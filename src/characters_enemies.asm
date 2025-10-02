@@ -1,21 +1,17 @@
-include "constants.inc"
+INCLUDE "constants.inc"
 
 SECTION "Character Sprites", ROM0
 
 Cowboy_Sprites::
-    DB $00,$00,$00,$00,$01,$01,$03,$03
-    DB $01,$00,$00,$03,$06,$01,$0F,$00
-    DB $03,$00,$03,$00,$03,$00,$03,$03
-    DB $00,$03,$00,$03,$00,$02,$00,$02
-    DB $00,$00,$00,$00,$80,$80,$C0,$C0
-    DB $80,$00,$00,$C0,$60,$80,$70,$80
-    DB $C0,$10,$C8,$0F,$C8,$C8,$C0,$C0
-    DB $00,$C0,$00,$40,$00,$40,$00,$40
+    DB $00,$00,$3C,$3C,$7E,$7E,$FF,$FF
+    DB $FF,$FF,$7E,$7E,$3C,$3C,$00,$00
+    DB $00,$00,$18,$18,$3C,$3C,$7E,$7E
+    DB $7E,$7E,$3C,$3C,$18,$18,$00,$00
 Cowboy_Sprites_End::
 
 Load_Character_Sprites::
     ld hl, Cowboy_Sprites
-    ld de, $8000 + (TILE_COWBOY * 16)
+    ld de, $8100
     ld bc, Cowboy_Sprites_End - Cowboy_Sprites
     call Copy_Memory
     ret
@@ -37,7 +33,7 @@ Render_Player::
     ld [hl+], a
     ld a, [wPlayerX]
     ld [hl+], a
-    ld a, TILE_COWBOY
+    ld a, $10
     ld [hl+], a
     xor a
     ld [hl], a

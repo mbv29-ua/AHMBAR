@@ -1,4 +1,4 @@
-include "constants.inc"
+INCLUDE "constants.inc"
 
 SECTION "Character Movement", ROM0
 
@@ -7,18 +7,18 @@ Update_Input::
     ld [wJoypadPrevious], a
     
     ld a, $20
-    ldh [$FF00], a
-    ldh a, [$FF00]
-    ldh a, [$FF00]
+    ldh [rP1], a
+    ldh a, [rP1]
+    ldh a, [rP1]
     cpl
     and $0F
     swap a
     ld b, a
     
     ld a, $10
-    ldh [$FF00], a
-    ldh a, [$FF00]
-    ldh a, [$FF00]
+    ldh [rP1], a
+    ldh a, [rP1]
+    ldh a, [rP1]
     cpl
     and $0F
     or b
@@ -31,7 +31,7 @@ Update_Input::
     ld [wJoypadPressed], a
     
     ld a, $30
-    ldh [$FF00], a
+    ldh [rP1], a
     ret
 
 Update_Player_Movement::

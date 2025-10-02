@@ -1,4 +1,4 @@
-include "constants.inc"
+INCLUDE "constants.inc"
 
 SECTION "Bullet System", ROM0
 
