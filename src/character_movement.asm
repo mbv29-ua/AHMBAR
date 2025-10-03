@@ -35,77 +35,49 @@ Update_Input::
     ret
 
 Update_Player_Movement::
-    call Apply_Gravity
     call Process_Horizontal_Movement
-    call Process_Jump
+    call Process_Vertical_Movement
     call Clamp_Player_Position
-    ret
-
-Apply_Gravity::
-    ld a, [wPlayerY]
-    cp 100
-    jr c, .not_grounded
-    
-    ld a, 100
-    ld [wPlayerY], a
-    xor a
-    ld [wPlayerVelY], a
-    ld a, 1
-    ld [wPlayerGrounded], a
-    ret
-    
-.not_grounded:
-    xor a
-    ld [wPlayerGrounded], a
-    
-    ld a, [wPlayerY]
-    ld b, a
-    ld a, [wPlayerVelY]
-    add b
-    ld [wPlayerY], a
-    
-    ld a, [wPlayerVelY]
-    add 2
-    cp 127
-    jr c, .gravity_ok
-    ld a, 127
-.gravity_ok:
-    ld [wPlayerVelY], a
     ret
 
 Process_Horizontal_Movement::
     ld a, [wJoypadCurrent]
     bit DPAD_RIGHT, a
     jr z, .check_left
-    
+
     ld a, [wPlayerX]
     add PLAYER_SPEED
     ld [wPlayerX], a
     ret
-    
+
 .check_left:
     ld a, [wJoypadCurrent]
     bit DPAD_LEFT, a
     ret z
-    
+
     ld a, [wPlayerX]
     sub PLAYER_SPEED
     ld [wPlayerX], a
     ret
 
-Process_Jump::
-    ld a, [wJoypadPressed]
-    bit BUTTON_A, a
+Process_Vertical_Movement::
+    ld a, [wJoypadCurrent]
+    bit DPAD_UP, a
+    jr z, .check_down
+
+    ld a, [wPlayerY]
+    sub PLAYER_SPEED
+    ld [wPlayerY], a
+    ret
+
+.check_down:
+    ld a, [wJoypadCurrent]
+    bit DPAD_DOWN, a
     ret z
-    
-    ld a, [wPlayerGrounded]
-    or a
-    ret z
-    
-    ld a, -PLAYER_JUMP_POWER
-    ld [wPlayerVelY], a
-    xor a
-    ld [wPlayerGrounded], a
+
+    ld a, [wPlayerY]
+    add PLAYER_SPEED
+    ld [wPlayerY], a
     ret
 
 Clamp_Player_Position::
@@ -114,20 +86,27 @@ Clamp_Player_Position::
     jr nc, .check_right
     ld a, 8
     ld [wPlayerX], a
-    ret
-    
+
 .check_right:
+    ld a, [wPlayerX]
     cp 152
-    jr c, .x_ok
+    jr c, .check_y_min
     ld a, 152
     ld [wPlayerX], a
-    
-.x_ok:
+
+.check_y_min:
     ld a, [wPlayerY]
     cp 16
-    jr nc, .y_ok
+    jr nc, .check_y_max
     ld a, 16
     ld [wPlayerY], a
-    
-.y_ok:
+
+.check_y_max:
+    ld a, [wPlayerY]
+    cp 136
+    jr c, .ok
+    ld a, 136
+    ld [wPlayerY], a
+
+.ok:
     ret

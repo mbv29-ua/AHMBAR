@@ -21,10 +21,6 @@ Init_Player::
     ld [wPlayerX], a
     ld a, PLAYER_START_Y
     ld [wPlayerY], a
-    xor a
-    ld [wPlayerVelY], a
-    ld a, 1
-    ld [wPlayerGrounded], a
     ret
 
 Render_Player::

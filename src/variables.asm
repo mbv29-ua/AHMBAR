@@ -2,8 +2,6 @@ SECTION "Game Variables", WRAM0
 
 wPlayerX::          DS 1
 wPlayerY::          DS 1
-wPlayerVelY::       DS 1
-wPlayerGrounded::   DS 1
 
 wBullet1X::         DS 1
 wBullet1Y::         DS 1
