@@ -66,7 +66,7 @@ Next_Level::
     call Init_Bullet_System
 
     ; Encender pantalla con sprites habilitados
-    ld a, %10000011
+    ld a, %10010011
     ldh [rLCDC], a
     ret
 

@@ -23,8 +23,8 @@ main::
     ld a, IEF_VBLANK
     ldh [rIE], a
 
-    ; LCDC: LCD On, BG On, OBJ On (bit 7, 1, 0)
-    ld a, %10000011
+    ; LCDC: LCD On, BG Tile Data $8000, BG On, OBJ On (bits 7, 4, 1, 0)
+    ld a, %10010011
     ldh [rLCDC], a
 
     ei

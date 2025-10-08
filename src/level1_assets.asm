@@ -66,6 +66,7 @@ Tile_Bullet:
     DB $FF,$FF,$7E,$7E,$18,$18,$00,$00
 
 Tile_Goal:
+    ; Cuadrado negro sólido con borde destacado
     DB $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
     DB $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
 
@@ -215,21 +216,11 @@ Load_Level1_Tiles::
     ret
 
 Load_Level1_Map::
-    ; Llenar todo el mapa con tile GROUND ($01) para prueba
-    ld hl, $9800
-    ld bc, 32 * 18          ; 32x18 tiles
-    ld a, TILE_GROUND
-.fill_loop:
-    ld [hl+], a
-    dec bc
-    ld a, b
-    or c
-    jr nz, .fill_loop_reload
+    ld hl, Level1_Map
+    ld de, $9800
+    ld bc, Level1_Map_End - Level1_Map
+    call Copy_Memory
     ret
-
-.fill_loop_reload:
-    ld a, TILE_GROUND
-    jr .fill_loop
 
 Copy_Memory:
 .loop:

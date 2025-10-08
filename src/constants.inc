@@ -43,11 +43,11 @@ DEF PLAYER_START_Y      EQU 72
 DEF PLAYER_SPEED        EQU 2
 DEF PLAYER_JUMP_POWER   EQU 32
 
-; Posición del objetivo en píxeles (esquina superior derecha)
-DEF GOAL_X_MIN          EQU 224
-DEF GOAL_X_MAX          EQU 240
-DEF GOAL_Y_MIN          EQU 24
-DEF GOAL_Y_MAX          EQU 40
+; Posición del objetivo en píxeles (tile en columna 30, fila 2)
+DEF GOAL_X_MIN          EQU 240
+DEF GOAL_X_MAX          EQU 248
+DEF GOAL_Y_MIN          EQU 16
+DEF GOAL_Y_MAX          EQU 24
 
 DEF MAX_BULLETS         EQU 3
 DEF BULLET_SPEED        EQU 4

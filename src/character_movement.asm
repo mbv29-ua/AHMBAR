@@ -89,9 +89,9 @@ Clamp_Player_Position::
 
 .check_right:
     ld a, [wPlayerX]
-    cp 152
+    cp 248
     jr c, .check_y_min
-    ld a, 152
+    ld a, 248
     ld [wPlayerX], a
 
 .check_y_min:
