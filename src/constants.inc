@@ -36,11 +36,18 @@ DEF TILE_DIGIT_3        EQU $0D
 DEF TILE_DIGIT_4        EQU $0E
 DEF TILE_DIGIT_5        EQU $0F
 DEF TILE_COWBOY         EQU $10
+DEF TILE_GOAL           EQU $11
 
 DEF PLAYER_START_X      EQU 80
 DEF PLAYER_START_Y      EQU 72
 DEF PLAYER_SPEED        EQU 2
 DEF PLAYER_JUMP_POWER   EQU 32
+
+; Posición del objetivo en píxeles (esquina superior derecha)
+DEF GOAL_X_MIN          EQU 224
+DEF GOAL_X_MAX          EQU 240
+DEF GOAL_Y_MIN          EQU 24
+DEF GOAL_Y_MAX          EQU 40
 
 DEF MAX_BULLETS         EQU 3
 DEF BULLET_SPEED        EQU 4
@@ -55,9 +62,11 @@ DEF SCREEN_WIDTH        EQU 160
 DEF SCREEN_HEIGHT       EQU 144
 DEF SCREEN_RIGHT_EDGE   EQU 168
 
-DEF BUTTON_A            EQU 4
-DEF BUTTON_B            EQU 5
-DEF DPAD_RIGHT          EQU 0
-DEF DPAD_LEFT           EQU 1
-DEF DPAD_UP             EQU 2
-DEF DPAD_DOWN           EQU 3
+DEF BUTTON_A            EQU 0
+DEF BUTTON_B            EQU 1
+DEF BUTTON_SELECT       EQU 2
+DEF BUTTON_START        EQU 3
+DEF DPAD_RIGHT          EQU 4
+DEF DPAD_LEFT           EQU 5
+DEF DPAD_UP             EQU 6
+DEF DPAD_DOWN           EQU 7

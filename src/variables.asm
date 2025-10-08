@@ -19,3 +19,5 @@ wCounterReload::    DS 1
 wJoypadCurrent::    DS 1
 wJoypadPrevious::   DS 1
 wJoypadPressed::    DS 1
+
+wCurrentLevel::     DS 1

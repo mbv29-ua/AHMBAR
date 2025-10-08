@@ -5,12 +5,13 @@ SECTION "Level 1 Tiles", ROM0
 Level1_Tiles::
 
 Tile_Empty:
-    DB $00,$00,$10,$10,$00,$00,$08,$08
-    DB $00,$00,$04,$04,$00,$00,$00,$00
+    DB $00,$00,$00,$00,$00,$00,$00,$00
+    DB $00,$00,$00,$00,$00,$00,$00,$00
 
 Tile_Ground:
-    DB $FF,$FF,$AA,$AA,$55,$55,$AA,$AA
-    DB $55,$55,$AA,$AA,$FF,$FF,$00,$00
+    ; Tile completamente negro (color 3)
+    DB $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+    DB $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
 
 Tile_Brick:
     DB $FF,$FF,$81,$81,$99,$99,$81,$81
@@ -64,13 +65,23 @@ Tile_Bullet:
     DB $00,$00,$18,$18,$7E,$7E,$FF,$FF
     DB $FF,$FF,$7E,$7E,$18,$18,$00,$00
 
+Tile_Goal:
+    DB $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+    DB $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+
 Level1_Tiles_End::
 
 SECTION "Level 1 Map", ROM0
 
 Level1_Map::
-    DS 32 * 3, TILE_EMPTY
-    
+    DS 32 * 2, TILE_EMPTY
+
+    ; Fila con el cuadrado objetivo (meta) en la esquina superior derecha
+    DB TILE_EMPTY,TILE_EMPTY,TILE_EMPTY,TILE_EMPTY,TILE_EMPTY,TILE_EMPTY,TILE_EMPTY,TILE_EMPTY
+    DB TILE_EMPTY,TILE_EMPTY,TILE_EMPTY,TILE_EMPTY,TILE_EMPTY,TILE_EMPTY,TILE_EMPTY,TILE_EMPTY
+    DB TILE_EMPTY,TILE_EMPTY,TILE_EMPTY,TILE_EMPTY,TILE_EMPTY,TILE_EMPTY,TILE_EMPTY,TILE_EMPTY
+    DB TILE_EMPTY,TILE_EMPTY,TILE_EMPTY,TILE_EMPTY,TILE_EMPTY,TILE_EMPTY,TILE_GOAL,TILE_EMPTY
+
     DB TILE_EMPTY,TILE_EMPTY,TILE_WINDOW,TILE_BRICK,TILE_WINDOW,TILE_EMPTY,TILE_EMPTY,TILE_EMPTY
     DB TILE_EMPTY,TILE_WINDOW,TILE_BRICK,TILE_WINDOW,TILE_EMPTY,TILE_EMPTY,TILE_EMPTY,TILE_EMPTY
     DB TILE_EMPTY,TILE_EMPTY,TILE_EMPTY,TILE_WINDOW,TILE_BRICK,TILE_WINDOW,TILE_EMPTY,TILE_EMPTY
@@ -155,7 +166,13 @@ Load_Level1_Tiles::
     ld de, $8070
     ld bc, 16
     call Copy_Memory
-    
+
+    ; Tile vacío en $8080 (tile $08 no usado)
+    ld hl, Tile_Empty
+    ld de, $8080
+    ld bc, 16
+    call Copy_Memory
+
     ld hl, Tile_Bullet
     ld de, $8090
     ld bc, 16
@@ -190,14 +207,29 @@ Load_Level1_Tiles::
     ld de, $80F0
     ld bc, 16
     call Copy_Memory
+
+    ld hl, Tile_Goal
+    ld de, $8110
+    ld bc, 16
+    call Copy_Memory
     ret
 
 Load_Level1_Map::
-    ld hl, Level1_Map
-    ld de, $9800
-    ld bc, Level1_Map_End - Level1_Map
-    call Copy_Memory
+    ; Llenar todo el mapa con tile GROUND ($01) para prueba
+    ld hl, $9800
+    ld bc, 32 * 18          ; 32x18 tiles
+    ld a, TILE_GROUND
+.fill_loop:
+    ld [hl+], a
+    dec bc
+    ld a, b
+    or c
+    jr nz, .fill_loop_reload
     ret
+
+.fill_loop_reload:
+    ld a, TILE_GROUND
+    jr .fill_loop
 
 Copy_Memory:
 .loop:

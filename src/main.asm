@@ -11,23 +11,29 @@ main::
     call Clear_VRAM
     call Clear_OAM
     call Load_Level1_Tiles
-    call Load_Level1_Map
+    call Init_Level_System
+    call Load_Current_Level
     call Load_Character_Sprites
     call Init_Palettes
-    
-    ld a, $91
-    ldh [rLCDC], a
-    
     call Init_Player
     call Init_Bullet_System
     call Init_Counter
-    
+
+    ; Habilitar interrupciones VBlank
+    ld a, IEF_VBLANK
+    ldh [rIE], a
+
+    ; LCDC: LCD On, BG On, OBJ On (bit 7, 1, 0)
+    ld a, %10000011
+    ldh [rLCDC], a
+
     ei
 
 .main_loop:
     halt
     nop
     call Update_Input
+    call Check_Level_Change
     call Update_Player_Movement
     call Update_Bullet_System
     call Update_Counter
