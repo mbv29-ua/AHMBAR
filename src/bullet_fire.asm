@@ -174,22 +174,7 @@ Render_Bullet_3::
     ret
 
 Update_Counter::
-    ld a, [wCounterValue]
-    or a
-    jr nz, .render
-    
-    ld a, [wCounterReload]
-    inc a
-    ld [wCounterReload], a
-    cp 60
-    jr c, .render
-    
-    ld a, COUNTER_START
-    ld [wCounterValue], a
-    xor a
-    ld [wCounterReload], a
-    
-.render:
+    ; Ya no se resetea automáticamente el contador
     ret
 
 Render_Counter::

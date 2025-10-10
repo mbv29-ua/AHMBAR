@@ -43,11 +43,13 @@ DEF PLAYER_START_Y      EQU 72
 DEF PLAYER_SPEED        EQU 2
 DEF PLAYER_JUMP_POWER   EQU 32
 
-; Posición del objetivo en píxeles (tile en columna 30, fila 2)
-DEF GOAL_X_MIN          EQU 240
-DEF GOAL_X_MAX          EQU 248
-DEF GOAL_Y_MIN          EQU 16
-DEF GOAL_Y_MAX          EQU 24
+; Posición del objetivo en píxeles OAM (tile en columna 16, fila 9 - centro del mapa)
+; Columna 16: 16*8 = 128 píxeles de pantalla + 8 offset OAM = 136
+; Fila 9: 9*8 = 72 píxeles de pantalla + 16 offset OAM = 88
+DEF GOAL_X_MIN          EQU 136
+DEF GOAL_X_MAX          EQU 144
+DEF GOAL_Y_MIN          EQU 88
+DEF GOAL_Y_MAX          EQU 96
 
 DEF MAX_BULLETS         EQU 3
 DEF BULLET_SPEED        EQU 4
