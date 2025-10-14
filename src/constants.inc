@@ -52,11 +52,9 @@ DEF DEFAULT_PALETTE EQU %11100100
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; DELETE
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
-DEF OAM_PLAYER          EQU $FE00
+DEF OAM_PLAYER          EQU $FE00    ;; temp -> maybe dont delete
 DEF OAM_COUNTER         EQU $FE04
-DEF OAM_BULLET_1        EQU $FE08
-DEF OAM_BULLET_2        EQU $FE0C
-DEF OAM_BULLET_3        EQU $FE10
+DEF OAM_BULLET          EQU $FE08
 
 DEF TILE_EMPTY          EQU $00
 DEF TILE_GROUND         EQU $01

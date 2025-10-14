@@ -6,6 +6,7 @@ main::
     call init 
 
 .main_loop:
+    call render_player
     jp .main_loop
 
 init::
@@ -19,6 +20,7 @@ init::
     call enable_screen
 
     call load_cowboy_sprites
+    call init_player
 
     call screen_on
     ret

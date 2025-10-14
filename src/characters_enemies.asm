@@ -17,14 +17,15 @@ load_cowboy_sprites::
     call memcpy_65536
     ret
 
-Init_Player::
+init_player::
     ld a, PLAYER_START_X
     ld [wPlayerX], a
     ld a, PLAYER_START_Y
     ld [wPlayerY], a
     ret
 
-Render_Player::
+render_player::
+    call wait_vblank
     ld hl, OAM_PLAYER
     ld a, [wPlayerY]
     ld [hl+], a
