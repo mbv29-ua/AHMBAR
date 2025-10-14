@@ -30,6 +30,22 @@ AHMBAR/src/
 └── main.asm # Punto de entrada del juego (call init, call scene.start)
 
 ---
+
+### 📦 Distribución en memoria (WRAM0)
+
+| Dirección Base | Componente | Tamaño por entidad | Descripción                                 |
+| -------------- | ---------- | ------------------ | ------------------------------------------- |
+| `$C000`        | **SPR**    | 4 bytes            | Datos de sprite (posición, tile, atributos) |
+| `$C100`        | **PHYS**   | 4 bytes            | Física (velocidades, estado, flags)         |
+| `$C200`        | **ATTR**   | 4 bytes            | Atributos generales                         |
+| `$C300`        | **CONT**   | 4 bytes            | Contadores                                  |
+| `$C400`        | **ANIM**   | 4 bytes            | Animación o estados visuales                |
+| `$C500`        | **JAIME**  | 4 bytes            | Componente auxiliar (libre)                 |
+| `$C600`        | **MIGUEL** | 4 bytes            | Componente auxiliar (libre)                 |
+| `$C700`        | **SONIA**  | 4 bytes            | Componente auxiliar (libre)                 |
+
+--- 
+
 ## 🧱 Detalle de Módulos
 
 ### 🎨 **assets/**
