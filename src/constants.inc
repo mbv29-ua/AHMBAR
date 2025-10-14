@@ -1,3 +1,33 @@
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; DIRECCIONES RAM
+;;;;;;;;;;;;;;;;;;;;;;;;;;
+DEF VRAM0_START         EQU $8000
+DEF VRAM_TILESET_SIZE   EQU 128
+DEF BG_MAP_START        EQU $9800
+DEF OAM_START           EQU $FE00
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; UTILS CONSTANTS RAM
+;;;;;;;;;;;;;;;;;;;;;;;;;;
+DEF TILE_SET_BANK_SIZE  EQU 128
+DEF TILE_SIZE           EQU $10
+DEF OAM_SPRITE_SIZE     EQU 4
+DEF OAM_TOTAL_SPRITES   EQU 40
+DEF OAM_SIZE            EQU (OAM_TOTAL_SPRITES*OAM_SPRITE_SIZE)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; ??? 
+;;;;;;;;;;;;;;;;;;;;;;;;;;
+DEF SCREEN_WIDTH        EQU 160
+DEF SCREEN_HEIGHT       EQU 144
+DEF SCREEN_RIGHT_EDGE   EQU 168
+DEF BIT_PPU_ENABLES     EQU 7
+DEF START_VBLANK        EQU 144
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; REGISTROS I/O   
+;;;;;;;;;;;;;;;;;;;;;;;;;;
 DEF rLCDC   EQU $FF40
 DEF rSTAT   EQU $FF41
 DEF rSCY    EQU $FF42
@@ -14,6 +44,14 @@ DEF LCDCF_BGON  EQU $01
 DEF LCDCF_OBJON EQU $02
 DEF IEF_VBLANK  EQU $01
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; PALETTE 
+;;;;;;;;;;;;;;;;;;;;;;;;;;
+DEF DEFAULT_PALETTE EQU %11100100
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; DELETE
+;;;;;;;;;;;;;;;;;;;;;;;;;;
 DEF OAM_PLAYER          EQU $FE00
 DEF OAM_COUNTER         EQU $FE04
 DEF OAM_BULLET_1        EQU $FE08
@@ -60,23 +98,4 @@ DEF COUNTER_START       EQU 5
 DEF COUNTER_X_POS       EQU 152
 DEF COUNTER_Y_POS       EQU 16
 
-DEF SCREEN_WIDTH        EQU 160
-DEF SCREEN_HEIGHT       EQU 144
-DEF SCREEN_RIGHT_EDGE   EQU 168
 
-DEF OAM_SIZE            EQU 160
-DEF OAM_START           EQU $FE00
-
-DEF BIT_PPU_ENABLES         EQU 7
-
-DEF START_VBLANK            EQU 144
-
-; Joypad button bits
-DEF BUTTON_A                EQU 0
-DEF BUTTON_B                EQU 1
-DEF BUTTON_SELECT           EQU 2
-DEF BUTTON_START            EQU 3
-DEF BUTTON_RIGHT            EQU 4
-DEF BUTTON_LEFT             EQU 5
-DEF BUTTON_UP               EQU 6
-DEF BUTTON_DOWN             EQU 7

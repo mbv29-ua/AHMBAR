@@ -1,2 +1,8 @@
 # AHMBAR
-RA project
+## RA project
+
+
+## Style Notes
+- Snake Case
+
+

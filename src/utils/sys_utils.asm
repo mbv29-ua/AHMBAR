@@ -28,3 +28,23 @@ screen_on::
     ld hl, rLCDC
     set BIT_PPU_ENABLES, [hl]
     ret
+
+init_palettes_by_default::
+    ld a, DEFAULT_PALETTE
+    ldh [rBGP], a
+    ldh [rOBP0], a
+    ld a, DEFAULT_PALETTE
+    ldh [rOBP1], a
+    ret
+
+enable_vblank_interrupts::
+    ; Habilitar interrupciones VBlank
+    ld a, IEF_VBLANK
+    ldh [rIE], a
+    ret
+
+enable_screen::
+    ; LCDC: LCD On, BG Tile Data $8000, 
+    ld hl, rLCDC
+    set 0, [hl] ; Bit 0: LCD Enable
+    ret

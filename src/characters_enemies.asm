@@ -3,8 +3,7 @@ INCLUDE "constants.inc"
 SECTION "Character Sprites", ROM0
 
 
-
-Load_Character_Sprites::
+load_cowboy_sprites::
     ; Cargar sprite de la bola negra (jugador)
     ld hl, Cowboy_Sprites
     ld de, $8100

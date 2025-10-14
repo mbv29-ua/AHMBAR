@@ -3,15 +3,9 @@ SECTION "Game Variables", WRAM0
 wPlayerX::          DS 1
 wPlayerY::          DS 1
 
-wBullet1X::         DS 1
-wBullet1Y::         DS 1
-wBullet1Active::    DS 1
-wBullet2X::         DS 1
-wBullet2Y::         DS 1
-wBullet2Active::    DS 1
-wBullet3X::         DS 1
-wBullet3Y::         DS 1
-wBullet3Active::    DS 1
+wBulletX::         DS 1
+wBulletY::         DS 1
+wBulletActive::    DS 1
 
 wCounterValue::     DS 1
 wCounterReload::    DS 1

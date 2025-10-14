@@ -34,8 +34,6 @@ Load_Current_Level::
 ; Avanza al siguiente nivel
 Next_Level::
     ; Esperar VBlank antes de modificar VRAM
-    call Wait_VBlank
-
     ; Apagar pantalla durante VBlank
     xor a
     ldh [rLCDC], a
@@ -51,10 +49,10 @@ Next_Level::
     ld [wCurrentLevel], a
 
     ; Limpiar VRAM del mapa anterior
-    call Clear_Map_Area
+    ; call Clear_Map_Area
 
     ; Cargar nuevo nivel
-    call Load_Current_Level
+    ; call Load_Current_Level
 
     ; Reposicionar jugador al inicio
     ld a, PLAYER_START_X
@@ -63,33 +61,13 @@ Next_Level::
     ld [wPlayerY], a
 
     ; Reiniciar sistema de balas
-    call Init_Bullet_System
+    ; call Init_Bullet_System
 
     ; Encender pantalla con sprites habilitados
     ld a, %10010011
     ldh [rLCDC], a
     ret
 
-; Espera a VBlank
-Wait_VBlank::
-.wait:
-    ldh a, [rLY]
-    cp 144
-    jr nz, .wait
-    ret
-
-; Limpia el área del mapa en VRAM
-Clear_Map_Area::
-    ld hl, $9800
-    ld bc, 32 * 18          ; 32x18 tiles
-    xor a
-.loop:
-    ld [hl+], a
-    dec bc
-    ld a, b
-    or c
-    jr nz, .loop
-    ret
 
 ; Verifica si el jugador tocó el cuadrado objetivo
 Check_Level_Change::
