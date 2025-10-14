@@ -24,15 +24,15 @@ SECTION "Header", ROM0[$100]
    DB "COWBOY GAME"
    DS $013F - @, 0
 
-   DB $EF, $AC, $AE, $AE
-   DB $00
-   DB $00, $00
-   DB $00
-   DB $00
-   DB $00
-   DB $02
-   DB $01
-   DB $00
-   DB $00
-   DB $00
-   DB $00, $00
+   DB $EF, $AC, $AE, $AE   ; Manufacturer code
+   DB $00                   ; CGB flag
+   DB $00, $00              ; New licensee code
+   DB $00                   ; SGB flag
+   DB $00                   ; Cartridge type ($00 = ROM ONLY)
+   DB $00                   ; ROM size ($00 = 32KB, no banking)
+   DB $00                   ; RAM size ($00 = No RAM)
+   DB $00                   ; Destination code (Japanese)
+   DB $00                   ; Old licensee code
+   DB $00                   ; Version number
+   DB $00                   ; Header checksum (will be fixed by rgbfix)
+   DB $00, $00              ; Global checksum (will be fixed by rgbfix)

@@ -1,3 +1,5 @@
+INCLUDE "constants.inc"
+
 SECTION "sys", ROM0
 
 clean_OAM::
@@ -17,10 +19,12 @@ wait_vblank::
 screen_off::
     di
     call wait_vblank
-    res BIT_PPU_ENABLES, [rLCDC]
+    ld hl, rLCDC
+    res BIT_PPU_ENABLES, [hl]
     ei
     ret
 
 screen_on::
-    set BIT_PPU_ENABLES, [rLCDC]
+    ld hl, rLCDC
+    set BIT_PPU_ENABLES, [hl]
     ret

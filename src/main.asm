@@ -4,42 +4,29 @@ SECTION "Entry Point", ROM0[$150]
 
 main::
     di
-    
-    xor a
-    ldh [rLCDC], a
-    
+
+    call screen_off
     call Clear_VRAM
     call Clear_OAM
     call Load_Level1_Tiles
-    call Init_Level_System
-    call Load_Current_Level
-    call Load_Character_Sprites
+    call Load_Level1_Map
     call Init_Palettes
-    call Init_Player
-    call Init_Bullet_System
-    call Init_Counter
 
     ; Habilitar interrupciones VBlank
     ld a, IEF_VBLANK
     ldh [rIE], a
 
-    ; LCDC: LCD On, BG Tile Data $8000, BG On, OBJ On (bits 7, 4, 1, 0)
-    ld a, %10010011
-    ldh [rLCDC], a
+    ; LCDC: LCD On, BG Tile Data $8000, 
+    ld hl, rLCDC
+    set 0, [hl] ; Bit 0: LCD Enable
+
+    call screen_on
 
     ei
 
 .main_loop:
     halt
     nop
-    call Update_Input
-    call Check_Level_Change
-    call Update_Player_Movement
-    call Update_Bullet_System
-    call Update_Counter
-    call Render_Player
-    call Render_Bullets
-    call Render_Counter
     jp .main_loop
 
 Init_Palettes::
@@ -57,8 +44,10 @@ Clear_VRAM::
 .loop:
     ld [hl+], a
     dec bc
+    push af
     ld a, b
     or c
+    pop af
     jr nz, .loop
     ret
 

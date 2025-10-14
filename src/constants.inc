@@ -67,4 +67,16 @@ DEF SCREEN_RIGHT_EDGE   EQU 168
 DEF OAM_SIZE            EQU 160
 DEF OAM_START           EQU $FE00
 
-DEF BIT_PPU_ENABLE          EQU 7
+DEF BIT_PPU_ENABLES         EQU 7
+
+DEF START_VBLANK            EQU 144
+
+; Joypad button bits
+DEF BUTTON_A                EQU 0
+DEF BUTTON_B                EQU 1
+DEF BUTTON_SELECT           EQU 2
+DEF BUTTON_START            EQU 3
+DEF BUTTON_RIGHT            EQU 4
+DEF BUTTON_LEFT             EQU 5
+DEF BUTTON_UP               EQU 6
+DEF BUTTON_DOWN             EQU 7

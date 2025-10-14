@@ -2,30 +2,20 @@ INCLUDE "constants.inc"
 
 SECTION "Character Sprites", ROM0
 
-Cowboy_Sprites::
-    ; Bola negra (jugador)
-    DB $00,$00,$3C,$3C,$7E,$7E,$FF,$FF
-    DB $FF,$FF,$7E,$7E,$3C,$3C,$00,$00
-Cowboy_Sprites_End::
 
-Goal_Sprite::
-    ; Cuadrado objetivo (meta del nivel)
-    DB $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
-    DB $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
-Goal_Sprite_End::
 
 Load_Character_Sprites::
     ; Cargar sprite de la bola negra (jugador)
     ld hl, Cowboy_Sprites
     ld de, $8100
     ld bc, Cowboy_Sprites_End - Cowboy_Sprites
-    call Copy_Memory
+    call memcpy_65536
 
     ; Cargar sprite del cuadrado objetivo
     ld hl, Goal_Sprite
     ld de, $8110
     ld bc, Goal_Sprite_End - Goal_Sprite
-    call Copy_Memory
+    call memcpy_65536
     ret
 
 Init_Player::
