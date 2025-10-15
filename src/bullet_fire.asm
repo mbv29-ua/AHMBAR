@@ -1,194 +1,138 @@
-;INCLUDE "constants.inc"
-;
-;SECTION "Bullet System", ROM0
-;
-;Init_Bullet_System::
-;    xor a
-;    ld [wBullet1Active], a
-;    ld [wBullet2Active], a
-;    ld [wBullet3Active], a
-;    ret
-;
-;Init_Counter::
-;    ld a, COUNTER_START
-;    ld [wCounterValue], a
-;    xor a
-;    ld [wCounterReload], a
-;    ret
-;
-;Update_Bullet_System::
-;    call Check_Fire_Input
-;    call Update_Bullet_1
-;    call Update_Bullet_2
-;    call Update_Bullet_3
-;    ret
-;
-;Check_Fire_Input::
-;    ld a, [wJoypadPressed]
-;    bit BUTTON_B, a
-;    ret z
-;    
-;    ld a, [wCounterValue]
-;    or a
-;    ret z
-;    
-;    dec a
-;    ld [wCounterValue], a
-;    call Fire_Bullet
-;    ret
-;
-;Fire_Bullet::
-;    ld a, [wBullet1Active]
-;    or a
-;    jr z, .fire_bullet_1
-;    ld a, [wBullet2Active]
-;    or a
-;    jr z, .fire_bullet_2
-;    ld a, [wBullet3Active]
-;    or a
-;    jr z, .fire_bullet_3
-;    ret
-;    
-;.fire_bullet_1:
-;    ld hl, wBullet1X
-;    jr .initialize
-;.fire_bullet_2:
-;    ld hl, wBullet2X
-;    jr .initialize
-;.fire_bullet_3:
-;    ld hl, wBullet3X
-;    
-;.initialize:
-;    ld a, [wPlayerX]
-;    add 8
-;    ld [hl+], a
-;    ld a, [wPlayerY]
-;    ld [hl+], a
-;    ld a, BULLET_ACTIVE
-;    ld [hl], a
-;    ret
-;
-;Update_Bullet_1::
-;    ld a, [wBullet1Active]
-;    or a
-;    ret z
-;    ld a, [wBullet1X]
-;    add BULLET_SPEED
-;    ld [wBullet1X], a
-;    cp SCREEN_RIGHT_EDGE
-;    ret c
-;    xor a
-;    ld [wBullet1Active], a
-;    ret
-;
-;Update_Bullet_2::
-;    ld a, [wBullet2Active]
-;    or a
-;    ret z
-;    ld a, [wBullet2X]
-;    add BULLET_SPEED
-;    ld [wBullet2X], a
-;    cp SCREEN_RIGHT_EDGE
-;    ret c
-;    xor a
-;    ld [wBullet2Active], a
-;    ret
-;
-;Update_Bullet_3::
-;    ld a, [wBullet3Active]
-;    or a
-;    ret z
-;    ld a, [wBullet3X]
-;    add BULLET_SPEED
-;    ld [wBullet3X], a
-;    cp SCREEN_RIGHT_EDGE
-;    ret c
-;    xor a
-;    ld [wBullet3Active], a
-;    ret
-;
-;Render_Bullets::
-;    call Render_Bullet_1
-;    call Render_Bullet_2
-;    call Render_Bullet_3
-;    ret
-;
-;Render_Bullet_1::
-;    ld a, [wBullet1Active]
-;    or a
-;    jr z, .hide
-;    ld hl, OAM_BULLET_1
-;    ld a, [wBullet1Y]
-;    ld [hl+], a
-;    ld a, [wBullet1X]
-;    ld [hl+], a
-;    ld a, TILE_BULLET
-;    ld [hl+], a
-;    xor a
-;    ld [hl], a
-;    ret
-;.hide:
-;    ld hl, OAM_BULLET_1
-;    xor a
-;    ld [hl], a
-;    ret
-;
-;Render_Bullet_2::
-;    ld a, [wBullet2Active]
-;    or a
-;    jr z, .hide
-;    ld hl, OAM_BULLET_2
-;    ld a, [wBullet2Y]
-;    ld [hl+], a
-;    ld a, [wBullet2X]
-;    ld [hl+], a
-;    ld a, TILE_BULLET
-;    ld [hl+], a
-;    xor a
-;    ld [hl], a
-;    ret
-;.hide:
-;    ld hl, OAM_BULLET_2
-;    xor a
-;    ld [hl], a
-;    ret
-;
-;Render_Bullet_3::
-;    ld a, [wBullet3Active]
-;    or a
-;    jr z, .hide
-;    ld hl, OAM_BULLET_3
-;    ld a, [wBullet3Y]
-;    ld [hl+], a
-;    ld a, [wBullet3X]
-;    ld [hl+], a
-;    ld a, TILE_BULLET
-;    ld [hl+], a
-;    xor a
-;    ld [hl], a
-;    ret
-;.hide:
-;    ld hl, OAM_BULLET_3
-;    xor a
-;    ld [hl], a
-;    ret
-;
-;Update_Counter::
-;    ; Ya no se resetea automáticamente el contador
-;    ret
-;
-;Render_Counter::
-;    ld a, [wCounterValue]
-;    add TILE_DIGIT_0
-;    ld b, a
-;    
-;    ld hl, OAM_COUNTER
-;    ld a, COUNTER_Y_POS
-;    ld [hl+], a
-;    ld a, COUNTER_X_POS
-;    ld [hl+], a
-;    ld a, b
-;    ld [hl+], a
-;    ld a, %00010000
-;    ld [hl], a
-;    ret
+INCLUDE "utils/joypad.inc"
+INCLUDE "constants.inc"
+
+SECTION "Bullet System Variables", WRAM0[$c010]
+cooldDown:   DS 1
+
+SECTION "Bullet System", ROM0
+
+Update_Bullet_System::
+    ld a, [cooldDown]
+    cp a, 0
+    jr z, .no_cooldown
+    dec a
+    ld [cooldDown], a
+    jr .render
+    .no_cooldown:
+    call check_button_input
+    ld a, b
+    jr nz, .skip
+    .render:
+    call Update_Bullet
+    call Render_Bullets
+    .skip:
+    ret
+
+load_bullet_sprites::
+    ld hl, Tile_Bullet
+    ld de, VRAM0_START + (TILE_BULLET * TILE_SIZE)
+    ld bc, Tile_Bullet_End - Tile_Bullet
+    call memcpy_65536
+    ret
+
+Init_Bullet_System::
+    ld [wBulletActive], a
+    ret
+
+Init_Counter::
+    ld a, COUNTER_START
+    ld [wCounterValue], a
+    ld [wCounterReload], a
+    ret
+
+
+check_button_input::
+    ld a, [PRESSED_BUTTONS]
+    bit BUTTON_B, a
+    ret z
+    call check_counter
+    ret
+
+check_counter::
+    ld a, [wCounterValue]
+    cp a, 0
+    ld b, a
+    ret z
+    call Fire_Bullet
+    ret
+
+check_active_bullet::
+    ld a, [wBulletActive]
+    or a
+    ret z
+    call Fire_Bullet
+    ret
+    
+Fire_Bullet::
+    ld a, [cooldDown]
+    cp a, 0
+    ret z
+
+    ld hl, wBulletX
+    ld a, [Player.wPlayerX]
+    add 8
+    ld [hl+], a
+    ld a, [Player.wPlayerY]
+    ld [hl+], a
+    ld a, BULLET_ACTIVE
+    ld [hl], a
+    ld hl, wCounterValue
+    dec [hl]
+
+    ld hl, cooldDown
+    ld [hl], 60
+    ret
+
+Update_Bullet::
+    ld a, [wBulletActive]
+    or a
+    ret z
+    ld a, [wBulletX]
+    add BULLET_SPEED
+    ld [wBulletX], a
+    cp SCREEN_RIGHT_EDGE
+    ret c
+    xor a
+    ld [wBulletActive], a
+    ret
+
+Render_Bullets::
+    call render_bullet
+    ret
+
+render_bullet::
+    call wait_vblank
+    ld a, [wBulletActive]
+    or a
+    jr z, .hide
+    ld hl, OAM_BULLET
+    ld a, [wBulletY]
+    ld [hl+], a
+    ld a, [wBulletX]
+    ld [hl+], a
+    ld a, TILE_BULLET
+    ld [hl+], a
+    xor a
+    ld [hl], a
+    ret
+.hide:
+    ld hl, OAM_BULLET
+    xor a
+    ld [hl], a
+    ret
+
+Render_Counter::
+    ld a, [wCounterValue]
+    add TILE_DIGIT_0
+    ld b, a
+    
+    ld hl, OAM_COUNTER
+    ld a, COUNTER_Y_POS
+    ld [hl+], a
+    ld a, COUNTER_X_POS
+    ld [hl+], a
+    ld a, b
+    ld [hl+], a
+    ld a, %00010000
+    ld [hl], a
+    ret

@@ -19,17 +19,17 @@ load_cowboy_sprites::
 
 init_player::
     ld a, PLAYER_START_X
-    ld [wPlayerX], a
+    ld [Player.wPlayerX], a
     ld a, PLAYER_START_Y
-    ld [wPlayerY], a
+    ld [Player.wPlayerY], a
     ret
 
 render_player::
     call wait_vblank
     ld hl, OAM_PLAYER
-    ld a, [wPlayerY]
+    ld a, [Player.wPlayerY]
     ld [hl+], a
-    ld a, [wPlayerX]
+    ld a, [Player.wPlayerX]
     ld [hl+], a
     ld a, $10
     ld [hl+], a

@@ -1,7 +1,8 @@
-SECTION "Game Variables", WRAM0
+SECTION "Game Variables", WRAM0[$c000]
 
-wPlayerX::          DS 1
-wPlayerY::          DS 1
+Player::
+    .wPlayerX:          DS 1
+    .wPlayerY:          DS 1
 
 wBulletX::         DS 1
 wBulletY::         DS 1

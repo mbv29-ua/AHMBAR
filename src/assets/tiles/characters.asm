@@ -12,6 +12,7 @@ Goal_Sprite::
     DB $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
 Goal_Sprite_End::
 
-Tile_Bullet:
+Tile_Bullet::
     DB $00,$00,$18,$18,$7E,$7E,$FF,$FF
     DB $FF,$FF,$7E,$7E,$18,$18,$00,$00
+Tile_Bullet_End::

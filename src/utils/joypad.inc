@@ -2,10 +2,10 @@ DEF BUTTON_A            EQU 0
 DEF BUTTON_B            EQU 1
 DEF BUTTON_SELECT       EQU 2
 DEF BUTTON_START        EQU 3
-DEF DPAD_RIGHT          EQU 4
-DEF DPAD_LEFT           EQU 5
-DEF DPAD_UP             EQU 6
-DEF DPAD_DOWN           EQU 7
+DEF DPAD_LEFT          EQU 4
+DEF DPAD_RIGHT           EQU 5
+DEF DPAD_DOWN             EQU 6
+DEF DPAD_UP           EQU 7
 
 DEF SELECT_PAD          EQU $20
 DEF SELECT_BUTTONS      EQU $10

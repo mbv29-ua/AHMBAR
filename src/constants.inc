@@ -26,6 +26,12 @@ DEF BIT_PPU_ENABLES     EQU 7
 DEF START_VBLANK        EQU 144
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;  BULLET 
+;;;;;;;;;;;;;;;;;;;;;;;;;;
+DEF OAM_BULLET          EQU $FE08
+DEF BULLET_COUNT_INT    EQU 5
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; REGISTROS I/O   
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
 DEF rLCDC   EQU $FF40
@@ -54,16 +60,8 @@ DEF DEFAULT_PALETTE EQU %11100100
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
 DEF OAM_PLAYER          EQU $FE00    ;; temp -> maybe dont delete
 DEF OAM_COUNTER         EQU $FE04
-DEF OAM_BULLET          EQU $FE08
+DEF PRESSED_BUTTONS     EQU $DFFF    ;; ver que hacer con esto
 
-DEF TILE_EMPTY          EQU $00
-DEF TILE_GROUND         EQU $01
-DEF TILE_BRICK          EQU $02
-DEF TILE_WINDOW         EQU $03
-DEF TILE_PIPE           EQU $04
-DEF TILE_CABLE          EQU $05
-DEF TILE_PLATFORM_LIGHTS EQU $06
-DEF TILE_WARNING        EQU $07
 DEF TILE_BULLET         EQU $09
 DEF TILE_DIGIT_0        EQU $0A
 DEF TILE_DIGIT_1        EQU $0B
