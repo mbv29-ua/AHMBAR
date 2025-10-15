@@ -56,9 +56,9 @@ Next_Level::
 
     ; Reposicionar jugador al inicio
     ld a, PLAYER_START_X
-    ld [wPlayerX], a
+    ld [Player.wPlayerX], a
     ld a, PLAYER_START_Y
-    ld [wPlayerY], a
+    ld [Player.wPlayerY], a
 
     ; Reiniciar sistema de balas
     ; call Init_Bullet_System
@@ -72,14 +72,14 @@ Next_Level::
 ; Verifica si el jugador tocó el cuadrado objetivo
 Check_Level_Change::
     ; Verificar si X está en el rango del objetivo
-    ld a, [wPlayerX]
+    ld a, [Player.wPlayerX]
     cp GOAL_X_MIN
     ret c                   ; X < GOAL_X_MIN, no hay colisión
     cp GOAL_X_MAX
     ret nc                  ; X >= GOAL_X_MAX, no hay colisión
 
     ; Verificar si Y está en el rango del objetivo
-    ld a, [wPlayerY]
+    ld a, [Player.wPlayerY]
     cp GOAL_Y_MIN
     ret c                   ; Y < GOAL_Y_MIN, no hay colisión
     cp GOAL_Y_MAX

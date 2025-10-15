@@ -25,8 +25,14 @@ screen_off::
     ret
 
 screen_on::
-    ld hl, rLCDC
-    set BIT_PPU_ENABLES, [hl]
+    ; Configurar LCDC completo:
+    ; Bit 7 = 1: LCD ON
+    ; Bit 4 = 0: Tiles en $8800 (signed)
+    ; Bit 3 = 0: BG Map en $9800
+    ; Bit 1 = 1: OBJ ON
+    ; Bit 0 = 1: BG Display ON
+    ld a, %10000011
+    ldh [rLCDC], a
     ret
 
 init_palettes_by_default::
@@ -44,7 +50,15 @@ enable_vblank_interrupts::
     ret
 
 enable_screen::
-    ; LCDC: LCD On, BG Tile Data $8000, 
-    ld hl, rLCDC
-    set 0, [hl] ; Bit 0: LCD Enable
+    ; No hace nada, la configuración está en screen_on
+    ret
+
+init_scroll::
+    ; Inicializar scroll para empezar arriba a la izquierda
+    ; SCX = 0 (izquierda)
+    xor a
+    ldh [rSCX], a
+
+    ; SCY = 0 (arriba)
+    ldh [rSCY], a
     ret
