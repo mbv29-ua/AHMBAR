@@ -67,7 +67,39 @@ man_find_sentinel::
 
 	jr .loop
 
+;; INPUT
+;; 	HL: PROCESS ROUTINE ADDRESS
+man_entity_for_each::
+	ld de, ATTR_BASE
+	.loop
 
+	ld a, [de]
+	cp ENTITY_CMP_SENTINEL
+	ret z 
+
+	bit E_BIT_SENTINEL, a 
+	ret nz
+
+	push af
+	push de
+	push hl
+	call helper_call_hl
+	.return
+	pop hl
+	pop de
+	pop af
+
+
+	.continue
+	ld a, e 
+	add ATTR_SIZE
+	ld e, a 
+	
+	jr .loop
+
+
+helper_call_hl::
+	jp hl
 
 
 

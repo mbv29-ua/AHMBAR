@@ -9,6 +9,9 @@ DEF JAIME_BASE   EQU $C500
 DEF MIGUEL_BASE  EQU $C600
 DEF SONIA_BASE   EQU $C700
 
+
+DEF CMP_PHYS_H   EQU $C1
+
 ; =============================================================
 ; OFFSETS DE LOS COMPONENTES
 ; =============================================================
