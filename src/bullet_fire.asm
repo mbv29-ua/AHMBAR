@@ -1,9 +1,6 @@
 INCLUDE "utils/joypad.inc"
 INCLUDE "constants.inc"
 
-SECTION "Bullet System Variables", WRAM0[$c010]
-cooldDown:   DS 1
-
 SECTION "Bullet System", ROM0
 
 Update_Bullet_System::
@@ -15,7 +12,6 @@ Update_Bullet_System::
     jr .render
     .no_cooldown:
     call check_button_input
-    ld a, b
     jr nz, .skip
     .render:
     call Update_Bullet
@@ -31,7 +27,14 @@ load_bullet_sprites::
     ret
 
 Init_Bullet_System::
-    ld [wBulletActive], a
+    ; Inicializar array de balas como inactivas
+    ld hl, wBulletActive
+    ld b, MAX_BULLETS
+    xor a  ; a = BULLET_INACTIVE (0)
+.init_loop:
+    ld [hl+], a
+    dec b
+    jr nz, .init_loop
     ret
 
 Init_Counter::
@@ -56,69 +59,166 @@ check_counter::
     call Fire_Bullet
     ret
 
-check_active_bullet::
-    ld a, [wBulletActive]
-    or a
-    ret z
-    call Fire_Bullet
-    ret
-    
 Fire_Bullet::
+    ; Verificar cooldown: si != 0, retornar (estamos en cooldown)
     ld a, [cooldDown]
     cp a, 0
-    ret z
+    ret nz  ; ARREGLADO: era 'ret z', ahora es 'ret nz'
 
+    ; Buscar una bala libre en el array
+    ld hl, wBulletActive
+    ld b, MAX_BULLETS
+    ld d, 0  ; d = índice de la bala
+.find_free:
+    ld a, [hl+]
+    cp BULLET_INACTIVE
+    jr z, .found_free
+    inc d
+    dec b
+    jr nz, .find_free
+    ret  ; No hay balas libres
+
+.found_free:
+    ; d contiene el índice de la bala libre
+    ; Configurar posición X
     ld hl, wBulletX
+    ld e, d
+    add hl, de
     ld a, [Player.wPlayerX]
     add 8
-    ld [hl+], a
+    ld [hl], a
+
+    ; Configurar posición Y
+    ld hl, wBulletY
+    ld e, d
+    add hl, de
     ld a, [Player.wPlayerY]
-    ld [hl+], a
+    ld [hl], a
+
+    ; Activar la bala
+    ld hl, wBulletActive
+    ld e, d
+    add hl, de
     ld a, BULLET_ACTIVE
     ld [hl], a
+
+    ; Decrementar contador
     ld hl, wCounterValue
     dec [hl]
 
-    ld hl, cooldDown
-    ld [hl], 60
+    ; Activar cooldown de 60 frames (~1 segundo)
+    ld a, 60
+    ld [cooldDown], a
     ret
 
 Update_Bullet::
-    ld a, [wBulletActive]
-    or a
-    ret z
-    ld a, [wBulletX]
+    ld b, MAX_BULLETS
+    ld c, 0  ; c = índice de la bala
+.update_loop:
+    push bc
+
+    ; Verificar si la bala está activa
+    ld hl, wBulletActive
+    ld b, 0
+    add hl, bc
+    ld a, [hl]
+    cp BULLET_INACTIVE
+    jr z, .next_bullet
+
+    ; Actualizar posición X
+    ld hl, wBulletX
+    ld b, 0
+    add hl, bc
+    ld a, [hl]
     add BULLET_SPEED
-    ld [wBulletX], a
+    ld [hl], a
+
+    ; Verificar si salió de pantalla
     cp SCREEN_RIGHT_EDGE
-    ret c
+    jr c, .next_bullet
+
+    ; Desactivar la bala
+    ld hl, wBulletActive
+    ld b, 0
+    add hl, bc
     xor a
-    ld [wBulletActive], a
+    ld [hl], a
+
+.next_bullet:
+    pop bc
+    inc c
+    dec b
+    jr nz, .update_loop
     ret
 
 Render_Bullets::
-    call render_bullet
-    ret
-
-render_bullet::
     call wait_vblank
-    ld a, [wBulletActive]
-    or a
-    jr z, .hide
+    ld b, MAX_BULLETS
+    ld c, 0  ; c = índice de la bala
+.render_loop:
+    push bc
+
+    ; Verificar si la bala está activa
+    ld hl, wBulletActive
+    ld b, 0
+    add hl, bc
+    ld a, [hl]
+    cp BULLET_INACTIVE
+    jr z, .hide_bullet
+
+    ; Calcular offset OAM: OAM_BULLET + (índice * 4)
+    ld a, c
+    sla a  ; a = índice * 2
+    sla a  ; a = índice * 4
     ld hl, OAM_BULLET
-    ld a, [wBulletY]
+    ld d, 0
+    ld e, a
+    add hl, de
+
+    ; Renderizar Y
+    push hl
+    ld hl, wBulletY
+    ld b, 0
+    add hl, bc
+    ld a, [hl]
+    pop hl
     ld [hl+], a
-    ld a, [wBulletX]
+
+    ; Renderizar X
+    push hl
+    ld hl, wBulletX
+    ld b, 0
+    add hl, bc
+    ld a, [hl]
+    pop hl
     ld [hl+], a
+
+    ; Tile
     ld a, TILE_BULLET
     ld [hl+], a
+
+    ; Atributos
     xor a
     ld [hl], a
-    ret
-.hide:
+    jr .next_render
+
+.hide_bullet:
+    ; Calcular offset OAM y ocultar
+    ld a, c
+    sla a
+    sla a
     ld hl, OAM_BULLET
+    ld d, 0
+    ld e, a
+    add hl, de
     xor a
     ld [hl], a
+
+.next_render:
+    pop bc
+    inc c
+    dec b
+    jr nz, .render_loop
     ret
 
 Render_Counter::
