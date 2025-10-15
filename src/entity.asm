@@ -1,4 +1,4 @@
-SECTION "Game Variables", WRAM0[$c000]
+SECTION "Game Variables", WRAM0
 
 Player::
     .wPlayerX:          DS 1

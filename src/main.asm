@@ -7,15 +7,15 @@ main::
     call init 
 
 .main_loop:
+    call wait_vblank
     call move_character
     call render_player
     call Update_Bullet_System
-    ; call Render_Bullets
 
     jp .main_loop
 
 init::
-    ;call screen_off
+    call screen_off
 
     call man_entity_init
 
@@ -25,18 +25,16 @@ init::
     call Init_Bullet_System
     call Init_Counter
 
+    call Load_Level1_Tiles
+    call Load_Level1_Map
+    call init_scroll
+    call init_palettes_by_default
+    call clean_OAM
+    call enable_vblank_interrupts
+    call enable_screen
 
-    ;call clean_OAM
-    ;call Load_Level1_Tiles
-    ;call Load_Level1_Map
-    ;call init_palettes_by_default
-    ;call enable_vblank_interrupts
-    ;call enable_screen
+    call screen_on
 
-    ;call load_cowboy_sprites
-
-    ;call screen_on
-    
     call man_entity_alloc
     call man_entity_alloc
     ret

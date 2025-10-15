@@ -152,7 +152,6 @@ Update_Bullet::
     ret
 
 Render_Bullets::
-    call wait_vblank
     ld b, MAX_BULLETS
     ld c, 0  ; c = índice de la bala
 .render_loop:

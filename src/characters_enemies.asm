@@ -25,7 +25,6 @@ init_player::
     ret
 
 render_player::
-    call wait_vblank
     ld hl, OAM_PLAYER
     ld a, [Player.wPlayerY]
     ld [hl+], a
