@@ -48,7 +48,8 @@ init::
     ret
 
 testeo::
-    ld hl, PHYS_BASE
+    ld h, CMP_PHYS_H
+    ld l, e 
     set 7, [hl]
     ret
 

@@ -78,7 +78,7 @@ man_entity_for_each::
 	ret z 
 
 	bit E_BIT_SENTINEL, a 
-	ret nz
+	jr nz, .process_and_exit
 
 	push af
 	push de
@@ -96,6 +96,18 @@ man_entity_for_each::
 	ld e, a 
 	
 	jr .loop
+
+	.process_and_exit:
+	push af
+	push de
+	push hl
+	call helper_call_hl
+	pop hl
+	pop de
+	pop af	
+
+	.exit
+		ret
 
 
 helper_call_hl::
