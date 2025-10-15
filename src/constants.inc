@@ -1,4 +1,9 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; INTERRUPTS HANDLER CALLERS ADDRESSES
+;;;;;;;;;;;;;;;;;;;;;;;;;;
+DEF INTERRUPT_VBLANK         EQU $40
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; DIRECCIONES RAM
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
 DEF VRAM0_START         EQU $8000
@@ -39,6 +44,7 @@ DEF rSTAT   EQU $FF41
 DEF rSCY    EQU $FF42
 DEF rSCX    EQU $FF43
 DEF rLY     EQU $FF44
+DEF rDMA	EQU $FF46
 DEF rBGP    EQU $FF47
 DEF rOBP0   EQU $FF48
 DEF rOBP1   EQU $FF49

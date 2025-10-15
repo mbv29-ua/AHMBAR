@@ -15,7 +15,7 @@ Update_Bullet_System::
     jr nz, .skip
     .render:
     call Update_Bullet
-    call Render_Bullets
+    ;call Render_Bullets
     .skip:
     ret
 

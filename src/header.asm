@@ -1,5 +1,5 @@
-SECTION "VBlank Interrupt", ROM0[$40]
-    reti
+;SECTION "VBlank Interrupt", ROM0[$40]
+;    reti
 
 SECTION "LCD Interrupt", ROM0[$48]
     reti

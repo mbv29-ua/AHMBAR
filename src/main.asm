@@ -7,10 +7,9 @@ main::
     call init 
 
 .main_loop:
-
     call wait_vblank
     call move_character
-    call render_player
+    ;call render_player
     call Update_Bullet_System
 
 
@@ -19,6 +18,7 @@ main::
 init::
     call screen_off
 
+    call copy_DMA_routine
     call man_entity_init
 
     call load_cowboy_sprites
