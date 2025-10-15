@@ -29,6 +29,33 @@ memcpy_65536:
     jr nz , memcpy_65536
     ret
 
+;; INPUT
+;;  HL: SOURCE
+;;  BC: COUNTER
+;;   A: VALUE TO SET
+;; WARNING: DESTROYS HL AND BC
+
+memset_65536::
+    ld d, a
+    .loop:
+        ld a, d 
+        ld [hl+], a
+        dec bc
+        ld a, b 
+        or c 
+        jr nz, .loop
+    ret 
+
+; INPUT
+;  HL: DESTINY
+;  BC: COUNTER
+; WARNING: DESTROY HL AND BC
+
+memreset_65536::
+    xor a 
+    call memset_65536
+    ret
+
 ; Input
 ;  hl -> destiny
 ;  b -> counter
