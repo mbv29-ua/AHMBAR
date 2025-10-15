@@ -25,9 +25,12 @@ init::
     call Init_Bullet_System
     call Init_Counter
 
+    ; Inicializar y cargar nivel inicial
+    call Init_Level_System
     call Load_Level1_Tiles
-    call Load_Level1_Map
+    call Load_Current_Level
     call init_scroll
+    call init_player_position
     call init_palettes_by_default
     call clean_OAM
     call enable_vblank_interrupts

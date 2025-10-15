@@ -4,8 +4,8 @@
 
 INCLUDE "entities/entities.inc"
 
-SECTION "Components - Sprites", WRAM0[SPR_BASE]
-component_sprite: DS CMP_SPRITES_TOTALBYTES
+; SECTION "Components - Sprites", WRAM0[SPR_BASE]
+; component_sprite: DS CMP_SPRITES_TOTALBYTES
 
 SECTION "Components - Physics", WRAM0[PHYS_BASE]
 component_physics: DS CMP_PHYSICS_TOTALBYTES

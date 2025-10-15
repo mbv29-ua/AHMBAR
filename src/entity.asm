@@ -1,13 +1,17 @@
-SECTION "Game Variables", WRAM0
+SECTION "Game Variables", WRAM0[$C000] ; --> provisional, coment entities_components
 
 Player::
-    .wPlayerX:          DS 1
     .wPlayerY:          DS 1
+    .wPlayerX:          DS 1
+    .tile:              DS 1
+    .wDrawAttributes:   DS 1
 
-; Array de balas (MAX_BULLETS = 3)
-wBulletX::         DS 3
-wBulletY::         DS 3
-wBulletActive::    DS 3
+Bullet::
+    .wBulletY:         DS 1
+    .wBulletX:         DS 1
+    .tile:             DS 1
+    .wDrawAttributes:  DS 1
+    .wBulletDirection: DS 1  ; 0 = izquierda, 1 = derecha
 
 wCounterValue::     DS 1
 wCounterReload::    DS 1
@@ -18,4 +22,8 @@ wJoypadPressed::    DS 1
 
 wCurrentLevel::     DS 1
 
-cooldDown:          DS 1
+coolDown::          DS 1
+
+SECTION "Player Variables", WRAM0
+wPlayerDirection::  DS 1  ; 0 = izquierda, 1 = derecha
+wBulletActive::     DS 1

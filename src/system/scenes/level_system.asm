@@ -33,10 +33,8 @@ Load_Current_Level::
 
 ; Avanza al siguiente nivel
 Next_Level::
-    ; Esperar VBlank antes de modificar VRAM
-    ; Apagar pantalla durante VBlank
-    xor a
-    ldh [rLCDC], a
+    ; Apagar pantalla para poder escribir en VRAM
+    call screen_off
 
     ; Incrementar nivel
     ld a, [wCurrentLevel]
@@ -48,24 +46,54 @@ Next_Level::
 .set_level:
     ld [wCurrentLevel], a
 
-    ; Limpiar VRAM del mapa anterior
-    ; call Clear_Map_Area
+    ; Recargar tiles (todos los niveles usan los mismos tiles)
+    call Load_Level1_Tiles
 
     ; Cargar nuevo nivel
-    ; call Load_Current_Level
+    call Load_Current_Level
 
-    ; Reposicionar jugador al inicio
-    ld a, PLAYER_START_X
-    ld [Player.wPlayerX], a
-    ld a, PLAYER_START_Y
-    ld [Player.wPlayerY], a
+    ; Reinicializar scroll según nivel
+    call init_scroll
+
+    ; Reposicionar jugador según nivel
+    call init_player_position
 
     ; Reiniciar sistema de balas
-    ; call Init_Bullet_System
+    call Init_Bullet_System
 
-    ; Encender pantalla con sprites habilitados
-    ld a, %10010011
-    ldh [rLCDC], a
+    ; Encender pantalla
+    call screen_on
+    ret
+
+; Inicializa la posición del jugador según el nivel actual
+init_player_position::
+    ld a, [wCurrentLevel]
+    cp 1
+    jr z, .level1_position
+    cp 2
+    jr z, .level2_position
+    cp 3
+    jr z, .level3_position
+    ; Por defecto, nivel 1
+.level1_position:
+    ld a, LEVEL1_PLAYER_X
+    ld [Player.wPlayerX], a
+    ld a, LEVEL1_PLAYER_Y
+    ld [Player.wPlayerY], a
+    ret
+
+.level2_position:
+    ld a, LEVEL2_PLAYER_X
+    ld [Player.wPlayerX], a
+    ld a, LEVEL2_PLAYER_Y
+    ld [Player.wPlayerY], a
+    ret
+
+.level3_position:
+    ld a, LEVEL3_PLAYER_X
+    ld [Player.wPlayerX], a
+    ld a, LEVEL3_PLAYER_Y
+    ld [Player.wPlayerY], a
     ret
 
 

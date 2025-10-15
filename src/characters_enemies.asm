@@ -22,6 +22,13 @@ init_player::
     ld [Player.wPlayerX], a
     ld a, PLAYER_START_Y
     ld [Player.wPlayerY], a
+    ld a, 1  ; 1 = derecha (dirección inicial)
+    ld [wPlayerDirection], a
+    ld [Player.tile], a
+    ld a, $10
+    ld [Player.wDrawAttributes], a
+    xor a
+    ld [hl], a
     ret
 
 render_player::

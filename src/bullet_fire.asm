@@ -4,11 +4,11 @@ INCLUDE "constants.inc"
 SECTION "Bullet System", ROM0
 
 Update_Bullet_System::
-    ld a, [cooldDown]
+    ld a, [coolDown]
     cp a, 0
     jr z, .no_cooldown
     dec a
-    ld [cooldDown], a
+    ld [coolDown], a
     jr .render
     .no_cooldown:
     call check_button_input
@@ -61,9 +61,9 @@ check_counter::
 
 Fire_Bullet::
     ; Verificar cooldown: si != 0, retornar (estamos en cooldown)
-    ld a, [cooldDown]
+    ld a, [coolDown]
     cp a, 0
-    ret nz  ; ARREGLADO: era 'ret z', ahora es 'ret nz'
+    ret nz
 
     ; Buscar una bala libre en el array
     ld hl, wBulletActive
@@ -81,7 +81,7 @@ Fire_Bullet::
 .found_free:
     ; d contiene el índice de la bala libre
     ; Configurar posición X
-    ld hl, wBulletX
+    ld hl, Bullet.wBulletX
     ld e, d
     add hl, de
     ld a, [Player.wPlayerX]
@@ -89,10 +89,23 @@ Fire_Bullet::
     ld [hl], a
 
     ; Configurar posición Y
-    ld hl, wBulletY
+    ld hl, Bullet.wBulletY
     ld e, d
     add hl, de
     ld a, [Player.wPlayerY]
+    ld [hl], a
+
+    ld a, TILE_BULLET
+    ld [Bullet.tile], a
+
+    xor a
+    ld [Bullet.wDrawAttributes], a
+
+    ; Configurar dirección de la bala (copiar del jugador)
+    ld hl, Bullet.wBulletDirection
+    ld e, d
+    add hl, de
+    ld a, [wPlayerDirection]
     ld [hl], a
 
     ; Activar la bala
@@ -108,7 +121,7 @@ Fire_Bullet::
 
     ; Activar cooldown de 60 frames (~1 segundo)
     ld a, 60
-    ld [cooldDown], a
+    ld [coolDown], a
     ret
 
 Update_Bullet::
@@ -125,18 +138,40 @@ Update_Bullet::
     cp BULLET_INACTIVE
     jr z, .next_bullet
 
-    ; Actualizar posición X
-    ld hl, wBulletX
+    ; Obtener dirección de la bala
+    ld hl, Bullet.wBulletDirection
+    ld b, 0
+    add hl, bc
+    ld a, [hl]
+    cp 1
+    jr z, .move_right
+
+.move_left:
+    ; Mover a la izquierda (decrementar X)
+    ld hl, Bullet.wBulletX
+    ld b, 0
+    add hl, bc
+    ld a, [hl]
+    sub BULLET_SPEED
+    ld [hl], a
+    ; Verificar si salió por la izquierda (X < 0 en unsigned = X >= 240)
+    cp 240
+    jr nc, .deactivate
+    jr .next_bullet
+
+.move_right:
+    ; Mover a la derecha (incrementar X)
+    ld hl, Bullet.wBulletX
     ld b, 0
     add hl, bc
     ld a, [hl]
     add BULLET_SPEED
     ld [hl], a
-
-    ; Verificar si salió de pantalla
+    ; Verificar si salió por la derecha
     cp SCREEN_RIGHT_EDGE
     jr c, .next_bullet
 
+.deactivate:
     ; Desactivar la bala
     ld hl, wBulletActive
     ld b, 0
@@ -176,7 +211,7 @@ Render_Bullets::
 
     ; Renderizar Y
     push hl
-    ld hl, wBulletY
+    ld hl, Bullet.wBulletY
     ld b, 0
     add hl, bc
     ld a, [hl]
@@ -185,7 +220,7 @@ Render_Bullets::
 
     ; Renderizar X
     push hl
-    ld hl, wBulletX
+    ld hl, Bullet.wBulletX
     ld b, 0
     add hl, bc
     ld a, [hl]

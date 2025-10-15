@@ -54,11 +54,43 @@ enable_screen::
     ret
 
 init_scroll::
-    ; Inicializar scroll para empezar arriba a la izquierda
-    ; SCX = 0 (izquierda)
-    xor a
+    ; Establecer scroll según el nivel actual
+    ld a, [wCurrentLevel]
+    cp 1
+    jr z, .level1_scroll
+    cp 2
+    jr z, .level2_scroll
+    cp 3
+    jr z, .level3_scroll
+    ; Por defecto, nivel 1
+.level1_scroll:
+    ld a, LEVEL1_SCX
     ldh [rSCX], a
-
-    ; SCY = 0 (arriba)
+    ld a, LEVEL1_SCY
     ldh [rSCY], a
     ret
+
+.level2_scroll:
+    ld a, LEVEL2_SCX
+    ldh [rSCX], a
+    ld a, LEVEL2_SCY
+    ldh [rSCY], a
+    ret
+
+.level3_scroll:
+    ld a, LEVEL3_SCX
+    ldh [rSCX], a
+    ld a, LEVEL3_SCY
+    ldh [rSCY], a
+    ret
+
+
+;;;;; No hacer caso aparece asi en el libro! Ejemplo de rutina para actualizar scroll X
+;;;;; (no se usa en este juego)
+;UpdateSample:
+;    halt
+;    ld a, [rSCX]
+;    inc a
+;    ldh [rSCX], a
+;
+;    ret

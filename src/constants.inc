@@ -77,6 +77,17 @@ DEF PLAYER_START_Y      EQU 72
 DEF PLAYER_SPEED        EQU 2
 DEF PLAYER_JUMP_POWER   EQU 32
 
+; Posiciones iniciales del jugador por nivel
+; Nivel 1: Tile en $9BA1 (X=1, Y=29) con scroll (0, 112)
+DEF LEVEL1_PLAYER_X     EQU 16
+DEF LEVEL1_PLAYER_Y     EQU 136
+; Nivel 2: Tile en $98C4 (X=4, Y=6) con scroll (0, 0)
+DEF LEVEL2_PLAYER_X     EQU 40
+DEF LEVEL2_PLAYER_Y     EQU 64
+; Nivel 3: Por defecto --> no esta hecho mirar de momento
+DEF LEVEL3_PLAYER_X     EQU 80
+DEF LEVEL3_PLAYER_Y     EQU 72
+
 ; Posición del objetivo en píxeles OAM (tile en columna 16, fila 9 - centro del mapa)
 ; Columna 16: 16*8 = 128 píxeles de pantalla + 8 offset OAM = 136
 ; Fila 9: 9*8 = 72 píxeles de pantalla + 16 offset OAM = 88
@@ -93,5 +104,16 @@ DEF BULLET_ACTIVE       EQU 1
 DEF COUNTER_START       EQU 5
 DEF COUNTER_X_POS       EQU 152
 DEF COUNTER_Y_POS       EQU 16
+
+; Scroll inicial para cada nivel
+; Nivel 1: abajo-izquierda (SCX=0, SCY=112)
+DEF LEVEL1_SCX          EQU 0
+DEF LEVEL1_SCY          EQU 112
+; Nivel 2: arriba-izquierda (SCX=0, SCY=0)
+DEF LEVEL2_SCX          EQU 0
+DEF LEVEL2_SCY          EQU 0
+; Nivel 3: abajo-izquierda (SCX=0, SCY=112)
+DEF LEVEL3_SCX          EQU 0
+DEF LEVEL3_SCY          EQU 112
 
 
