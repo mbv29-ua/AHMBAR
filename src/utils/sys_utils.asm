@@ -46,5 +46,5 @@ enable_vblank_interrupts::
 enable_screen::
     ; LCDC: LCD On, BG Tile Data $8000, 
     ld hl, rLCDC
-    set 0, [hl] ; Bit 0: LCD Enable
+    set 1, [hl] ; Bit 0: LCD Enable
     ret

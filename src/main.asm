@@ -7,12 +7,23 @@ main::
     call init 
 
 .main_loop:
+    call move_character
+    call render_player
+    call Update_Bullet_System
+    ; call Render_Bullets
+
     jp .main_loop
 
 init::
     ;call screen_off
 
     call man_entity_init
+
+    call load_cowboy_sprites
+    call init_player
+    call load_bullet_sprites
+    call Init_Bullet_System
+    call Init_Counter
 
 
     ;call clean_OAM
