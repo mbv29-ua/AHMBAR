@@ -8,8 +8,6 @@ main::
 
 .main_loop:
 
-    call sys_physics_update
-
     call wait_vblank
     call move_character
     call render_player
@@ -47,6 +45,8 @@ init::
     
     ret
 
+
+;; DE aqui a abajo ignorar que lo tengo que mover
 testeo::
     ld h, CMP_PHYS_H
     ld l, e 
