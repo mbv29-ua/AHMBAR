@@ -15,7 +15,7 @@ Update_Bullet_System::
     jr nz, .skip
     .render:
     call Update_Bullet
-    ;call Render_Bullets
+    ; call Render_Bullets
     .skip:
     ret
 
@@ -40,7 +40,7 @@ Init_Bullet_System::
 Init_Counter::
     ld a, COUNTER_START
     ld [wCounterValue], a
-    ld [wCounterReload], a
+    ; ld [wCounterReload], a
     ret
 
 
@@ -54,17 +54,20 @@ check_button_input::
 check_counter::
     ld a, [wCounterValue]
     cp a, 0
-    ld b, a
+    ; ld b, a
     ret z
-    call Fire_Bullet
+    call check_cooldown
     ret
 
-Fire_Bullet::
+check_cooldown::
     ; Verificar cooldown: si != 0, retornar (estamos en cooldown)
     ld a, [coolDown]
     cp a, 0
     ret nz
+    call Fire_Bullet
+    ret
 
+Fire_Bullet::
     ; Buscar una bala libre en el array
     ld hl, wBulletActive
     ld b, MAX_BULLETS
@@ -81,19 +84,17 @@ Fire_Bullet::
 .found_free:
     ; d contiene el índice de la bala libre
     ; Configurar posición X
-    ld hl, Bullet.wBulletX
-    ld e, d
-    add hl, de
+    ; ld e, d
+    ; add hl, de
     ld a, [Player.wPlayerX]
     add 8
-    ld [hl], a
+    ld [Bullet.wBulletX], a
 
     ; Configurar posición Y
-    ld hl, Bullet.wBulletY
-    ld e, d
-    add hl, de
+    ; ld e, d
+    ; add hl, de
     ld a, [Player.wPlayerY]
-    ld [hl], a
+    ld [Bullet.wBulletY], a
 
     ld a, TILE_BULLET
     ld [Bullet.tile], a
@@ -102,18 +103,16 @@ Fire_Bullet::
     ld [Bullet.wDrawAttributes], a
 
     ; Configurar dirección de la bala (copiar del jugador)
-    ld hl, Bullet.wBulletDirection
-    ld e, d
-    add hl, de
+    ; ld e, d
+    ; add hl, de
     ld a, [wPlayerDirection]
-    ld [hl], a
+    ld [Bullet.wBulletDirection], a
 
     ; Activar la bala
-    ld hl, wBulletActive
-    ld e, d
-    add hl, de
-    ld a, BULLET_ACTIVE
-    ld [hl], a
+    ;  e, d
+    ; d hl, de
+    ld a, BULLET_ACTIVE ;; TODO : PASAR DE 1 BYTE A BIT
+    ld [wBulletActive], a
 
     ; Decrementar contador
     ld hl, wCounterValue
@@ -127,30 +126,30 @@ Fire_Bullet::
 Update_Bullet::
     ld b, MAX_BULLETS
     ld c, 0  ; c = índice de la bala
-.update_loop:
-    push bc
+; pdate_loop:
+    ; push bc
 
     ; Verificar si la bala está activa
     ld hl, wBulletActive
-    ld b, 0
-    add hl, bc
-    ld a, [hl]
-    cp BULLET_INACTIVE
+    bit 0, [hl]
+    ; add hl, bc
+    ; ld a, [hl]
+    ; cp BULLET_INACTIVE
     jr z, .next_bullet
 
     ; Obtener dirección de la bala
     ld hl, Bullet.wBulletDirection
-    ld b, 0
-    add hl, bc
-    ld a, [hl]
-    cp 1
-    jr z, .move_right
+    bit 0, [hl]
+    ; ld b, 0
+    ; add hl, bc
+    ; ld a, [hl]
+    jr nz, .move_right
 
 .move_left:
     ; Mover a la izquierda (decrementar X)
-    ld hl, Bullet.wBulletX
-    ld b, 0
-    add hl, bc
+    ld hl, Bullet.wBulletX ; --> b c006
+    ; ld b, 0
+    ; add hl, bc
     ld a, [hl]
     sub BULLET_SPEED
     ld [hl], a
@@ -162,8 +161,8 @@ Update_Bullet::
 .move_right:
     ; Mover a la derecha (incrementar X)
     ld hl, Bullet.wBulletX
-    ld b, 0
-    add hl, bc
+    ; ld b, 0
+    ; add hl, bc
     ld a, [hl]
     add BULLET_SPEED
     ld [hl], a
@@ -174,86 +173,84 @@ Update_Bullet::
 .deactivate:
     ; Desactivar la bala
     ld hl, wBulletActive
-    ld b, 0
-    add hl, bc
+    ; ld b, 0
+    ; add hl, bc
     xor a
     ld [hl], a
 
 .next_bullet:
-    pop bc
-    inc c
-    dec b
-    jr nz, .update_loop
+    ; pop bc
+    ;  nz, .update_loop
     ret
 
-Render_Bullets::
-    ld b, MAX_BULLETS
-    ld c, 0  ; c = índice de la bala
-.render_loop:
-    push bc
-
-    ; Verificar si la bala está activa
-    ld hl, wBulletActive
-    ld b, 0
-    add hl, bc
-    ld a, [hl]
-    cp BULLET_INACTIVE
-    jr z, .hide_bullet
-
-    ; Calcular offset OAM: OAM_BULLET + (índice * 4)
-    ld a, c
-    sla a  ; a = índice * 2
-    sla a  ; a = índice * 4
-    ld hl, OAM_BULLET
-    ld d, 0
-    ld e, a
-    add hl, de
-
-    ; Renderizar Y
-    push hl
-    ld hl, Bullet.wBulletY
-    ld b, 0
-    add hl, bc
-    ld a, [hl]
-    pop hl
-    ld [hl+], a
-
-    ; Renderizar X
-    push hl
-    ld hl, Bullet.wBulletX
-    ld b, 0
-    add hl, bc
-    ld a, [hl]
-    pop hl
-    ld [hl+], a
-
-    ; Tile
-    ld a, TILE_BULLET
-    ld [hl+], a
-
-    ; Atributos
-    xor a
-    ld [hl], a
-    jr .next_render
-
-.hide_bullet:
-    ; Calcular offset OAM y ocultar
-    ld a, c
-    sla a
-    sla a
-    ld hl, OAM_BULLET
-    ld d, 0
-    ld e, a
-    add hl, de
-    xor a
-    ld [hl], a
-
-.next_render:
-    pop bc
-    inc c
-    dec b
-    jr nz, .render_loop
-    ret
+;render_Bullets::
+;   ld b, MAX_BULLETS
+;   ld c, 0  ; c = índice de la bala
+;render_loop:
+;   push bc
+;
+;   ; Verificar si la bala está activa
+;   ld hl, wBulletActive
+;   ld b, 0
+;   add hl, bc
+;   ld a, [hl]
+;   cp BULLET_INACTIVE
+;   jr z, .hide_bullet
+;
+;   ; Calcular offset OAM: OAM_BULLET + (índice * 4)
+;   ld a, c
+;   sla a  ; a = índice * 2
+;   sla a  ; a = índice * 4
+;   ld hl, OAM_BULLET
+;   ld d, 0
+;   ld e, a
+;   add hl, de
+;
+;   ; Renderizar Y
+;   push hl
+;   ld hl, Bullet.wBulletY
+;   ld b, 0
+;   add hl, bc
+;   ld a, [hl]
+;   pop hl
+;   ld [hl+], a
+;
+;   ; Renderizar X
+;   push hl
+;   ld hl, Bullet.wBulletX
+;   ld b, 0
+;   add hl, bc
+;   ld a, [hl]
+;   pop hl
+;   ld [hl+], a
+;
+;   ; Tile
+;   ld a, TILE_BULLET
+;   ld [hl+], a
+;
+;   ; Atributos
+;   xor a
+;   ld [hl], a
+;   jr .next_render
+;
+;hide_bullet:
+;   ; Calcular offset OAM y ocultar
+;   ld a, c
+;   sla a
+;   sla a
+;   ld hl, OAM_BULLET
+;   ld d, 0
+;   ld e, a
+;   add hl, de
+;   xor a
+;   ld [hl], a
+;
+;next_render:
+;   pop bc
+;   inc c
+;   dec b
+;   jr nz, .render_loop
+;   ret
 
 Render_Counter::
     ld a, [wCounterValue]

@@ -24,6 +24,7 @@ init_player::
     ld [Player.wPlayerY], a
     ld a, 1  ; 1 = derecha (dirección inicial)
     ld [wPlayerDirection], a
+    ld a, TILE_COWBOY
     ld [Player.tile], a
     ld a, $10
     ld [Player.wDrawAttributes], a
@@ -31,14 +32,14 @@ init_player::
     ld [hl], a
     ret
 
-render_player::
-    ld hl, OAM_PLAYER
-    ld a, [Player.wPlayerY]
-    ld [hl+], a
-    ld a, [Player.wPlayerX]
-    ld [hl+], a
-    ld a, $10
-    ld [hl+], a
-    xor a
-    ld [hl], a
-    ret
+;render_player::
+;   ld hl, OAM_PLAYER
+;   ld a, [Player.wPlayerY]
+;   ld [hl+], a
+;   ld a, [Player.wPlayerX]
+;   ld [hl+], a
+;   ld a, $10
+;   ld [hl+], a
+;   xor a
+;   ld [hl], a
+;   ret

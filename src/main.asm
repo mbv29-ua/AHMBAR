@@ -44,8 +44,6 @@ init::
     call man_entity_alloc
     call man_entity_alloc
 
-
-    
     ret
 
 
