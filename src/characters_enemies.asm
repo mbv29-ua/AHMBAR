@@ -1,3 +1,4 @@
+INCLUDE "entities/entities.inc"
 INCLUDE "constants.inc"
 
 SECTION "Character Sprites", ROM0
@@ -18,19 +19,34 @@ load_cowboy_sprites::
     ret
 
 init_player::
-    ld a, PLAYER_START_X
-    ld [Player.wPlayerX], a
+    call man_entity_alloc ; Deja en l el indice
+    ld h, CMP_SPRIT_H
+    ; Load sprite atributes
     ld a, PLAYER_START_Y
-    ld [Player.wPlayerY], a
-    ld a, 1  ; 1 = derecha (dirección inicial)
-    ld [wPlayerDirection], a
+    ld [hl+], a
+    ld a, PLAYER_START_X
+    ld [hl+], a
     ld a, TILE_COWBOY
-    ld [Player.tile], a
-    ld a, $10
-    ld [Player.wDrawAttributes], a
+    ld [hl+], a
     xor a
     ld [hl], a
+    ld hl, wPlayerDirection
+    set 0, [hl]
     ret
+
+    ;ld a, PLAYER_START_X
+    ;ld [Player.wPlayerX], a
+    ;ld a, PLAYER_START_Y
+    ;ld [Player.wPlayerY], a
+    ;ld a, 1  ; 1 = derecha (dirección inicial)
+    ;ld [wPlayerDirection], a
+    ;ld a, TILE_COWBOY
+    ;ld [Player.tile], a
+    ;ld a, $10
+    ;ld [Player.wDrawAttributes], a
+    ;xor a
+    ;ld [hl], a
+    ;ret
 
 ;render_player::
 ;   ld hl, OAM_PLAYER

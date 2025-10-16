@@ -8,10 +8,13 @@ main::
 
 .main_loop:
     call wait_vblank
-    call move_character
+    call read_pad
+    ;call move_character
+    call update_character_velocities
+    call update_all_entities_positions
+    call scroll_manager
     ;call render_player
     call Update_Bullet_System
-
 
     jp .main_loop
 
@@ -40,9 +43,9 @@ init::
 
     call screen_on
 
-    call man_entity_alloc
-    call man_entity_alloc
-    call man_entity_alloc
+    ;call man_entity_alloc
+    ;call man_entity_alloc
+    ;call man_entity_alloc
 
     ret
 

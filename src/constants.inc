@@ -1,3 +1,7 @@
+;;; TEMPORARY CONSTANTS
+DEF PLAYER_Y_SPEED EQU 1
+DEF PLAYER_X_SPEED EQU 1
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; INTERRUPTS HANDLER CALLERS ADDRESSES
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
