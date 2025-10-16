@@ -11,6 +11,7 @@ main::
     call read_pad
     ;call move_character
     call update_character_velocities
+    call check_door_collision
     call update_all_entities_positions
     call scroll_manager
     ;call render_player

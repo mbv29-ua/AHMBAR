@@ -107,7 +107,7 @@ scroll_manager::
 .scroll_right
     ; Miramos si ya estamos a la derecha del todo
     ldh a, [rSCX]
-    cp 96
+    cp 96      ;; cambiar
     jr z, .end_scroll_right
 
     ; El personaje en posicion que activa el scroll right
