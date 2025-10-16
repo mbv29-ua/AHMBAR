@@ -86,9 +86,28 @@ Fire_Bullet::
     ; Configurar posición X
     ; ld e, d
     ; add hl, de
+
+    ;; When wPlayerDirection is right (1) 
+    ;; in other case (0) left sub 8
+
+    ;; Prove bit wPlayerDirection bit (lef tor right)    
+    ld a, [wPlayerDirection]
+    cp a, 0
+    jr nz, .fire_right 
+
+.fire_left:
+    ld a, [player.wPlayerX]
+    sub 8
+    ld [Bullet.wBulletX], a
+    ld a, 0
+    jr z, .kip
+    
+
+.fire_right:
     ld a, [Player.wPlayerX]
     add 8
     ld [Bullet.wBulletX], a
+.skip:
 
     ; Configurar posición Y
     ; ld e, d
