@@ -14,8 +14,7 @@ Update_Bullet_System::
     call check_button_input
     jr nz, .skip
     .render:
-    call Update_Bullet
-    ; call Render_Bullets
+    call Update_Bullet    ;; Todo --> quitar gestio del movimiento
     .skip:
     ret
 
@@ -91,23 +90,11 @@ Fire_Bullet::
     ;; in other case (0) left sub 8
 
     ;; Prove bit wPlayerDirection bit (lef tor right)    
-    ld a, [wPlayerDirection]
-    cp a, 0
-    jr nz, .fire_right 
-
-.fire_left:
-    ld a, [player.wPlayerX]
-    sub 8
-    ld [Bullet.wBulletX], a
-    ld a, 0
-    jr z, .kip
-    
-
-.fire_right:
+    ;; TODO: logica de disparo que empiece en la posción correspondiente izda o der
     ld a, [Player.wPlayerX]
     add 8
     ld [Bullet.wBulletX], a
-.skip:
+    ld a, 0
 
     ; Configurar posición Y
     ; ld e, d
@@ -143,6 +130,12 @@ Fire_Bullet::
     ret
 
 Update_Bullet::
+    ;; call
+    ;; call
+    ;; call
+    ret
+
+
     ld b, MAX_BULLETS
     ld c, 0  ; c = índice de la bala
 ; pdate_loop:
