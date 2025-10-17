@@ -94,3 +94,26 @@ init_scroll::
 ;    ldh [rSCX], a
 ;
 ;    ret
+
+
+
+
+wait_a_frame::
+    ld hl, rLY
+    ld a, 0
+    .loop1
+        cp [hl]
+        jr nz, .loop1
+    Ld a, START_VBLANK
+    .loop2
+        cp [hl]
+        jr nz, .loop2
+    ret
+
+
+load_fonts::
+    ld hl, fonts
+    ld de, VRAM0_START + CHARMAP_START * TILE_SIZE
+    ld bc, CHARMAP_SIZE * TILE_SIZE 
+    call memcpy_65536
+    ret
