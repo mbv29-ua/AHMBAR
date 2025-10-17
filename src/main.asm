@@ -4,6 +4,7 @@ INCLUDE "entities/entities.inc"
 SECTION "Entry Point", ROM0[$150]
 
 main::
+    call scene_title_screen
     call init 
 
 .main_loop:

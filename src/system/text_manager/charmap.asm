@@ -87,7 +87,7 @@ DB "89 ", ENDTEXT
 
 
 credits::
-DB "A game by", ENDLINE
+DB "A game by the", ENDLINE
 DB "Hernandez", ENDLINE
 DB "Mendivil", ENDLINE
 DB "Beltra", ENDLINE

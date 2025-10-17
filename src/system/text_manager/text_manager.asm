@@ -39,7 +39,6 @@ write_line::
 			call wait_a_frame
 			call wait_a_frame
 			call wait_a_frame
-			call wait_a_frame
 		.write_faster:
 		call wait_a_frame
 		pop hl
