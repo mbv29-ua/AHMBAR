@@ -32,4 +32,7 @@ init_player::
     ld [hl], a
     ld hl, wPlayerDirection
     set 0, [hl]
+
+    ld h, CMP_PHYS_H
+    set PHY_FLAG_GROUNDED, [hl]
     ret

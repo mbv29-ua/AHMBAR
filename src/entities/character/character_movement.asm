@@ -11,6 +11,36 @@ update_character_velocities::
     ld h, CMP_PHYS_H
     ld l, 0
 
+.handle_jump:
+    bit BUTTON_A, a 
+    jr z, .movement
+    ;; ------ Comprobamos flags ------
+    ld a, l 
+    add PHY_FLAGS
+    ld l, a 
+    ld a, [hl]
+
+    bit PHY_FLAG_GROUNDED, a ;; SI NO ESTA EN EL SUELO NO SALTA
+    jr z, .movement
+    bit PHY_FLAG_JUMPING, a ;; SI YA ESTA SALTANDO NO SALTAR
+    jr nz, .movement
+
+    ld h, CMP_PHYS_H
+    ld l, 0
+    ld [hl], -PLAYER_JUMP_SPEED
+
+    ;; actualizamos flags si salto
+    ld a, l 
+    add PHY_FLAGS
+    ld l, a 
+
+    ld a, [hl]
+    res PHY_FLAG_GROUNDED, a ; ya no está en el suelo
+    set PHY_FLAG_JUMPING, a  ; ahora está saltando   
+
+    jr .next
+
+.movement:
 ; Movimiento ABAJO y ABAJO
     ld [hl], 0 ; reiniciamos
     

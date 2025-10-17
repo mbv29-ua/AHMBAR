@@ -91,8 +91,23 @@ DEF E_BIT_FREE		EQU 6 ; 1 =  USED,  0 = FREE
 ; =============================================================
 
 
+; =============================================================
+; FLAGS DE FISICAS
+; =============================================================
+; --- Bits en PHY_FLAGS ---
+DEF PHY_FLAG_GROUNDED EQU 7    ; 1 = ESTA EN SUELO 
+DEF PHY_FLAG_JUMPING  EQU 6    ; 1 = ESTA SALTANDO
+
+
+
 DEF ENTITY_CMP_SENTINEL 	EQU $FF
 
+; =============================================================
+; GRAVEDAD ESTO MOVERLO
+; =============================================================
+
+DEF GRAVITY 	EQU 1
+; =============================================================
 
 
 DEF CMP_SPRITES_TOTALBYTES = NUM_ENTITIES * SPR_SIZE
