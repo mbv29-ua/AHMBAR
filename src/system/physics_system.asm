@@ -13,7 +13,7 @@ update_entity_position::
 	ld l, e 
 
 	;; HACER CONTADOR PARA SKIPEAR FRAMES
-	call Delay60Cycles
+	;call Delay60Cycles
 
 	;; ========== APLICAMOS GRAVEDAD ==========
 
