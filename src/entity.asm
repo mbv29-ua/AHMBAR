@@ -16,10 +16,6 @@ Bullet::
 wCounterValue::     DS 1
 wCounterReload::    DS 1
 
-wJoypadCurrent::    DS 1
-wJoypadPrevious::   DS 1
-wJoypadPressed::    DS 1
-
 wCurrentLevel::     DS 1
 
 coolDown::          DS 1

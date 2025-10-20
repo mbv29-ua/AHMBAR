@@ -44,6 +44,8 @@ init::
     call enable_vblank_interrupts
     call enable_screen
 
+    call init_enemigos_prueba
+
     call screen_on
 
     ;call man_entity_alloc
