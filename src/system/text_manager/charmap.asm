@@ -1,5 +1,4 @@
-; Provisional, mover donde toque
-DEF CHARMAP_SIZE EQU (198-(128-1))
+include "constants.inc"
 
 SECTION "Charmap", ROM0
 
@@ -79,7 +78,18 @@ CHARMAP " ", 198
 
 ; Esto debera estar en otro fichero hasta que se elimine -> fichero de textos
 test_text:
-DB "ABCDEFGHYJKLMNÑOP", 10
-DB "QRSTUVWXYZabcdefg", 10
-DB "hijklmnñopqrstuvw", 10
-DB "xyz¡!¿?.,", 0
+DB "ABCDEFGHYJKLMNÑOP", ENDLINE
+DB "QRSTUVWXYZabcdefg", ENDLINE
+DB "hijklmnñopqrstuvw", ENDLINE
+DB "xyz¡!¿?.,01234567", ENDLINE
+DB "89 ", ENDTEXT
+
+
+
+credits::
+DB "A game by the", ENDLINE
+DB "Hernandez", ENDLINE
+DB "Mendivil", ENDLINE
+DB "Beltra", ENDLINE
+DB "Automatic", ENDLINE
+DB "Reasoning Team", ENDTEXT

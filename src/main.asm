@@ -4,6 +4,7 @@ INCLUDE "entities/entities.inc"
 SECTION "Entry Point", ROM0[$150]
 
 main::
+    call scene_title_screen
     call init 
 
 .main_loop:
@@ -13,6 +14,7 @@ main::
     call update_character_velocities
     call check_door_collision
     call update_all_entities_positions
+    call check_door_collision
     call scroll_manager
     ;call render_player
     call Update_Bullet_System
