@@ -133,7 +133,7 @@ Update_Bullet::
     ;; call
     ;; call
     ;; call
-    ret
+    ;ret
 
 
     ld b, MAX_BULLETS

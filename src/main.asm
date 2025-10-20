@@ -50,7 +50,7 @@ init::
     ;call man_entity_alloc
     ;call man_entity_alloc
 
-    ;ret
+    ret
 
 
 ;; DE aqui a abajo ignorar que lo tengo que mover
