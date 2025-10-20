@@ -14,7 +14,6 @@ main::
     call update_character_velocities
     call check_door_collision
     call update_all_entities_positions
-    call check_door_collision
     call scroll_manager
     ;call render_player
     call Update_Bullet_System

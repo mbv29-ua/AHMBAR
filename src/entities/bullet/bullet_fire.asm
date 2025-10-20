@@ -47,7 +47,8 @@ check_button_input::
     ld a, [PRESSED_BUTTONS]
     bit BUTTON_B, a
     ret z
-    call check_counter
+    ;call check_counter
+    call init_bullet
     ret
 
 check_counter::
@@ -91,29 +92,8 @@ Fire_Bullet::
 
     ;; Prove bit wPlayerDirection bit (lef tor right)    
     ;; TODO: logica de disparo que empiece en la posción correspondiente izda o der
-    ld a, [Player.wPlayerX]
-    add 8
-    ld [Bullet.wBulletX], a
-    ld a, 0
-
-    ; Configurar posición Y
-    ; ld e, d
-    ; add hl, de
-    ld a, [Player.wPlayerY]
-    ld [Bullet.wBulletY], a
-
-    ld a, TILE_BULLET
-    ld [Bullet.tile], a
-
-    xor a
-    ld [Bullet.wDrawAttributes], a
-
-    ; Configurar dirección de la bala (copiar del jugador)
-    ; ld e, d
-    ; add hl, de
-    ld a, [wPlayerDirection]
-    ld [Bullet.wBulletDirection], a
-
+    call init_bullet
+    
     ; Activar la bala
     ;  e, d
     ; d hl, de
@@ -149,39 +129,7 @@ Update_Bullet::
     ; cp BULLET_INACTIVE
     jr z, .next_bullet
 
-    ; Obtener dirección de la bala
-    ld hl, Bullet.wBulletDirection
-    bit 0, [hl]
-    ; ld b, 0
-    ; add hl, bc
-    ; ld a, [hl]
-    jr nz, .move_right
-
-.move_left:
-    ; Mover a la izquierda (decrementar X)
-    ld hl, Bullet.wBulletX ; --> b c006
-    ; ld b, 0
-    ; add hl, bc
-    ld a, [hl]
-    sub BULLET_SPEED
-    ld [hl], a
-    ; Verificar si salió por la izquierda (X < 0 en unsigned = X >= 240)
-    cp 240
-    jr nc, .deactivate
-    jr .next_bullet
-
-.move_right:
-    ; Mover a la derecha (incrementar X)
-    ld hl, Bullet.wBulletX
-    ; ld b, 0
-    ; add hl, bc
-    ld a, [hl]
-    add BULLET_SPEED
-    ld [hl], a
-    ; Verificar si salió por la derecha
-    cp SCREEN_RIGHT_EDGE
-    jr c, .next_bullet
-
+    
 .deactivate:
     ; Desactivar la bala
     ld hl, wBulletActive

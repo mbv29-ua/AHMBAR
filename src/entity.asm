@@ -18,8 +18,8 @@ wCounterReload::    DS 1
 
 wCurrentLevel::     DS 1
 
-coolDown::          DS 1
 
-SECTION "Player Variables", WRAM0
+SECTION "Player Variables", WRAM0[$CE00]
 wPlayerDirection::  DS 1  ; 0 = izquierda, 1 = derecha
 wBulletActive::     DS 1
+coolDown::          DS 1
