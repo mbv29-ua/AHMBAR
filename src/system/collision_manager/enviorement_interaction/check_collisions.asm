@@ -1,13 +1,19 @@
-include "constants.inc"
+INCLUDE "constants.inc"
+INCLUDE "system/collision_manager/tile_properties.inc"
 
-SECTION "Collions", ROM0
+SECTION "Collisions", ROM0
 
 
-; Verifica si el jugador está tocando un tile de puerta
-
-;; TODO : split code 2 parts 1. calculate player position     2. tile position
-check_door_collision::
-    ; Calcular posición del jugador en el tilemap
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; get_tile_at_player_position
+;;; Calculates which tile the player is standing on
+;;;
+;;; Output:
+;;;   A = Tile ID at player position
+;;;   HL = Address in tilemap ($9800 + offset)
+;;; Destroys: BC
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+get_tile_at_player_position::
     ; Tile X = (Player.wPlayerX + SCX - 8) / 8
     ldh a, [rSCX]
     ld b, a
@@ -31,7 +37,6 @@ check_door_collision::
     ld b, a  ; b = Tile Y
 
     ; Calcular offset en tilemap: Tile Y * 32 + Tile X
-    ; Primero b * 32ñ
     ld a, b
     sla a  ; * 2
     sla a  ; * 4
@@ -48,19 +53,59 @@ check_door_collision::
 
     ; Leer el tile en esa posición
     ld a, [hl]
+    ret
 
-    ; Verificar si es uno de los tiles de puerta (0x88, 0x89, 0x8A, 0x8B)
-    cp $88
-    jr z, .is_door
-    cp $89
-    jr z, .is_door
-    cp $8A
-    jr z, .is_door
-    cp $8B
-    jr z, .is_door
-    ret  ; No es puerta, retornar
 
-.is_door:
-    ; Es una puerta, cambiar de nivel
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; check_door_collision
+;;; Checks if player is touching a door tile
+;;; and triggers level transition if true
+;;;
+;;; Destroys: A, BC, HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+check_door_collision::
+    call get_tile_at_player_position  ; A = tile ID, HL = tilemap address
+    call is_tile_door
+    ret z  ; Not a door, return
+
+    ; Is a door, change level
     call Next_Level
+    ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; check_deadly_collision
+;;; Checks if player is touching a deadly tile
+;;; (spikes, etc.) and handles player death
+;;;
+;;; Destroys: A, BC, HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+check_deadly_collision::
+    call get_tile_at_player_position  ; A = tile ID
+    call is_tile_deadly
+    ret z  ; Not deadly, return
+
+    ; Is deadly, handle player death
+    ; TODO: Implement player death/respawn logic
+    ; call reset_player
+    ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; check_collectible_collision
+;;; Checks if player is touching a collectible tile
+;;; (hearts, etc.) and collects it
+;;;
+;;; Destroys: A, BC, HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+check_collectible_collision::
+    call get_tile_at_player_position  ; A = tile ID, HL = tilemap address
+    call is_tile_collectible
+    ret z  ; Not collectible, return
+
+    ; Is collectible
+    ; TODO: Add score/health/etc.
+    ; Remove tile from map (replace with empty)
+    ld a, $A0  ; Empty tile
+    ld [hl], a
     ret
