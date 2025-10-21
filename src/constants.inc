@@ -110,9 +110,9 @@ DEF PLAYER_SPEED        EQU 2
 DEF PLAYER_JUMP_POWER   EQU 32
 
 ; Posiciones iniciales del jugador por nivel
-; Nivel 1: Tile en $9BA1 (X=1, Y=29) con scroll (0, 112)
+; Nivel 1: Tile en $9BC1 (X=1, Y=30/0x1E) con scroll (0, 112)
 DEF LEVEL1_PLAYER_X     EQU 16
-DEF LEVEL1_PLAYER_Y     EQU 136
+DEF LEVEL1_PLAYER_Y     EQU 144
 ; Nivel 2: Tile en $98C4 (X=4, Y=6) con scroll (0, 0)
 DEF LEVEL2_PLAYER_X     EQU 40
 DEF LEVEL2_PLAYER_Y     EQU 64
