@@ -10,13 +10,14 @@ main::
 .main_loop:
     call wait_vblank
     call read_pad
-    ;call move_character
+    ; call move_character
     call update_character_velocities
     call check_door_collision
     call update_all_entities_positions
+    call clamp_player_position       ; Limitar posición del jugador a los bordes del mapa
     call scroll_manager
-    ;call render_player
-    call Update_Bullet_System
+    ; call render_player
+    ; call Update_Bullet_System
 
     jp .main_loop
 
@@ -43,7 +44,7 @@ init::
     call enable_vblank_interrupts
     call enable_screen
 
-    call init_enemigos_prueba
+    ; call init_enemigos_prueba   --> Descomentar (Debug)
 
     call screen_on
 

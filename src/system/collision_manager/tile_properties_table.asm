@@ -1,4 +1,4 @@
-INCLUDE "system/collision_manager/tile_properties.inc"
+INCLUDE "tile_properties.inc"
 
 SECTION "Tile Properties Table", ROM0
 
@@ -48,17 +48,17 @@ tile_properties_table::
     ; 0x20-0x7F: Reserved/empty
     DS 96, TILE_PROP_EMPTY
 
-    ; 0x80-0x83: Ground/platform tiles (solid)
-    DB TILE_PROP_SOLID      ; 0x80: Ground block
-    DB TILE_PROP_SOLID      ; 0x81: Ground block variant
-    DB TILE_PROP_SOLID      ; 0x82
-    DB TILE_PROP_SOLID      ; 0x83
+    ; 0x80-0x81: ONLY SOLID TILES (bricks/blocks)
+    DB TILE_PROP_SOLID      ; 0x80: Brick block (SOLID)
+    DB TILE_PROP_SOLID      ; 0x81: Brick block variant (SOLID)
 
-    ; 0x84-0x87: Platform/decoration tiles (solid)
-    DB TILE_PROP_SOLID      ; 0x84
-    DB TILE_PROP_SOLID      ; 0x85
-    DB TILE_PROP_SOLID      ; 0x86
-    DB TILE_PROP_SOLID      ; 0x87
+    ; 0x82-0x87: Empty (not solid)
+    DB TILE_PROP_EMPTY      ; 0x82
+    DB TILE_PROP_EMPTY      ; 0x83
+    DB TILE_PROP_EMPTY      ; 0x84
+    DB TILE_PROP_EMPTY      ; 0x85
+    DB TILE_PROP_EMPTY      ; 0x86
+    DB TILE_PROP_EMPTY      ; 0x87
 
     ; 0x88-0x8B: Door tiles
     DB TILE_PROP_DOOR       ; 0x88: Door top-left
@@ -72,14 +72,13 @@ tile_properties_table::
     DB TILE_PROP_EMPTY      ; 0x8E
     DB TILE_PROP_EMPTY      ; 0x8F
 
-    ; 0x90-0x95: Hazards or special blocks
-    ; TODO: Adjust these based on actual tile graphics
-    DB TILE_PROP_SOLID      ; 0x90: Assuming solid block
-    DB TILE_PROP_SOLID      ; 0x91: Assuming solid block
+    ; 0x90-0x95: NOT solid (empty/decorative)
+    DB TILE_PROP_EMPTY      ; 0x90: Not solid
+    DB TILE_PROP_EMPTY      ; 0x91: Not solid
     DB TILE_PROP_EMPTY      ; 0x92
     DB TILE_PROP_EMPTY      ; 0x93
-    DB TILE_PROP_SOLID      ; 0x94: Assuming solid block
-    DB TILE_PROP_SOLID      ; 0x95: Assuming solid block
+    DB TILE_PROP_EMPTY      ; 0x94: Not solid
+    DB TILE_PROP_EMPTY      ; 0x95: Not solid
 
     ; 0x96-0x9F: Reserved
     DS 10, TILE_PROP_EMPTY
@@ -90,8 +89,8 @@ tile_properties_table::
     ; 0xA1-0xDA: Reserved
     DS 58, TILE_PROP_EMPTY
 
-    ; 0xDB: Solid fill tile (very common in your maps)
-    DB TILE_PROP_SOLID      ; 0xDB: Solid ground
+    ; 0xDB: Brick/solid fill tile (very common in maps - the visible brick blocks)
+    DB TILE_PROP_SOLID      ; 0xDB: Solid brick block
 
     ; 0xDC-0xFF: Reserved
     DS 36, TILE_PROP_EMPTY

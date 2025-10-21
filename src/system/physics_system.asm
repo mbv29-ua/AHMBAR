@@ -17,10 +17,9 @@ update_entity_position::
 	;call Delay60Cycles
 
 	;; ========== APLICAMOS GRAVEDAD ==========
-
 	ld a, [hl]
 	add GRAVITY
-	ld [hl], a 
+	ld [hl], a
 	ld b, a 
 		
 

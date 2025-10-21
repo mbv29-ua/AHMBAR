@@ -1,4 +1,4 @@
-INCLUDE "system/collision_manager/tile_properties.inc"
+INCLUDE "tile_properties.inc"
 
 SECTION "Tile Properties Functions", ROM0
 
@@ -14,8 +14,11 @@ SECTION "Tile Properties Functions", ROM0
 ;;; Destroys: HL
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 get_tile_properties::
+    ; Add tile ID as offset to table base address
     ld hl, tile_properties_table
-    ld l, a         ; Use tile ID as offset (HL = $XX00 + tile_id)
+    ld d, 0
+    ld e, a         ; DE = tile ID (0-255)
+    add hl, de      ; HL = table base + tile ID
     ld a, [hl]      ; Load property byte
     or a            ; Set Z flag if properties == 0
     ret

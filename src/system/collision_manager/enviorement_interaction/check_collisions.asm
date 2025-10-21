@@ -1,5 +1,5 @@
 INCLUDE "constants.inc"
-INCLUDE "system/collision_manager/tile_properties.inc"
+INCLUDE "tile_properties.inc"
 
 SECTION "Collisions", ROM0
 
