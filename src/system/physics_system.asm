@@ -1,4 +1,5 @@
 INCLUDE "entities/entities.inc"
+INCLUDE "constants.inc"
 
 SECTION "Physics system", ROM0
 
@@ -27,52 +28,136 @@ update_entity_position::
 	
 
 
-	;; ========== SUMAMOS Y + VY ==========
+	;; ========== SUMAMOS Y + VY (con colisiones) ==========
 	ld a, [de]
 	add b
-	; y -> y+vy
+	ld [de], a      ; Actualizar Y temporalmente
+
+	; Guardar estado
+	push de
+	push bc
+
+	; Verificar colisión vertical
+	ld a, b
+	cp 0
+	jr z, .no_vertical_movement
+	jr nc, .moving_down
+
+.moving_up:
+	call check_solid_collision_up
+	jr z, .apply_y_movement  ; No hay colisión, aplicar movimiento
+	; Hay colisión arriba, cancelar movimiento vertical
+	pop bc
+	pop de
+	ld a, [de]
+	sub b           ; Revertir movimiento
 	ld [de], a
 
-	inc e
-	
-	; Load x
-	ld d, CMP_SPRIT_H
-	ld a, [de]
-    ; Add vx
+	; Detener velocidad vertical
 	ld h, CMP_PHYS_H
-	ld l, e 
-	add [hl]
-	; x -> x+vx
+	ld l, e
+	xor a
+	ld [hl], a
+	jr .handle_x
+
+.moving_down:
+	call check_solid_collision_down
+	jr z, .apply_y_movement  ; No hay colisión, aplicar movimiento
+	; Hay colisión abajo (suelo detectado)
+	pop bc
+	pop de
+	ld a, [de]
+	sub b           ; Revertir movimiento
 	ld [de], a
 
-	;; ========== ESTO SE TENDRA QUE MOVER POR EL MAPA DE COLISIONES SOLO ES PARA PROBAR LA GRAVEDAD Y EL SALTO ==========
-	dec e 
-	ld l, e 
+	; Detener velocidad vertical y marcar como grounded
+	ld h, CMP_PHYS_H
+	ld l, e
+	xor a
+	ld [hl], a      ; vy = 0
 
+	; Marcar como grounded
+	ld a, l
+	add PHY_FLAGS
+	ld l, a
+	set PHY_FLAG_GROUNDED, [hl]
+	jr .handle_x
+
+.apply_y_movement:
+	pop bc
+	pop de
+	; Movimiento ya aplicado, desmarcar grounded si se movió
+	ld h, CMP_PHYS_H
+	ld l, e
+	ld a, l
+	add PHY_FLAGS
+	ld l, a
+	res PHY_FLAG_GROUNDED, [hl]
+	jr .handle_x
+
+.no_vertical_movement:
+	pop bc
+	pop de
+
+.handle_x:
+	;; ========== SUMAMOS X + VX (con colisiones) ==========
+	inc e
+
+	ld d, CMP_SPRIT_H
+	ld h, CMP_PHYS_H
+	ld l, e
+
+	; Cargar velocidad X
+	ld a, [hl]
+	or a
+	jr z, .no_x_movement  ; Si vx = 0, no hay movimiento
+
+	; Guardar vx
+	ld b, a
+
+	; Aplicar movimiento temporalmente
 	ld a, [de]
-	cp $72
-	jr c, .no_floor
-	    ld a, $72
-	    ld [de], a
-	    xor a
-	    ld [hl], a ;; y = 72 vy = 0
+	add b
+	ld [de], a
 
-	    ld a, l 
-	    add PHY_FLAGS
-	    ld l, a 
+	; Guardar estado
+	push de
+	push bc
 
-	    set PHY_FLAG_GROUNDED, [hl]
+	; Verificar colisión horizontal
+	ld a, b
+	cp 0
+	jr nc, .moving_right
 
-	    jr .end
-	    
-	.no_floor:
-		ld a, l 
-	    add PHY_FLAGS
-	    ld l, a 
+.moving_left:
+	call check_solid_collision_left
+	jr z, .apply_x_movement  ; No hay colisión
+	; Hay colisión, revertir
+	pop bc
+	pop de
+	ld a, [de]
+	sub b
+	ld [de], a
+	jr .end
 
-	    res PHY_FLAG_GROUNDED, [hl]
+.moving_right:
+	call check_solid_collision_right
+	jr z, .apply_x_movement  ; No hay colisión
+	; Hay colisión, revertir
+	pop bc
+	pop de
+	ld a, [de]
+	sub b
+	ld [de], a
+	jr .end
 
-	.end:
+.apply_x_movement:
+	pop bc
+	pop de
+	jr .end
+
+.no_x_movement:
+.end:
 	ret
 
 
