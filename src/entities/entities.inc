@@ -11,6 +11,7 @@ DEF SONIA_BASE   EQU $C700
 
 DEF CMP_SPRIT_H  EQU $C0
 DEF CMP_PHYS_H   EQU $C1
+DEF CMP_ATTR_H   EQU $C2
 
 ; =============================================================
 ; OFFSETS DE LOS COMPONENTES

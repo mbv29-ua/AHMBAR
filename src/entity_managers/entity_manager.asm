@@ -52,6 +52,8 @@ man_find_first_free::
 	jr .loop
 	ret
 
+
+;; output hl: direccion del que tiene el sentinel a 1
 man_find_sentinel::
 	ld hl, ATTR_BASE - ATTR_SIZE 
 	ld de, ATTR_SIZE
@@ -112,6 +114,27 @@ man_entity_for_each::
 
 helper_call_hl::
 	jp hl
+
+;; INPUT: 
+;;	   L: INDEX ENTITY TO DELETE 
+man_entity_free::
+	;; Necesito direccion que quiero borrar
+	;; Buscar sentinel quitar el bit de sentinel y ponerselo al anterior del sentinel es decir, restar 4 para pasar a la entidad anterior
+	call man_find_sentinel ;; hl = address con sentinel
+	res E_BIT_SENTINEL, [hl]
+
+	;; aqui habria que hacer un algo para pasar todos los datos de esa entidad a la otra
+
+	ld de, ATTR_SIZE
+	sub l, e  ;; solo usar este borrado si no es para el personaje principal que lo tenemos en el 0
+	set E_BIT_SENTINEL, [hl]
+
+
+
+
+	;; Coger los datos del sentinel e intercambiarlos por el que lo quiero borrar
+	;; get y luego set en la direccion del que queria borrar
+
 
 
 

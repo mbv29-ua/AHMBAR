@@ -84,3 +84,20 @@ set_entity_physics::
     ld h, CMP_PHYS_H
     call set_entity_components
     ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Generic function to set entities attributes components
+;;
+;; Input
+;;  B: ATT_ENTITY_FLAGS 
+;;  C: TBA
+;;  D: TBA
+;;  E: TBA
+;;  L: Entity index
+;; WARNING: Destroys H
+
+set_entity_attributes::
+    ld h, CMP_ATTR_H
+    call set_entity_components
+    ret
