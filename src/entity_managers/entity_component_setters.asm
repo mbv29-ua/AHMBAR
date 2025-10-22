@@ -3,6 +3,40 @@ INCLUDE "entities/entities.inc"
 SECTION "Entity setters", ROM0
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Generic function to reset the values of an entity component
+;;
+;; INPUT
+;;  HL: memory address of the entity values to set to 0
+;; Does not destroy anything
+
+reset_entity_components:
+    push hl
+    ld [hl], 0 ; value 1
+    inc l
+    ld [hl], 0 ; value 2
+    inc l
+    ld [hl], 0 ; value 3
+    inc l
+    ld [hl], 0 ; value 4
+    pop hl
+    ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Generic function to reset an entity 
+;; sprite
+;;
+;; INPUT
+;;  L: Entity index
+;; WARNING: Destroys H
+
+set_entity_sprite::
+    ld h, CMP_SPRIT_H
+    call reset_entity_components
+    ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Generic function to set the values of an entity component
 ;;
 ;; INPUT
@@ -25,6 +59,7 @@ set_entity_components:
     pop hl
     ret
 
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Generic function to initialize an entity
 ;;
@@ -40,6 +75,7 @@ set_entity_sprite::
     ld h, CMP_SPRIT_H
     call set_entity_components
     ret
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Generic function to set entities physics components
