@@ -2,11 +2,30 @@ INCLUDE "constants.inc"
 
 SECTION "sys", ROM0
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine cleans the OAM
+;;
+;; INPUT:
+;;      -
+;; OUTPUT:
+;;      -
+;; WARNING: Destroys B and HL
+
 clean_OAM::
     ld hl, OAM_START
     ld b, OAM_SIZE
     call memreset_256
     ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine waits until the VBLANK starts
+;;
+;; INPUT:
+;;      -
+;; OUTPUT:
+;;      -
+;; WARNING: Destroys A and HL
 
 wait_vblank::
     ld hl, rLY
@@ -16,6 +35,16 @@ wait_vblank::
         jr nz, .loop
     ret
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine turns off the GameBoy LCD.
+;;
+;; INPUT:
+;;      -
+;; OUTPUT:
+;;      -
+;; WARNING: Destroys HL
+
 screen_off::
     di
     call wait_vblank
@@ -23,6 +52,16 @@ screen_off::
     res BIT_PPU_ENABLES, [hl]
     ei
     ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine turns off the GameBoy LCD.
+;;
+;; INPUT:
+;;      -
+;; OUTPUT:
+;;      -
+;; WARNING: Destroys A
 
 screen_on::
     ; Configurar LCDC completo:
@@ -35,6 +74,17 @@ screen_on::
     ldh [rLCDC], a
     ret
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine sets the default palette for both
+;; background tiles and sprites
+;;
+;; INPUT:
+;;      -
+;; OUTPUT:
+;;      -
+;; WARNING: Destroys A
+
 init_palettes_by_default::
     ld a, DEFAULT_PALETTE
     ldh [rBGP], a
@@ -43,11 +93,68 @@ init_palettes_by_default::
     ldh [rOBP1], a
     ret
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine enables VBLANK interruptions.
+;;
+;; INPUT:
+;;      -
+;; OUTPUT:
+;;      -
+;; WARNING: Destroys A
+
 enable_vblank_interrupts::
     ; Habilitar interrupciones VBlank
     ld a, IEF_VBLANK
     ldh [rIE], a
     ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine waits a complete frame (~1/60 sec.)
+;;
+;; INPUT:
+;;      -
+;; OUTPUT:
+;;      -
+;; WARNING: Destroys A and HL.
+
+wait_a_frame::
+    ld hl, rLY
+    ld a, 0
+    .loop1
+        cp [hl]
+        jr nz, .loop1
+    Ld a, START_VBLANK
+    .loop2
+        cp [hl]
+        jr nz, .loop2
+    ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This loads the tileset with the fonts in the
+;; VRAM.
+;;
+;; INPUT:
+;;      -
+;; OUTPUT:
+;;      -
+;; WARNING: Destroys BC, DE and HL.
+
+load_fonts::
+    ld hl, fonts
+    ld de, VRAM0_START + CHARMAP_START * TILE_SIZE
+    ld bc, CHARMAP_SIZE * TILE_SIZE 
+    call memcpy_65536
+    ret
+
+
+
+
+
+
+
 
 enable_screen::
     ; No hace nada, la configuración está en screen_on
@@ -98,22 +205,3 @@ init_scroll::
 
 
 
-wait_a_frame::
-    ld hl, rLY
-    ld a, 0
-    .loop1
-        cp [hl]
-        jr nz, .loop1
-    Ld a, START_VBLANK
-    .loop2
-        cp [hl]
-        jr nz, .loop2
-    ret
-
-
-load_fonts::
-    ld hl, fonts
-    ld de, VRAM0_START + CHARMAP_START * TILE_SIZE
-    ld bc, CHARMAP_SIZE * TILE_SIZE 
-    call memcpy_65536
-    ret

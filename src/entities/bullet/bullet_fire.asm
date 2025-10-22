@@ -9,12 +9,12 @@ Update_Bullet_System::
     jr z, .no_cooldown
     dec a
     ld [coolDown], a
-    jr .render
+    jr .skip
     .no_cooldown:
     call check_button_input
     jr nz, .skip
     .render:
-    call Update_Bullet    ;; Todo --> quitar gestio del movimiento
+    ;call Update_Bullet    ;; Todo --> quitar gestio del movimiento
     .skip:
     ret
 
@@ -49,6 +49,7 @@ check_button_input::
     ret z
     ;call check_counter
     call init_bullet
+    call init_cool_down
     ret
 
 check_counter::
@@ -104,6 +105,9 @@ Fire_Bullet::
     ld hl, wCounterValue
     dec [hl]
 
+    ret
+
+init_cool_down::
     ; Activar cooldown de 60 frames (~1 segundo)
     ld a, 60
     ld [coolDown], a

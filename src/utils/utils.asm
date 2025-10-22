@@ -1,11 +1,21 @@
 SECTION "utils", ROM0
 
 
-; Input
-;  hl -> source
-;  de -> destiny
-; b -> counter
-; Warning: Destoy b, hl and de
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine copies B consecutive bytes of
+;; data stored in memory position starting in
+;; HL into the memory position starting in DE.
+;; The maximum amount of data is restricted to
+;; 256 bytes.
+;;
+;; INPUT:
+;;      HL: Data source
+;;      DE: Data destiny
+;;       B: Total bytes to be copied
+;; OUTPUT:
+;;      -
+;; WARNING: Destroys A, B, DE and HL.
+
 memcpy_256::
     ld a, [hl+]
     ld [de], a
@@ -14,11 +24,62 @@ memcpy_256::
     jr nz, memcpy_256
     ret
 
-; Input
-;  hl -> source
-;  de -> destiny
-; bc -> counter
-; Warning: Destoy b, c, hl and de
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine sets B consecutive bytes in the
+;; memory positions starting in HL to value A.
+;; The maximum amount of set bytes is restricted 
+;; to 256 bytes.
+;;
+;; INPUT:
+;;      HL: Data destiny
+;;       B: Total bytes to be set
+;;       A: Value to be set
+;; OUTPUT:
+;;      -
+;; WARNING: Destroys B and HL.
+
+memset_256::
+    ld [hl+], a
+    dec b
+    jr nz, memset_256
+    ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine sets B consecutive bytes in the
+;; memory positions starting in HL to value 0.
+;; The maximum amount of set bytes is restricted 
+;; to 256 bytes.
+;;
+;; INPUT:
+;;      HL: Data destiny
+;;       B: Total bytes to be set to 0
+;; OUTPUT:
+;;      -
+;; WARNING: Destroys A, B and HL.
+
+memreset_256::
+    xor a
+    call memset_256
+    ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine copies B consecutive bytes of
+;; data stored in memory position starting in
+;; HL into the memory position starting in DE.
+;; The maximum amount of data is restricted to
+;; 65536 bytes.
+;;
+;; INPUT:
+;;      HL: Data source
+;;      DE: Data destiny
+;;       B: Total bytes to be copied
+;; OUTPUT:
+;;      -
+;; WARNING: Destroys A, B, DE and HL.
+
 memcpy_65536:
     ld a, [hl+]
     ld [de], a
@@ -29,11 +90,20 @@ memcpy_65536:
     jr nz , memcpy_65536
     ret
 
-;; INPUT
-;;  HL: SOURCE
-;;  BC: COUNTER
-;;   A: VALUE TO SET
-;; WARNING: DESTROYS HL AND BC
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine sets BC consecutive bytes in
+;; memory position starting in HL to value A.
+;; The maximum amount of set bytes is restricted 
+;; to 65536 bytes.
+;;
+;; INPUT:
+;;      HL: Data destiny
+;;      BC: Total bytes to be set
+;;       A: Value to be set
+;; OUTPUT:
+;;      -
+;; WARNING: Destroys A, B, C, D and HL.
 
 memset_65536::
     ld d, a
@@ -46,32 +116,21 @@ memset_65536::
         jr nz, .loop
     ret 
 
-; INPUT
-;  HL: DESTINY
-;  BC: COUNTER
-; WARNING: DESTROY HL AND BC
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine sets BC consecutive bytes in the
+;; memory positions starting in HL to value 0.
+;; The maximum amount of set bytes is restricted 
+;; to 65536 bytes.
+;;
+;; INPUT:
+;;      HL: Data destiny
+;;      BC: Total bytes to be set to 0
+;; OUTPUT:
+;;      -
+;; WARNING: Destroys A, B, C, D and HL.
 
 memreset_65536::
     xor a 
     call memset_65536
-    ret
-
-; Input
-;  hl -> destiny
-;  b -> counter
-;  a -> value
-; Warning: Destoy b and hl
-memset_256::
-    ld [hl+], a
-    dec b
-    jr nz, memset_256
-    ret
-
-; Input
-;  hl -> destiny
-;  b -> counter
-; Warning: destroy a, b and hl
-memreset_256::
-    xor a
-    call memset_256
     ret

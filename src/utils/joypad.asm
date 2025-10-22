@@ -3,6 +3,22 @@ include "constants.inc"
 
 SECTION "Joypad Handling", ROM0
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine reads the joypad and stores three
+;; values in memory:
+;; [PRESSED_BUTTONS] - buttons currently pressed
+;; [JUST_PRESSED_BUTTONS] - buttons that have 
+;;                          been pressed in the
+;;                          current frame.
+;; [RELEASED_BUTTONS] - buttons that have been 
+;;                          released in the
+;;                          current read.
+;; INPUT:
+;;      -
+;; OUTPUT:
+;;      -
+;; WARNING: Destroys A and B
+
 read_pad::
    ld a, SELECT_PAD
    ldh [rP1], a
@@ -45,6 +61,15 @@ read_pad::
 ret
 
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine reads the joypad until the
+;; button A is pressed.
+;;
+;; INPUT:
+;;      -
+;; OUTPUT:
+;;      -
+;; WARNING: Destroys HL 
 
 wait_until_A_pressed::
    ld hl, JUST_PRESSED_BUTTONS

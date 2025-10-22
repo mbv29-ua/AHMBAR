@@ -30,54 +30,107 @@ update_character_velocities::
     ld [hl], -PLAYER_JUMP_SPEED
 
     ;; actualizamos flags si salto
-    ld a, l 
+    ld a, l
     add PHY_FLAGS
-    ld l, a 
+    ld l, a
 
     ld a, [hl]
     res PHY_FLAG_GROUNDED, a ; ya no está en el suelo
-    set PHY_FLAG_JUMPING, a  ; ahora está saltando   
+    set PHY_FLAG_JUMPING, a  ; ahora está saltando
+    ld [hl], a              ; GUARDAR flags modificados en memoria!
 
     jr .next
 
 .movement:
-; Movimiento ABAJO y ABAJO
-    ld [hl], 0 ; reiniciamos
-    
-    .move_down:
-        bit DPAD_DOWN, a
-        jr z, .move_up
-        ld [hl], PLAYER_Y_SPEED ; 1
-
-    .move_up:
-        bit DPAD_UP, a
-        jr z, .next
-        ld [hl], -PLAYER_Y_SPEED ; -1
+    ; No modificar velocidad Y - la gravedad ya la controla el physics_system
+    ; Solo manejamos movimiento horizontal
 
 .next:
 ; Movimiento IZQUIERDA y DERECHA
-    inc l
-    ld [hl], 0 ; reiniciamos
+    ld h, CMP_PHYS_H    ; Asegurar que H apunta a componente física
+    ld l, 1             ; Offset 1 = velocidad X
+    ld [hl], 0          ; reiniciar velocidad X
+
+    ; Recargar botones presionados en A
+    ld a, [PRESSED_BUTTONS]
 
     .move_left:
         bit DPAD_LEFT, a
         jr z, .move_right
         ld [hl], -PLAYER_X_SPEED ; -1
         ; Actualizar dirección del jugador a izquierda (0)
+        push af
         ld a, 0
         ld [wPlayerDirection], a
+        pop af
 
     .move_right:
-        ld a, [PRESSED_BUTTONS] ; Por si alguien pulsa izq+der
         bit DPAD_RIGHT, a
-        jr z, .end 
+        jr z, .end
         ld [hl], PLAYER_X_SPEED ; 1
         ; Actualizar dirección del jugador a derecha (1)
         ld a, 1
         ld [wPlayerDirection], a
 
-.end
-ret
+.end:
+    ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; clamp_player_position
+;;; Limita la posición del jugador para que no salga de los bordes del mapa
+;;; Debe llamarse DESPUÉS de aplicar físicas
+;;;
+;;; Input: None
+;;; Output: None
+;;; Destroys: A, HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+clamp_player_position::
+    ; Límite X izquierdo (mínimo)
+    ld a, [Player.wPlayerX]
+    cp 8                ; Borde izquierdo de la pantalla
+    jr nc, .check_x_right
+    ld a, 8
+    ld [Player.wPlayerX], a
+
+.check_x_right:
+    ; Límite X derecho (máximo)
+    ; Si SCX está en su máximo (96), el jugador puede ir hasta 152
+    ; Si SCX está en 0, el jugador puede ir hasta 152 también
+    ldh a, [rSCX]
+    cp 96               ; ¿Scroll en el límite derecho?
+    jr nz, .check_y_top
+
+    ; Estamos en el borde derecho del mapa
+    ld a, [Player.wPlayerX]
+    cp 152              ; Límite absoluto derecho
+    jr c, .check_y_top
+    ld a, 152
+    ld [Player.wPlayerX], a
+
+.check_y_top:
+    ; Límite Y superior (mínimo)
+    ld a, [Player.wPlayerY]
+    cp 16               ; Borde superior de la pantalla
+    jr nc, .check_y_bottom
+    ld a, 16
+    ld [Player.wPlayerY], a
+
+.check_y_bottom:
+    ; Límite Y inferior (máximo)
+    ldh a, [rSCY]
+    cp 112              ; ¿Scroll en el límite inferior?
+    jr nz, .end
+
+    ; Estamos en el borde inferior del mapa
+    ld a, [Player.wPlayerY]
+    cp 152              ; Límite absoluto inferior
+    jr c, .end
+    ld a, 152
+    ld [Player.wPlayerY], a
+
+.end:
+    ret
 
 
 
