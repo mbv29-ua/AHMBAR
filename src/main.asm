@@ -4,10 +4,6 @@ INCLUDE "entities/entities.inc"
 SECTION "Entry Point", ROM0[$150]
 
 main::
-    call man_entity_init
-    call init_enemigos_prueba
-    ld l, 4  
-    call man_entity_free
     call scene_title_screen
     call init 
 
