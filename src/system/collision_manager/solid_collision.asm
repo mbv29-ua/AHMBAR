@@ -135,20 +135,20 @@ get_tile_at_entity_position_x::
 ;;; Destroys: A, BC, DE, HL
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 check_solid_collision_right::
-    ; Check right edge of entity sprite (center point)
+    ; Check right edge of entity sprite (8x8 tile)
     ; NOTE: E points to X component when called from physics_system
     push de
 
     ; Get entity X position
     ld d, CMP_SPRIT_H
     ld a, [de]          ; A = entity X
-    add 8               ; Add 8 pixels (one pixel to right of 8x8 sprite)
+    add 7               ; Add 7 pixels (right edge of 8x8 sprite: 0-7)
     ld c, a             ; C = X position to check
 
-    ; Get entity Y position
+    ; Get entity Y position - check top half
     dec e
     ld a, [de]          ; A = entity Y
-    add 4               ; Add 4 pixels (middle of sprite)
+    add 2               ; Check at Y+2 (upper part of sprite)
     ld b, a             ; B = Y position to check
     inc e               ; Restore E
     pop de
@@ -157,6 +157,26 @@ check_solid_collision_right::
     call get_tile_at_position
 
     ; Check if tile is solid (only 0x80 and 0x81)
+    cp $80
+    jr z, .is_solid_right
+    cp $81
+    jr z, .is_solid_right
+
+    ; Top half OK, check bottom half at Y+5
+    ld d, CMP_SPRIT_H
+    ld a, [de]          ; A = entity X
+    add 7               ; Right edge again
+    ld c, a             ; C = X position to check
+
+    dec e
+    ld a, [de]          ; A = entity Y
+    add 5               ; Check at Y+5 (lower part of sprite)
+    ld b, a             ; B = Y position to check
+    inc e               ; Restore E
+
+    call get_tile_at_position
+
+    ; Check if tile is solid
     cp $80
     jr z, .is_solid_right
     cp $81
@@ -185,7 +205,7 @@ check_solid_collision_right::
 ;;; Destroys: A, BC, DE, HL
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 check_solid_collision_left::
-    ; Check left edge of entity sprite (center point)
+    ; Check left edge of entity sprite (8x8 tile)
     ; NOTE: E points to X component when called from physics_system
     push de
 
@@ -194,13 +214,12 @@ check_solid_collision_left::
     ld a, [de]          ; A = entity X
     or a                ; Check if X = 0
     jr z, .at_edge      ; If at edge, treat as solid
-    dec a               ; Subtract 1 (one pixel to left of sprite)
-    ld c, a             ; C = X position to check
+    ld c, a             ; C = X position (left edge: pixel 0)
 
-    ; Get entity Y position
+    ; Get entity Y position - check top half
     dec e
     ld a, [de]          ; A = entity Y
-    add 4               ; Add 4 pixels (middle of sprite)
+    add 2               ; Check at Y+2 (upper part of sprite)
     ld b, a             ; B = Y position to check
     inc e               ; Restore E
     pop de
@@ -209,6 +228,25 @@ check_solid_collision_left::
     call get_tile_at_position
 
     ; Check if tile is solid (only 0x80 and 0x81)
+    cp $80
+    jr z, .is_solid_left
+    cp $81
+    jr z, .is_solid_left
+
+    ; Top half OK, check bottom half at Y+5
+    ld d, CMP_SPRIT_H
+    ld a, [de]          ; A = entity X
+    ld c, a             ; Left edge again
+
+    dec e
+    ld a, [de]          ; A = entity Y
+    add 5               ; Check at Y+5 (lower part of sprite)
+    ld b, a             ; B = Y position to check
+    inc e               ; Restore E
+
+    call get_tile_at_position
+
+    ; Check if tile is solid
     cp $80
     jr z, .is_solid_left
     cp $81
@@ -239,19 +277,19 @@ check_solid_collision_left::
 ;;; Destroys: BC, DE, HL
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 check_solid_collision_down::
-    ; Check bottom edge of entity sprite at TWO points (left and right foot)
+    ; Check bottom edge of entity sprite (8x8 tile)
     push de
     ld d, CMP_SPRIT_H
     ld a, [de]          ; A = entity Y
-    add 12              ; Add 12 pixels (4 pixels below 8x8 sprite) - ajustado para alinear mejor
+    add 7               ; Add 7 pixels (bottom edge of 8x8 sprite: 0-7)
     ld b, a             ; B = Y position to check
 
     ; Get entity X position
     inc e
     ld a, [de]          ; A = entity X
 
-    ; Check LEFT foot (X+1)
-    inc a               ; X + 1 (left side of sprite, avoiding edge)
+    ; Check LEFT side (X+1)
+    inc a               ; X + 1 (left part of sprite, avoiding extreme edge)
     ld c, a             ; C = X position to check
     dec e               ; Restore E
     pop de
@@ -261,17 +299,17 @@ check_solid_collision_down::
     call get_tile_at_position
     pop bc              ; Restore B
 
-    ; Check if left foot tile is solid (only 0x80 and 0x81)
+    ; Check if left side tile is solid (only 0x80 and 0x81)
     cp $80
     jr z, .is_solid_down
     cp $81
     jr z, .is_solid_down
 
-    ; Left foot OK, now check RIGHT foot (X+6)
+    ; Left OK, now check RIGHT side (X+6)
     ld d, CMP_SPRIT_H
     inc e
     ld a, [de]          ; A = entity X
-    add 6               ; X + 6 (right side of sprite, avoiding edge)
+    add 6               ; X + 6 (right part of sprite, avoiding extreme edge)
     ld c, a             ; C = X position to check
     dec e               ; Restore E
 
@@ -279,13 +317,13 @@ check_solid_collision_down::
     call get_tile_at_position
     pop bc              ; Restore BC
 
-    ; Check if right foot tile is solid (only 0x80 and 0x81)
+    ; Check if right side tile is solid (only 0x80 and 0x81)
     cp $80
     jr z, .is_solid_down
     cp $81
     jr z, .is_solid_down
 
-    ; Both feet on air - not solid
+    ; Both sides are air - not solid
     xor a       ; Z = 1 (no collision)
     pop de
     ret
@@ -308,11 +346,11 @@ check_solid_collision_down::
 ;;; Destroys: A, BC, DE, HL
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 check_solid_collision_up::
-    ; Check top edge of entity sprite at TWO points (left and right)
+    ; Check top edge of entity sprite (8x8 tile)
     push de
     ld d, CMP_SPRIT_H
     ld a, [de]          ; A = entity Y
-    dec a               ; Subtract 1 (one pixel above sprite)
+    ; Top edge is pixel 0, no offset needed
     ld b, a             ; B = Y position to check
 
     ; Get entity X position
@@ -320,7 +358,7 @@ check_solid_collision_up::
     ld a, [de]          ; A = entity X
 
     ; Check LEFT side (X+1)
-    inc a               ; X + 1 (left side of sprite, avoiding edge)
+    inc a               ; X + 1 (left part of sprite, avoiding extreme edge)
     ld c, a             ; C = X position to check
     dec e               ; Restore E
     pop de
@@ -340,7 +378,7 @@ check_solid_collision_up::
     ld d, CMP_SPRIT_H
     inc e
     ld a, [de]          ; A = entity X
-    add 6               ; X + 6 (right side of sprite, avoiding edge)
+    add 6               ; X + 6 (right part of sprite, avoiding extreme edge)
     ld c, a             ; C = X position to check
     dec e               ; Restore E
 
