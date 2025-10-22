@@ -25,6 +25,34 @@ set_entity_components:
     pop hl
     ret
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Generic function to get the values of an entity component
+;;
+;; INPUT
+;;   HL: memory address of the entity values to read
+;; OUTPUT
+;;   B: value 1
+;;   C: value 2
+;;   D: value 3
+;;   E: value 4
+;; Does not destroy HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+get_entity_components:
+    push hl
+    ld a, [hl]    ; value 1
+    ld b, a
+    inc l
+    ld a, [hl]    ; value 2
+    ld c, a
+    inc l
+    ld a, [hl]    ; value 3
+    ld d, a
+    inc l
+    ld a, [hl]    ; value 4
+    ld e, a
+    pop hl
+    ret
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Generic function to initialize an entity
 ;;
