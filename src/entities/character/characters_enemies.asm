@@ -43,3 +43,21 @@ init_player::
     ld a, (1 << PHY_FLAG_GROUNDED)  ; Solo GROUNDED activado
     ld [hl], a
     ret
+
+; ESTE ES EL BUENO, LUEGO LO DESCOMENTAMOS
+;init_player::
+;    call man_entity_alloc ; Deja en l el indice
+;
+;    ld b, PLAYER_START_Y ; Y coordinate
+;    ld c, PLAYER_START_X  ; X coordinate
+;    ld d, TILE_COWBOY ; tile
+;    ld e, 0   ; tile properties
+;    call set_entity_sprite
+;
+;    ld hl, wPlayerDirection
+;    set 0, [hl]
+;
+;    ld h, HIGH(ATTR_BASE)
+;    ld l, PHY_FLAGS
+;    set PHY_FLAG_GROUNDED, [hl]
+;    ret
