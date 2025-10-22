@@ -73,17 +73,13 @@ set_entity_components:
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 get_entity_components:
     push hl
-    ld a, [hl]    ; value 1
-    ld b, a
+    ld b, [hl]    ; value 1
     inc l
-    ld a, [hl]    ; value 2
-    ld c, a
+    ld c, [hl]    ; value 2
     inc l
-    ld a, [hl]    ; value 3
-    ld d, a
+    ld d, [hl]    ; value 3
     inc l
-    ld a, [hl]    ; value 4
-    ld e, a
+    ld e, [hl]    ; value 4
     pop hl
     ret
 
