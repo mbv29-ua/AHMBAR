@@ -4,21 +4,24 @@ INCLUDE "entities/entities.inc"
 SECTION "Entry Point", ROM0[$150]
 
 main::
-    call scene_title_screen
+    ;call scene_title_screen
     call init 
 
+call wait_vblank
 .main_loop:
-    call wait_vblank
+    ;
     call update_fire_animation      ; Animate fire tiles during VBlank
     call read_pad
     ; call move_character
     call update_character_velocities
     ; call check_door_collision    ; COMENTADO - No queremos colisiones de puerta
+    call apply_gravity_to_affected_entities
     call update_all_entities_positions
     call clamp_player_position       ; Limitar posición del jugador a los bordes del mapa
     call scroll_manager
     ; call render_player
     ; call Update_Bullet_System
+    halt
 
     jp .main_loop
 

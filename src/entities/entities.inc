@@ -112,7 +112,7 @@ DEF ENTITY_CMP_SENTINEL 	EQU $FF
 ; GRAVEDAD ESTO MOVERLO
 ; =============================================================
 
-DEF GRAVITY 	EQU 1
+DEF GRAVITY 	EQU 16
 ; =============================================================
 
 

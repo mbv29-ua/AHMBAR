@@ -15,29 +15,21 @@ update_character_velocities::
     bit BUTTON_A, a 
     jr z, .movement
     ;; ------ Comprobamos flags ------
-    ld a, l 
-    add PHY_FLAGS
-    ld l, a 
-    ld a, [hl]
+    ld d, CMP_ATTR_H
+    ld e, PHY_FLAGS
+    ld a, [de]
 
     bit PHY_FLAG_GROUNDED, a ;; SI NO ESTA EN EL SUELO NO SALTA
     jr z, .movement
     bit PHY_FLAG_JUMPING, a ;; SI YA ESTA SALTANDO NO SALTAR
     jr nz, .movement
 
-    ld h, CMP_PHYS_H
-    ld l, 0
     ld [hl], -PLAYER_JUMP_SPEED
 
     ;; actualizamos flags si salto
-    ld a, l
-    add PHY_FLAGS
-    ld l, a
-
-    ld a, [hl]
     res PHY_FLAG_GROUNDED, a ; ya no está en el suelo
     set PHY_FLAG_JUMPING, a  ; ahora está saltando
-    ld [hl], a              ; GUARDAR flags modificados en memoria!
+    ld [de], a              ; GUARDAR flags modificados en memoria!
 
     jr .next
 
@@ -48,7 +40,8 @@ update_character_velocities::
 .next:
 ; Movimiento IZQUIERDA y DERECHA
     ld h, CMP_PHYS_H    ; Asegurar que H apunta a componente física
-    ld l, 1             ; Offset 1 = velocidad X
+    ld l, 1             ; Offset 2 = velocidad X
+    inc l
     ld [hl], 0          ; reiniciar velocidad X
 
     ; Recargar botones presionados en A
