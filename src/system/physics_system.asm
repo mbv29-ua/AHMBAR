@@ -42,11 +42,11 @@ update_entity_position::
 	ld a, [hl]
 	
 	;; HACER CONTADOR PARA SKIPEAR FRAMES
-	;call Delay60Cycles
+	; call Delay60Cycles
 
 	;; ========== APLICAMOS GRAVEDAD ==========
-	;add GRAVITY
-	;ld [hl], a
+	; add GRAVITY
+	; ld [hl], a
 	ld b, a 
 		
 
@@ -100,7 +100,10 @@ update_entity_position::
 	ld h, CMP_PHYS_H
 	ld l, e
 	xor a
-	ld [hl], a      ; vy = 0
+	
+	ld [hl+], a      ; vy = 0
+	ld [hl], a
+	dec l
 
 	; Marcar como grounded y resetear jumping
 	ld h, CMP_ATTR_H
@@ -218,13 +221,13 @@ apply_gravity_to_entity::
 	;; HL contains the address of the routine,
 	;; so we save it since we want to use HL
 
-	push hl 
-	ld h, HIGH(ATTR_BASE)
-    ld l, PHY_FLAGS
-    ld a, [hl]
-    bit PHY_FLAG_GROUNDED, a
-    pop hl
-    ret nz
+	; push hl 
+	; ld h, HIGH(ATTR_BASE)
+    ; ld l, PHY_FLAGS
+    ; ld a, [hl]
+    ; bit PHY_FLAG_GROUNDED, a
+    ; pop hl
+    ; ret nz
 
     push hl
 	;; Load entity physics addres in HL
@@ -262,5 +265,41 @@ apply_gravity_to_entity::
 
 apply_gravity_to_affected_entities::
 	ld hl, apply_gravity_to_entity
+	call man_entity_for_each ;;; Cambiar por man_entity_for_each_ gravity
+	ret
+
+
+vertical_speed_to_zero_if_grounded_to_entity::
+	push hl 
+	ld h, HIGH(ATTR_BASE)
+    ld l, PHY_FLAGS
+    bit PHY_FLAG_GROUNDED, [hl]
+    pop hl
+    ret z
+	
+	call check_solid_collision_down
+	ret z
+
+	push hl
+	; Detener velocidad vertical y marcar como grounded
+	ld h, CMP_PHYS_H
+	ld l, e
+	xor a
+	
+	ld [hl+], a      ; vy = 0
+	ld [hl], a
+	pop hl
+
+	ret
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;	
+;;;
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+vertical_speed_to_zero_if_grounded::
+	ld hl, vertical_speed_to_zero_if_grounded_to_entity
 	call man_entity_for_each ;;; Cambiar por man_entity_for_each_ gravity
 	ret

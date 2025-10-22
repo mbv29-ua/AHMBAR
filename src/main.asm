@@ -16,6 +16,7 @@ call wait_vblank
     call update_character_velocities
     ; call check_door_collision    ; COMENTADO - No queremos colisiones de puerta
     call apply_gravity_to_affected_entities
+    call vertical_speed_to_zero_if_grounded
     call update_all_entities_positions
     call clamp_player_position       ; Limitar posición del jugador a los bordes del mapa
     call scroll_manager
