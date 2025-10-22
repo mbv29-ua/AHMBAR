@@ -30,7 +30,7 @@ reset_entity_components:
 ;;  L: Entity index
 ;; WARNING: Destroys H
 
-set_entity_sprite::
+reset_entity_sprite::
     ld h, CMP_SPRIT_H
     call reset_entity_components
     ret
