@@ -3,6 +3,33 @@ INCLUDE "constants.inc"
 
 SECTION "Physics system", ROM0
 
+;; 
+original_update_entity_position::
+	; Load y
+	ld d, CMP_SPRIT_H
+	ld a, [de]
+	; Add vy 
+	ld h, CMP_PHYS_H
+	ld l, e 
+	add [hl]
+	; y -> y+vy
+	ld [de], a
+
+	inc e
+	; Load x
+	ld d, CMP_SPRIT_H
+	ld a, [de]
+    ; Add vx
+	ld h, CMP_PHYS_H
+	ld l, e 
+	inc l
+	add [hl]
+	; x -> x+vx
+	ld [de], a
+	ret
+
+
+
 ;; Applies the velocities to the positions of a movable entity
 update_entity_position::
 
@@ -12,14 +39,14 @@ update_entity_position::
 	; LOAD VY 
 	ld h, CMP_PHYS_H
 	ld l, e 
-
+	ld a, [hl]
+	
 	;; HACER CONTADOR PARA SKIPEAR FRAMES
 	;call Delay60Cycles
 
 	;; ========== APLICAMOS GRAVEDAD ==========
-	ld a, [hl]
-	add GRAVITY
-	ld [hl], a
+	;add GRAVITY
+	;ld [hl], a
 	ld b, a 
 		
 
@@ -76,6 +103,7 @@ update_entity_position::
 	ld [hl], a      ; vy = 0
 
 	; Marcar como grounded y resetear jumping
+	ld h, CMP_ATTR_H
 	ld a, l
 	add PHY_FLAGS
 	ld l, a
@@ -89,7 +117,7 @@ update_entity_position::
 	pop bc
 	pop de
 	; Movimiento ya aplicado, desmarcar grounded si se movió
-	ld h, CMP_PHYS_H
+	ld h, CMP_ATTR_H
 	ld l, e
 	ld a, l
 	add PHY_FLAGS
@@ -110,6 +138,7 @@ update_entity_position::
 	ld d, CMP_SPRIT_H
 	ld h, CMP_PHYS_H
 	ld l, e
+	inc l
 
 	; Cargar velocidad X
 	ld a, [hl]
@@ -169,6 +198,7 @@ update_entity_position::
 ;; 
 ;; Warning: destroys ... (lo que destruya man_entity_for_each) 
 update_all_entities_positions::
+	;ld hl, original_update_entity_position
 	ld hl, update_entity_position
 	call man_entity_for_each ;;; de <- direccion deatributos entidad ;;; Cambiar por man_entity_for_each_movable
 	ret
@@ -187,14 +217,16 @@ update_all_entities_positions::
 apply_gravity_to_entity::
 	;; HL contains the address of the routine,
 	;; so we save it since we want to use HL
-	ld d, HIGH(ATTR_BASE)
-    ld e, PHY_FLAGS
-    ld a, [de]
-    bit PHY_FLAG_GROUNDED, a
-    ret nz
 
 	push hl 
+	ld h, HIGH(ATTR_BASE)
+    ld l, PHY_FLAGS
+    ld a, [hl]
+    bit PHY_FLAG_GROUNDED, a
+    pop hl
+    ret nz
 
+    push hl
 	;; Load entity physics addres in HL
 	ld h, CMP_PHYS_H
 	ld l, e
