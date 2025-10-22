@@ -47,7 +47,11 @@ check_button_input::
     ld a, [PRESSED_BUTTONS]
     bit BUTTON_B, a
     ret z
-    ;call check_counter
+
+    ; Verificar si hay balas disponibles
+    call use_bullet      ; Decrementa balas, retorna zero si no hay
+    ret z                ; Si no hay balas, retornar sin disparar
+
     call init_bullet
     call init_cool_down
     ret

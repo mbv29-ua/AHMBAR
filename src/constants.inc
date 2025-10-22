@@ -53,6 +53,8 @@ DEF rDMA	EQU $FF46
 DEF rBGP    EQU $FF47
 DEF rOBP0   EQU $FF48
 DEF rOBP1   EQU $FF49
+DEF rWY     EQU $FF4A
+DEF rWX     EQU $FF4B
 DEF rP1     EQU $FF00
 DEF rIE     EQU $FFFF
 
@@ -95,12 +97,14 @@ DEF ENDTEXT EQU 11
 
 
 DEF TILE_BULLET         EQU $09
-DEF TILE_DIGIT_0        EQU $0A
-DEF TILE_DIGIT_1        EQU $0B
-DEF TILE_DIGIT_2        EQU $0C
-DEF TILE_DIGIT_3        EQU $0D
-DEF TILE_DIGIT_4        EQU $0E
-DEF TILE_DIGIT_5        EQU $0F
+
+; Números para HUD (según posiciones reales en VRAM)
+DEF TILE_DIGIT_0        EQU $95  ; Tile 0
+DEF TILE_DIGIT_1        EQU $96  ; Tile 1
+DEF TILE_DIGIT_2        EQU $97  ; Tile 2
+DEF TILE_DIGIT_3        EQU $98  ; Tile 3
+DEF TILE_DIGIT_4        EQU $99  ; Tile 4
+DEF TILE_DIGIT_5        EQU $9A  ; Tile 5
 DEF TILE_COWBOY         EQU $10
 DEF TILE_GOAL           EQU $11
 
@@ -128,12 +132,13 @@ DEF GOAL_X_MAX          EQU 144
 DEF GOAL_Y_MIN          EQU 88
 DEF GOAL_Y_MAX          EQU 96
 
-DEF MAX_BULLETS         EQU 3
+DEF MAX_BULLETS         EQU 5  ; Máximo de balas disponibles
 DEF BULLET_SPEED        EQU 4
 DEF BULLET_INACTIVE     EQU 0
 DEF BULLET_ACTIVE       EQU 1
 
 DEF COUNTER_START       EQU 5
+DEF INITIAL_PLAYER_LIVES EQU 4 ; Vidas iniciales del jugador
 DEF COUNTER_X_POS       EQU 152
 DEF COUNTER_Y_POS       EQU 16
 

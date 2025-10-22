@@ -1,6 +1,9 @@
 SECTION "blocks", ROM0
 
 tiles::
+; Export fire animation frames for animation system
+EXPORT fireFrame0, fireFrame1, fireFrame2, fireFrame3
+
 tilesTLE0::
 DB $7F,$7F,$81,$81,$DF,$81,$EF,$91
 DB $FF,$FF,$FF,$88,$FF,$88,$7F,$7F
@@ -13,16 +16,16 @@ DB $3E,$BE,$00,$FF,$00,$FF,$00,$FF
 tilesTLE3::
 DB $00,$00,$00,$00,$00,$00,$00,$00
 DB $FF,$FF,$00,$C1,$59,$A2,$00,$FF
-tilesTLE4::    ;; fire 1
+tilesTLE4::    ;; FIRE TOP - frame 0 (will animate at VRAM $84)
 DB $00,$00,$20,$00,$60,$00,$50,$20
 DB $78,$78,$30,$30,$30,$30,$20,$7C
-tilesTLE5::
+tilesTLE5::    ;; FIRE PLATFORM - STATIC (original, stays at VRAM $85)
 DB $30,$7C,$30,$30,$00,$30,$00,$30
 DB $FF,$00,$00,$FF,$02,$67,$FF,$FF
-tilesTLE6::     ;; fire 2
+tilesTLE6::     ;; FIRE TOP - frame 1 (will animate at VRAM $86)
 DB $00,$00,$10,$00,$18,$00,$28,$10
 DB $78,$78,$30,$30,$30,$30,$78,$10
-tilesTLE7::
+tilesTLE7::    ;; FIRE PLATFORM - STATIC (original, stays at VRAM $87)
 DB $48,$30,$00,$30,$00,$30,$00,$30
 DB $FF,$00,$00,$FF,$70,$FC,$FF,$FF
 tilesTLE8::
@@ -46,7 +49,7 @@ DB $6E,$42,$6E,$42,$FB,$85,$DB,$85
 tilesTLE14::
 DB $00,$00,$00,$00,$E0,$00,$BF,$E0
 DB $41,$73,$1B,$FB,$80,$7F,$00,$FF
-tilesTLE15::
+tilesTLE15::    ;; HEART FULL (tile $8F)
 DB $00,$00,$66,$66,$99,$F9,$9D,$E1
 DB $8F,$F1,$46,$7A,$24,$3C,$18,$18
 tilesTLE16::
@@ -100,4 +103,34 @@ DB $52,$52,$62,$62,$42,$42,$3C,$3C
 tilesTLE32::
 DB $00,$00,$00,$00,$00,$00,$00,$00
 DB $00,$00,$00,$00,$00,$00,$00,$00
+; ============================================
+; FIRE ANIMATION FRAMES (4 frames, only top tile)
+; Subtle flickering based on original TLE4 design
+; Base: $00,$00,$20,$00,$60,$00,$50,$20 / $78,$78,$30,$30,$30,$30,$20,$7C
+; ============================================
+fireFrame0::     ;; Frame 0 - original flames (base state)
+DB $00,$00,$20,$00,$60,$00,$50,$20
+DB $78,$78,$30,$30,$30,$30,$20,$7C
+
+fireFrame1::     ;; Frame 1 - flames slightly higher/brighter
+DB $00,$00,$20,$00,$70,$00,$50,$20
+DB $78,$78,$38,$38,$30,$30,$30,$7C
+
+fireFrame2::     ;; Frame 2 - flames lean slightly right
+DB $00,$00,$10,$00,$30,$00,$28,$10
+DB $78,$78,$30,$30,$30,$30,$20,$7C
+
+fireFrame3::     ;; Frame 3 - flames return to center, shorter
+DB $00,$00,$20,$00,$60,$00,$50,$20
+DB $70,$70,$30,$30,$30,$30,$20,$7C
+
+; ============================================
+; HUD TILES
+; ============================================
+EXPORT tileHalfHeart
+
+tileHalfHeart::  ;; Medio corazón (tile $90)
+DB $00,$00,$60,$60,$90,$F0,$98,$E0
+DB $88,$F0,$40,$70,$20,$30,$10,$10
+
 tiles_end::

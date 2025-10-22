@@ -23,3 +23,7 @@ SECTION "Player Variables", WRAM0[$CE00]
 wPlayerDirection::  DS 1  ; 0 = izquierda, 1 = derecha
 wBulletActive::     DS 1
 coolDown::          DS 1
+
+; HUD Variables
+wPlayerLives::      DS 1  ; Vidas del jugador (0-4)
+wPlayerBullets::    DS 1  ; Balas disponibles (0-5)

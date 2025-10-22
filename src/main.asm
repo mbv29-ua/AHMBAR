@@ -9,6 +9,7 @@ main::
 
 .main_loop:
     call wait_vblank
+    call update_fire_animation      ; Animate fire tiles during VBlank
     call read_pad
     ; call move_character
     call update_character_velocities
@@ -39,6 +40,8 @@ init::
     call Load_Current_Level
     call init_scroll
     call init_player_position
+    call init_tile_animation        ; Initialize fire animation system
+    call init_hud                   ; Initialize HUD (lives & bullets)
     call init_palettes_by_default
     call clean_OAM
     call enable_vblank_interrupts
