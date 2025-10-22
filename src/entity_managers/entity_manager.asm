@@ -120,23 +120,128 @@ helper_call_hl::
 man_entity_free::
 	;; Necesito direccion que quiero borrar
 	;; Buscar sentinel quitar el bit de sentinel y ponerselo al anterior del sentinel es decir, restar 4 para pasar a la entidad anterior
+	
+	ld d, CMP_SPRIT_H
+	ld e, l  
+	push de
 	call man_find_sentinel ;; hl = address con sentinel
-	res E_BIT_SENTINEL, [hl]
+	ld h, CMP_ATTR_H
+	res E_BIT_SENTINEL, [hl] 
 
-	;; aqui habria que hacer un algo para pasar todos los datos de esa entidad a la otra
+	ld h, CMP_SPRIT_H
+	
+	ld c,  8
 
-	ld de, ATTR_SIZE
-	sub l, e  ;; solo usar este borrado si no es para el personaje principal que lo tenemos en el 0
+	pop de
+	.loop:
+	push hl 
+	push de
+	ld b, 4
+
+	call memcpy_256
+	pop de 
+	pop hl 
+
+	inc h 
+	inc d 
+	dec c 
+	jr nz, .loop 
+
+	call reset_entity_sprite
+
+	ld h, CMP_ATTR_H
+	ld a, l 
+	sub 4 
+	ld l, a 
 	set E_BIT_SENTINEL, [hl]
 
+	ret
+
+man_entity_for_each_movable::
+	ld de, ATTR_BASE
+	.loop
+
+	ld a, [de]
+	cp ENTITY_CMP_SENTINEL
+	ret z 
+
+	bit E_BIT_SENTINEL, a 
+	jr nz, .process_and_exit
+
+	bit E_BIT_MOVABLE, a
+	jr z, .continue
+
+	push af
+	push de
+	push hl
+	call helper_call_hl
+	.return
+	pop hl
+	pop de
+	pop af
 
 
+	.continue
+	ld a, e 
+	add ATTR_SIZE
+	ld e, a 
+	
+	jr .loop
 
-	;; Coger los datos del sentinel e intercambiarlos por el que lo quiero borrar
-	;; get y luego set en la direccion del que queria borrar
+	.process_and_exit:
+	push af
+	push de
+	push hl
+	call helper_call_hl
+	pop hl
+	pop de
+	pop af	
+
+	.exit
+		ret
+
+man_entity_for_each_gravity::
+	ld de, ATTR_BASE
+	.loop
+
+	ld a, [de]
+	cp ENTITY_CMP_SENTINEL
+	ret z 
+
+	bit E_BIT_SENTINEL, a 
+	jr nz, .process_and_exit
+
+	bit E_BIT_GRAVITY, a
+	jr z, .continue
+
+	push af
+	push de
+	push hl
+	call helper_call_hl
+	.return
+	pop hl
+	pop de
+	pop af
 
 
+	.continue
+	ld a, e 
+	add ATTR_SIZE
+	ld e, a 
+	
+	jr .loop
 
+	.process_and_exit:
+	push af
+	push de
+	push hl
+	call helper_call_hl
+	pop hl
+	pop de
+	pop af	
+
+	.exit
+		ret
 
 
 
