@@ -75,11 +75,14 @@ update_entity_position::
 	xor a
 	ld [hl], a      ; vy = 0
 
-	; Marcar como grounded
+	; Marcar como grounded y resetear jumping
 	ld a, l
 	add PHY_FLAGS
 	ld l, a
-	set PHY_FLAG_GROUNDED, [hl]
+	ld a, [hl]
+	set PHY_FLAG_GROUNDED, a
+	res PHY_FLAG_JUMPING, a
+	ld [hl], a
 	jr .handle_x
 
 .apply_y_movement:
@@ -91,7 +94,9 @@ update_entity_position::
 	ld a, l
 	add PHY_FLAGS
 	ld l, a
-	res PHY_FLAG_GROUNDED, [hl]
+	ld a, [hl]
+	res PHY_FLAG_GROUNDED, a
+	ld [hl], a
 	jr .handle_x
 
 .no_vertical_movement:

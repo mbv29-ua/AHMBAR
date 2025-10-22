@@ -29,7 +29,7 @@ get_tile_at_position::
     ; Tile Y = (Y + SCY - 16) / 8
     ldh a, [rSCY]
     add b
-    sub 16          ; OAM offset
+    sub 16          ; OAM offset estándar de Game Boy
     srl a
     srl a
     srl a
@@ -135,7 +135,7 @@ get_tile_at_entity_position_x::
 ;;; Destroys: A, BC, DE, HL
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 check_solid_collision_right::
-    ; Check right edge of entity sprite at TWO points (top and bottom)
+    ; Check right edge of entity sprite (center point)
     ; NOTE: E points to X component when called from physics_system
     push de
 
@@ -148,48 +148,21 @@ check_solid_collision_right::
     ; Get entity Y position
     dec e
     ld a, [de]          ; A = entity Y
-
-    ; Check TOP of sprite (Y+1)
-    inc a               ; Y + 1 (top side, avoiding edge)
+    add 4               ; Add 4 pixels (middle of sprite)
     ld b, a             ; B = Y position to check
     inc e               ; Restore E
     pop de
 
     push de
-    push bc             ; Save positions
     call get_tile_at_position
-    pop bc              ; Restore positions
 
-    ; Check if top tile is solid
-    cp $DB
-    jr z, .is_solid_right
+    ; Check if tile is solid (only 0x80 and 0x81)
     cp $80
     jr z, .is_solid_right
     cp $81
     jr z, .is_solid_right
 
-    ; Top OK, now check BOTTOM of sprite (Y+6)
-    ld d, CMP_SPRIT_H
-    dec e
-    ld a, [de]          ; A = entity Y
-    add 6               ; Y + 6 (bottom side, avoiding edge)
-    ld b, a             ; B = Y position to check
-    inc e               ; Restore E
-
-    ; C still has X+8 position
-    push bc             ; Save BC before second call
-    call get_tile_at_position
-    pop bc              ; Restore BC
-
-    ; Check if bottom tile is solid
-    cp $DB
-    jr z, .is_solid_right
-    cp $80
-    jr z, .is_solid_right
-    cp $81
-    jr z, .is_solid_right
-
-    ; Both points are air - not solid
+    ; Not solid
     xor a               ; Z = 1 (no collision)
     pop de
     ret
@@ -212,7 +185,7 @@ check_solid_collision_right::
 ;;; Destroys: A, BC, DE, HL
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 check_solid_collision_left::
-    ; Check left edge of entity sprite at TWO points (top and bottom)
+    ; Check left edge of entity sprite (center point)
     ; NOTE: E points to X component when called from physics_system
     push de
 
@@ -227,48 +200,21 @@ check_solid_collision_left::
     ; Get entity Y position
     dec e
     ld a, [de]          ; A = entity Y
-
-    ; Check TOP of sprite (Y+1)
-    inc a               ; Y + 1 (top side, avoiding edge)
+    add 4               ; Add 4 pixels (middle of sprite)
     ld b, a             ; B = Y position to check
     inc e               ; Restore E
     pop de
 
     push de
-    push bc             ; Save positions
     call get_tile_at_position
-    pop bc              ; Restore positions
 
-    ; Check if top tile is solid
-    cp $DB
-    jr z, .is_solid_left
+    ; Check if tile is solid (only 0x80 and 0x81)
     cp $80
     jr z, .is_solid_left
     cp $81
     jr z, .is_solid_left
 
-    ; Top OK, now check BOTTOM of sprite (Y+6)
-    ld d, CMP_SPRIT_H
-    dec e
-    ld a, [de]          ; A = entity Y
-    add 6               ; Y + 6 (bottom side, avoiding edge)
-    ld b, a             ; B = Y position to check
-    inc e               ; Restore E
-
-    ; C still has X-1 position
-    push bc             ; Save BC before second call
-    call get_tile_at_position
-    pop bc              ; Restore BC
-
-    ; Check if bottom tile is solid
-    cp $DB
-    jr z, .is_solid_left
-    cp $80
-    jr z, .is_solid_left
-    cp $81
-    jr z, .is_solid_left
-
-    ; Both points are air - not solid
+    ; Not solid
     xor a               ; Z = 1 (no collision)
     pop de
     ret
@@ -297,7 +243,7 @@ check_solid_collision_down::
     push de
     ld d, CMP_SPRIT_H
     ld a, [de]          ; A = entity Y
-    add 8               ; Add 8 pixels (one pixel below 8x8 sprite)
+    add 12              ; Add 12 pixels (4 pixels below 8x8 sprite) - ajustado para alinear mejor
     ld b, a             ; B = Y position to check
 
     ; Get entity X position
@@ -315,9 +261,7 @@ check_solid_collision_down::
     call get_tile_at_position
     pop bc              ; Restore B
 
-    ; Check if left foot tile is solid
-    cp $DB
-    jr z, .is_solid_down
+    ; Check if left foot tile is solid (only 0x80 and 0x81)
     cp $80
     jr z, .is_solid_down
     cp $81
@@ -335,9 +279,7 @@ check_solid_collision_down::
     call get_tile_at_position
     pop bc              ; Restore BC
 
-    ; Check if right foot tile is solid
-    cp $DB
-    jr z, .is_solid_down
+    ; Check if right foot tile is solid (only 0x80 and 0x81)
     cp $80
     jr z, .is_solid_down
     cp $81
@@ -388,9 +330,7 @@ check_solid_collision_up::
     call get_tile_at_position
     pop bc              ; Restore positions
 
-    ; Check if left side tile is solid
-    cp $DB
-    jr z, .is_solid_up
+    ; Check if left side tile is solid (only 0x80 and 0x81)
     cp $80
     jr z, .is_solid_up
     cp $81
@@ -408,9 +348,7 @@ check_solid_collision_up::
     call get_tile_at_position
     pop bc              ; Restore BC
 
-    ; Check if right side tile is solid
-    cp $DB
-    jr z, .is_solid_up
+    ; Check if right side tile is solid (only 0x80 and 0x81)
     cp $80
     jr z, .is_solid_up
     cp $81

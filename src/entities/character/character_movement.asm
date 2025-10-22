@@ -42,20 +42,8 @@ update_character_velocities::
     jr .next
 
 .movement:
-; Movimiento ABAJO y ARRIBA (solo para debug, normalmente gravedad controla Y)
-    ld h, CMP_PHYS_H    ; Asegurar que H apunta a componente física
-    ld l, 0             ; Entidad 0 (jugador)
-    ld [hl], 0          ; reiniciar velocidad Y
-
-    .move_down:
-        bit DPAD_DOWN, a
-        jr z, .move_up
-        ld [hl], PLAYER_Y_SPEED ; 1
-
-    .move_up:
-        bit DPAD_UP, a
-        jr z, .next
-        ld [hl], -PLAYER_Y_SPEED ; -1
+    ; No modificar velocidad Y - la gravedad ya la controla el physics_system
+    ; Solo manejamos movimiento horizontal
 
 .next:
 ; Movimiento IZQUIERDA y DERECHA
@@ -63,18 +51,22 @@ update_character_velocities::
     ld l, 1             ; Offset 1 = velocidad X
     ld [hl], 0          ; reiniciar velocidad X
 
+    ; Recargar botones presionados en A
+    ld a, [PRESSED_BUTTONS]
+
     .move_left:
         bit DPAD_LEFT, a
         jr z, .move_right
         ld [hl], -PLAYER_X_SPEED ; -1
         ; Actualizar dirección del jugador a izquierda (0)
+        push af
         ld a, 0
         ld [wPlayerDirection], a
+        pop af
 
     .move_right:
-        ld a, [PRESSED_BUTTONS] ; Por si alguien pulsa izq+der
         bit DPAD_RIGHT, a
-        jr z, .end 
+        jr z, .end
         ld [hl], PLAYER_X_SPEED ; 1
         ; Actualizar dirección del jugador a derecha (1)
         ld a, 1

@@ -12,7 +12,7 @@ main::
     call read_pad
     ; call move_character
     call update_character_velocities
-    call check_door_collision
+    ; call check_door_collision    ; COMENTADO - No queremos colisiones de puerta
     call update_all_entities_positions
     call clamp_player_position       ; Limitar posición del jugador a los bordes del mapa
     call scroll_manager
