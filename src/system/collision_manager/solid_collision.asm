@@ -29,7 +29,7 @@ get_tile_at_position::
     ; Tile Y = (Y + SCY - 17) / 8
     ldh a, [rSCY]
     add b
-    sub 17          ; OAM offset estándar de Game Boy
+    sub 17
     srl a
     srl a
     srl a
