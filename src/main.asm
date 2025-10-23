@@ -21,7 +21,7 @@ call wait_vblank
     call clamp_player_position       ; Limitar posición del jugador a los bordes del mapa
     call scroll_manager
     ; call render_player
-    ; call Update_Bullet_System
+    call update_bullet_system
     halt
 
     jp .main_loop
@@ -35,8 +35,8 @@ init::
     call load_cowboy_sprites
     call init_player
     call load_bullet_sprites
-    call Init_Bullet_System
-    call Init_Counter
+    call init_bullet_system
+    call init_counter
 
     ; Inicializar y cargar nivel inicial
     call Init_Level_System
@@ -63,21 +63,21 @@ init::
 
 
 ;; DE aqui a abajo ignorar que lo tengo que mover
-testeo::
-    ld h, CMP_PHYS_H
-    ld l, e 
-    set 7, [hl]
-    ret
+;testeo::
+;    ld h, CMP_PHYS_H
+;    ld l, e 
+;    set 7, [hl]
+;    ret
 
 
 ;; DE = ENTIDAD
-sys_physics_update_one_entity::
-    ld h, CMP_PHYS_H
-    ld l, e 
-    ret
+;sys_physics_update_one_entity::
+;    ld h, CMP_PHYS_H
+;    ld l, e 
+;    ret
 
 
-sys_physics_update::
-    ld hl, testeo
-    call man_entity_for_each
-    ret
+;sys_physics_update::
+;    ld hl, testeo
+;    call man_entity_for_each
+;    ret
