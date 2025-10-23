@@ -41,19 +41,8 @@ update_entity_position::
 	ld l, e 
 	ld a, [hl]
 	
-	;; HACER CONTADOR PARA SKIPEAR FRAMES
-	; call Delay60Cycles
-
-	;; ========== APLICAMOS GRAVEDAD ==========
-	; add GRAVITY
-	; ld [hl], a
 	ld b, a 
-		
-
 	
-	
-
-
 	;; ========== SUMAMOS Y + VY (con colisiones) ==========
 	ld a, [de]
 	add b
@@ -71,7 +60,7 @@ update_entity_position::
 
 .moving_up:
 	call check_solid_collision_up
-	jr z, .apply_y_movement  ; No hay colisión, aplicar movimiento
+	jr nz, .apply_y_movement  ; No hay colisión, aplicar movimiento
 	; Hay colisión arriba, cancelar movimiento vertical
 	pop bc
 	pop de
@@ -88,7 +77,7 @@ update_entity_position::
 
 .moving_down:
 	call check_solid_collision_down
-	jr z, .apply_y_movement  ; No hay colisión, aplicar movimiento
+	jr nz, .apply_y_movement  ; No hay colisión, aplicar movimiento
 	; Hay colisión abajo (suelo detectado)
 	pop bc
 	pop de
@@ -167,7 +156,7 @@ update_entity_position::
 
 .moving_left:
 	call check_solid_collision_left
-	jr z, .apply_x_movement  ; No hay colisión
+	jr nz, .apply_x_movement  ; No hay colisión
 	; Hay colisión, revertir
 	pop bc
 	pop de
@@ -178,7 +167,7 @@ update_entity_position::
 
 .moving_right:
 	call check_solid_collision_right
-	jr z, .apply_x_movement  ; No hay colisión
+	jr nz, .apply_x_movement  ; No hay colisión
 	; Hay colisión, revertir
 	pop bc
 	pop de
@@ -215,19 +204,11 @@ update_all_entities_positions::
 ;;		E: Entity index
 ;; OUTPUT:
 ;;		-	
-;; WARNING: Destroys BC and DE
+;; WARNING: Destroys A, BC and DE
 
 apply_gravity_to_entity::
 	;; HL contains the address of the routine,
 	;; so we save it since we want to use HL
-
-	; push hl 
-	; ld h, HIGH(ATTR_BASE)
-    ; ld l, PHY_FLAGS
-    ; ld a, [hl]
-    ; bit PHY_FLAG_GROUNDED, a
-    ; pop hl
-    ; ret nz
 
     push hl
 	;; Load entity physics addres in HL
@@ -245,6 +226,14 @@ apply_gravity_to_entity::
 
 	;; Add and store
 	call add_bc_de
+
+	;; To avoid infinite acceleration <- TO UNCOMMENT AT SOME POINT
+	ld a, MAX_GRAVITY
+	cp b
+	jr nz, .store_new_speed ; if equal, we limit the gravity
+	ld b, MAX_GRAVITY-1
+
+	.store_new_speed:
 	ld [hl], c
 	dec hl
 	ld [hl], b
@@ -269,9 +258,23 @@ apply_gravity_to_affected_entities::
 	ret
 
 
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine stops the gravity to all 
+;; to the L-th entity.if it is grounded
+;;
+;; INPUT:
+;;		E: Entity index
+;; OUTPUT:
+;;		-	
+;; WARNING: Destroys BC and DE
+
+;; Creo que finalmente esta no es necesaria
+
 vertical_speed_to_zero_if_grounded_to_entity::
 	push hl 
-	ld h, HIGH(ATTR_BASE)
+	ld h, CMP_ATTR_H
     ld l, PHY_FLAGS
     bit PHY_FLAG_GROUNDED, [hl]
     pop hl
@@ -294,11 +297,17 @@ vertical_speed_to_zero_if_grounded_to_entity::
 
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;	
-;;;
-;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine stops the gravity to all 
+;; entities affected by gravity that are grounded
+;;
+;; INPUT:
+;;		-
+;; OUTPUT:
+;;		-	
+;; WARNING: Destroys ... (lo que destruya man_entity_for_each) 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 vertical_speed_to_zero_if_grounded::
 	ld hl, vertical_speed_to_zero_if_grounded_to_entity
 	call man_entity_for_each ;;; Cambiar por man_entity_for_each_ gravity

@@ -15,8 +15,8 @@ init_enemigos_prueba::
 	ld e, 0   ; tile properties
 	call set_entity_sprite
 	ld b, -1 ; vy 
-	ld c,  0 ; vx
-	;ld d,  0 ; vx
+	;ld c,  0 ; vx
+	ld d,  0 ; vx
 	call set_entity_physics
 
 	call man_entity_alloc ; Returns l=entity index
@@ -26,8 +26,8 @@ init_enemigos_prueba::
 	ld e, %11001010   ; tile properties
 	call set_entity_sprite	
 	ld b,  1 ; vy
-	ld c, -1 ; vx
-	;ld d, -1 ; vx
+	;ld c, -1 ; vx
+	ld d, -1 ; vx
 	call set_entity_physics
 
 	call man_entity_alloc ; Returns l=entity index
@@ -37,8 +37,8 @@ init_enemigos_prueba::
 	ld e, 0   ; tile properties
 	call set_entity_sprite
 	ld b,  0 ; vy
-	ld c,  1 ; vx
-	;ld d,  1 ; vx
+	;ld c,  1 ; vx
+	ld d,  1 ; vx
 	call set_entity_physics
 
 	ret

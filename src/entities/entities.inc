@@ -113,6 +113,7 @@ DEF ENTITY_CMP_SENTINEL 	EQU $FF
 ; =============================================================
 
 DEF GRAVITY 	EQU 16
+DEF MAX_GRAVITY EQU  8 ; To avoid skip two tiles
 ; =============================================================
 
 

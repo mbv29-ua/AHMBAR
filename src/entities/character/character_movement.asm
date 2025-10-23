@@ -25,6 +25,8 @@ update_character_velocities::
     jr nz, .movement
 
     ld [hl], -PLAYER_JUMP_SPEED
+    inc l
+    ld [hl], 0
 
     ;; actualizamos flags si salto
     res PHY_FLAG_GROUNDED, a ; ya no está en el suelo
@@ -96,9 +98,9 @@ clamp_player_position::
 
     ; Estamos en el borde derecho del mapa
     ld a, [Player.wPlayerX]
-    cp 152              ; Límite absoluto derecho
+    cp 152 + 8              ; Límite absoluto derecho + offset
     jr c, .check_y_top
-    ld a, 152
+    ld a, 152 + 8
     ld [Player.wPlayerX], a
 
 .check_y_top:

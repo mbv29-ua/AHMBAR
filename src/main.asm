@@ -10,13 +10,13 @@ main::
 call wait_vblank
 .main_loop:
     ;
-    call update_fire_animation      ; Animate fire tiles during VBlank
+    ;call update_fire_animation      ; Animate fire tiles during VBlank
     call read_pad
     ; call move_character
     call update_character_velocities
-    ; call check_door_collision    ; COMENTADO - No queremos colisiones de puerta
+    call check_door_collision    ; COMENTADO - No queremos colisiones de puerta
     call apply_gravity_to_affected_entities
-    call vertical_speed_to_zero_if_grounded
+    ;call vertical_speed_to_zero_if_grounded
     call update_all_entities_positions
     call clamp_player_position       ; Limitar posición del jugador a los bordes del mapa
     call scroll_manager
@@ -44,14 +44,14 @@ init::
     call Load_Current_Level
     call init_scroll
     call init_player_position
-    call init_tile_animation        ; Initialize fire animation system
-    call init_hud                   ; Initialize HUD (lives & bullets)
+    ;call init_tile_animation        ; Initialize fire animation system
+    ;call init_hud                   ; Initialize HUD (lives & bullets)
     call init_palettes_by_default
     call clean_OAM
     call enable_vblank_interrupts
     call enable_screen
 
-    ; call init_enemigos_prueba   --> Descomentar (Debug)
+    call init_enemigos_prueba  ; --> Descomentar (Debug)
 
     call screen_on
 
