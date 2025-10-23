@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(printenv)",
+      "Bash(unset:*)",
+      "Bash(source ~/.zshrc)",
+      "Bash(make:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
