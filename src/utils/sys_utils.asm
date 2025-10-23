@@ -89,7 +89,6 @@ init_palettes_by_default::
     ld a, DEFAULT_PALETTE
     ldh [rBGP], a
     ldh [rOBP0], a
-    ld a, DEFAULT_PALETTE
     ldh [rOBP1], a
     ret
 
@@ -130,6 +129,23 @@ wait_a_frame::
         cp [hl]
         jr nz, .loop2
     ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine waits a complete x frames (x/60 sec.)
+;;
+;; INPUT:
+;;      B: Frames to wait
+;; OUTPUT:
+;;      -
+;; WARNING: Destroys A, B and HL.
+
+wait_x_frames::
+    call wait_a_frame
+    dec b    
+    jr nz, wait_x_frames
+    ret
+
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
