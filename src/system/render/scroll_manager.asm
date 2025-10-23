@@ -2,10 +2,16 @@ include "constants.inc"
 
 SECTION "Scroll Manager", ROM0
 
+DEF SCROLL_OFFSET               EQU 48 ;; This can be changed and it sets the others
+
 DEF SCREEN_OFFSET_VERTICAL      EQU 16
 DEF SCREEN_OFFSET_HORIZONTAL    EQU  8
 DEF TILE_OFFSET                 EQU  8
-DEF SCROLL_OFFSET               EQU 16 ;; Este se puede cambiar
+
+DEF UP_SCROLL_OFFSET        EQU SCROLL_OFFSET + SCREEN_OFFSET_VERTICAL + TILE_OFFSET
+DEF DOWN_SCROLL_OFFSET      EQU 144 + SCREEN_OFFSET_VERTICAL - SCROLL_OFFSET - TILE_OFFSET
+DEF RIGHT_SCROLL_OFFSET     EQU 160 - SCROLL_OFFSET - SCREEN_OFFSET_HORIZONTAL
+DEF LEFT_SCROLL_OFFSET      EQU SCROLL_OFFSET + SCREEN_OFFSET_HORIZONTAL + TILE_OFFSET
 
 ;;; Mirar lo de los offsets de la pantalla
 scroll_manager::
@@ -18,7 +24,7 @@ scroll_manager::
 
     ; El personaje en posicion que activa el scroll up
     ld a, [Player.wPlayerY]
-    cp SCROLL_OFFSET + SCREEN_OFFSET_VERTICAL + TILE_OFFSET; Límite superior de la pantalla para activar scroll 
+    cp UP_SCROLL_OFFSET; Límite superior de la pantalla para activar scroll 
     jr nc, .end_scroll_up
 
     ; Hacemos scroll up
@@ -40,7 +46,7 @@ scroll_manager::
 
     ; El personaje en posicion que activa el scroll down
     ld a, [Player.wPlayerY]
-    cp 144 + SCREEN_OFFSET_VERTICAL - SCROLL_OFFSET - TILE_OFFSET; Límite inferior de la pantalla para activar scroll 
+    cp DOWN_SCROLL_OFFSET; Límite inferior de la pantalla para activar scroll 
     jr c, .end_scroll_down
 
     ; Hacemos scroll down
@@ -62,7 +68,7 @@ scroll_manager::
 
     ; El personaje en posicion que activa el scroll right
     ld a, [Player.wPlayerX]
-    cp 160 - SCROLL_OFFSET - SCREEN_OFFSET_HORIZONTAL; Límite derecha de la pantalla para activar scroll 
+    cp RIGHT_SCROLL_OFFSET; Límite derecha de la pantalla para activar scroll 
     jr c, .end_scroll_right
 
     ; Hacemos scroll right
@@ -85,7 +91,7 @@ scroll_manager::
 
     ; El personaje en posicion que activa el scroll left
     ld a, [Player.wPlayerX]
-    cp SCROLL_OFFSET + SCREEN_OFFSET_HORIZONTAL + TILE_OFFSET; Límite izquierda de la pantalla para activar scroll 
+    cp LEFT_SCROLL_OFFSET; Límite izquierda de la pantalla para activar scroll 
     jr nc, .end_scroll_left
 
     ; Hacemos scroll left
