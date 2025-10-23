@@ -58,6 +58,9 @@ init_player::
     set 0, [hl]
 
     ld h, CMP_ATTR_H
+    ld l, ATT_ENTITY_FLAGS
+    set E_BIT_GRAVITY, [hl]
+
     ld l, PHY_FLAGS
     set PHY_FLAG_GROUNDED, [hl]
     res PHY_FLAG_JUMPING, [hl]

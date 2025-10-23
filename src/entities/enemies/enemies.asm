@@ -1,3 +1,5 @@
+INCLUDE "entities/entities.inc"
+
 SECTION "Enemies", ROM0
 
 ;; Example <- To delete in the final version
@@ -40,5 +42,9 @@ init_enemigos_prueba::
 	;ld c,  1 ; vx
 	ld d,  1 ; vx
 	call set_entity_physics
+
+	ld h, CMP_ATTR_H
+    ld l, ATT_ENTITY_FLAGS
+    set E_BIT_GRAVITY, [hl]
 
 	ret
