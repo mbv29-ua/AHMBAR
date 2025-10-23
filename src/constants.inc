@@ -117,9 +117,9 @@ DEF PLAYER_JUMP_POWER   EQU 32
 ; Nivel 1: Tile en $9BC1 (X=1, Y=30/0x1E) con scroll (0, 112)
 DEF LEVEL1_PLAYER_X     EQU 16
 DEF LEVEL1_PLAYER_Y     EQU 144
-; Nivel 2: Tile en $98C4 (X=4, Y=6) con scroll (0, 0)
-DEF LEVEL2_PLAYER_X     EQU 40
-DEF LEVEL2_PLAYER_Y     EQU 64
+; Nivel 2: Arriba-izquierda del mapa (columna 0, fila 0)
+DEF LEVEL2_PLAYER_X     EQU 8
+DEF LEVEL2_PLAYER_Y     EQU 8
 ; Nivel 3: Por defecto --> no esta hecho mirar de momento
 DEF LEVEL3_PLAYER_X     EQU 80
 DEF LEVEL3_PLAYER_Y     EQU 72

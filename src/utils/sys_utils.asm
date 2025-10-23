@@ -66,11 +66,13 @@ screen_off::
 screen_on::
     ; Configurar LCDC completo:
     ; Bit 7 = 1: LCD ON
+    ; Bit 6 = 1: Window Tilemap en $9C00
+    ; Bit 5 = 1: Window Enable (para HUD en parte inferior)
     ; Bit 4 = 0: Tiles en $8800 (signed)
     ; Bit 3 = 0: BG Map en $9800
     ; Bit 1 = 1: OBJ ON
     ; Bit 0 = 1: BG Display ON
-    ld a, %10000011
+    ld a, %11100011
     ldh [rLCDC], a
     ret
 
@@ -104,8 +106,9 @@ init_palettes_by_default::
 ;; WARNING: Destroys A
 
 enable_vblank_interrupts::
-    ; Habilitar interrupciones VBlank
-    ld a, IEF_VBLANK
+    ; Habilitar solo interrupciones VBlank (LCD-Stat desactivado)
+    ; Bit 0: VBlank
+    ld a, %00000001     ; Solo bit 0
     ldh [rIE], a
     ret
 

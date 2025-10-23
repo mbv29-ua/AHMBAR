@@ -46,9 +46,28 @@ Next_Level::
 .set_level:
     ld [wCurrentLevel], a
 
-    ; Recargar tiles (todos los niveles usan los mismos tiles)
-    call Load_Level1_Tiles
+    ; Recargar tiles según el nivel
+    cp 1
+    jr z, .load_tiles_level1
+    cp 2
+    jr z, .load_tiles_level2
+    cp 3
+    jr z, .load_tiles_level3
+    jr .load_map
 
+.load_tiles_level1:
+    call Load_Level1_Tiles
+    jr .load_map
+
+.load_tiles_level2:
+    call Load_Level2_Tiles
+    jr .load_map
+
+.load_tiles_level3:
+    call Load_Level1_Tiles  ; Level 3 usa los mismos tiles que Level 1
+    jr .load_map
+
+.load_map:
     ; Cargar nuevo nivel
     call Load_Current_Level
 

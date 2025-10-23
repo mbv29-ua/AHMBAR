@@ -4,7 +4,8 @@
       "Bash(printenv)",
       "Bash(unset:*)",
       "Bash(source ~/.zshrc)",
-      "Bash(make:*)"
+      "Bash(make:*)",
+      "Bash(cat:*)"
     ],
     "deny": [],
     "ask": []

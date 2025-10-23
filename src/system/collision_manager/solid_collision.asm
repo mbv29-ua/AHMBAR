@@ -22,17 +22,17 @@ check_solid_collision_left::
     ld l, e
 
     ; Get entity Y position
-    ld b, [hl] ; C = Y position (left edge: pixel 0)
+    ld b, [hl] ; B = Y position (left edge: pixel 0)
     inc l
-    
+
     ld c, [hl] ; C = entity X
-    dec c      ; C = next pixel at left     
-    jr c, .at_edge 
+    dec c      ; C = next pixel at left
+    jr c, .at_edge
 
     call get_tile_at_position
     call is_tile_solid
-    ret z
-    
+    ret z               ; Return Z=1 if solid collision found
+
     ; Top half OK, check bottom half at Y+7
     ld a, b
     add 7
@@ -40,11 +40,10 @@ check_solid_collision_left::
 
     call get_tile_at_position
     call is_tile_solid
-    ret
+    ret                 ; Return result from second check
 
 .at_edge:
-    xor a
-    dec a               ; Z = 0 (collision)
+    cp a                ; Z = 1 (solid collision at edge)
     ret
 
 
@@ -67,18 +66,18 @@ check_solid_collision_right::
     ld l, e
 
     ; Get entity Y position
-    ld b, [hl] ; C = Y position (left edge: pixel 0)
+    ld b, [hl] ; B = Y position (left edge: pixel 0)
     inc l
-    
-    ld a, [hl] ; C = entity X
+
+    ld a, [hl] ; A = entity X
     add 8 ; 7+1 To see next pixel
     ld c, a
     cp 159 ; At edge
-    jr c, .at_edge 
+    jr nc, .at_edge
 
     call get_tile_at_position
     call is_tile_solid
-    ret z
+    ret z               ; Return Z=1 if solid collision found
 
     ; Top half OK, check bottom half at Y+7
     ld a, b
@@ -86,12 +85,11 @@ check_solid_collision_right::
     ld b, a             ; B = Y+7
 
     call get_tile_at_position
-    call is_tile_solid    
-    ret
+    call is_tile_solid
+    ret                 ; Return result from second check
 
-.at_edge
-    xor a
-    dec a               ; Z = 0 (collision)
+.at_edge:
+    cp a                ; Z = 1 (solid collision at edge)
     ret
 
 
@@ -113,19 +111,17 @@ check_solid_collision_down::
     ld l, e
 
     ; Get entity Y position
-    ld a, [hl]          ; C = Y position (left edge: pixel 0)
-    add 7               ; Add 7 pixels (bottom edge of 8x8 sprite: 0-7)
+    ld a, [hl]          ; A = Y position (left edge: pixel 0)
+    add 8               ; Add 8 pixels to check below the sprite
     ld b, a             ; B = Y position to check
 
     ; Get entity X position
-    inc l    
+    inc l
     ld c, [hl]          ; C = entity X
-    inc c               ; Check if that point is out of bounds
-    jr c, .at_edge 
 
     call get_tile_at_position
     call is_tile_solid
-    ret z
+    ret z               ; Return Z=1 if solid collision found
 
     ; Left OK, now check RIGHT side (X+7)
     ld a, c             ; A = entity X
@@ -134,12 +130,7 @@ check_solid_collision_down::
 
     call get_tile_at_position
     call is_tile_solid
-    ret 
-
-.at_edge:
-    xor a
-    dec a       ; Z = 0 (collision detected)
-    ret
+    ret                 ; Return result from second check
 
 
 
@@ -158,17 +149,17 @@ check_solid_collision_up::
     ld l, e
 
     ; Get entity Y position
-    ld b, [hl]          ; C = Y position (left edge: pixel 0)
-    
+    ld a, [hl]          ; A = Y position
+    dec a               ; Check pixel above the sprite
+    ld b, a             ; B = Y position to check
+
     ; Get entity X position
-    inc l    
+    inc l
     ld c, [hl]          ; C = entity X
-    dec c               ; Check if that point is out of bounds
-    jr c, .at_edge 
 
     call get_tile_at_position
     call is_tile_solid
-    ret z
+    ret z               ; Return Z=1 if solid collision found
 
     ; Left OK, now check RIGHT side (X+7)
     ld a, c             ; A = entity X
@@ -177,9 +168,4 @@ check_solid_collision_up::
 
     call get_tile_at_position
     call is_tile_solid
-    ret 
-
-.at_edge:
-    xor a
-    dec a       ; Z = 0 (collision detected)
-    ret
+    ret                 ; Return result from second check
