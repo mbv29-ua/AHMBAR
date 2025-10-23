@@ -10,7 +10,7 @@ main::
 call wait_vblank
 .main_loop:
     ;
-    ;call update_fire_animation      ; Animate fire tiles during VBlank
+    call update_fire_animation      ; Animate fire tiles during VBlank
     call read_pad
     ; call move_character
     call update_character_velocities
