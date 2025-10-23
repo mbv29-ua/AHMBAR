@@ -59,7 +59,7 @@ Next_Level::
     call init_player_position
 
     ; Reiniciar sistema de balas
-    call Init_Bullet_System
+    call init_bullet_system
 
     ; Encender pantalla
     call screen_on
