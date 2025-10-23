@@ -70,7 +70,7 @@ screen_on::
     ; Bit 3 = 0: BG Map en $9800
     ; Bit 1 = 1: OBJ ON
     ; Bit 0 = 1: BG Display ON
-    ld a, %10000011
+    ld a, %10010011
     ldh [rLCDC], a
     ret
 

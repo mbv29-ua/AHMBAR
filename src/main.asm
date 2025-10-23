@@ -4,6 +4,7 @@ INCLUDE "entities/entities.inc"
 SECTION "Entry Point", ROM0[$150]
 
 main::
+    
     ;call scene_title_screen
     call init 
 
@@ -46,38 +47,18 @@ init::
     call init_player_position
     ;call init_tile_animation        ; Initialize fire animation system
     ;call init_hud                   ; Initialize HUD (lives & bullets)
-    call init_palettes_by_default
+    
     call clean_OAM
     call enable_vblank_interrupts
     call enable_screen
-
+    call init_palettes_by_default
     call init_enemigos_prueba  ; --> Descomentar (Debug)
 
     call screen_on
+    
 
     ;call man_entity_alloc
     ;call man_entity_alloc
     ;call man_entity_alloc
 
-    ret
-
-
-;; DE aqui a abajo ignorar que lo tengo que mover
-testeo::
-    ld h, CMP_PHYS_H
-    ld l, e 
-    set 7, [hl]
-    ret
-
-
-;; DE = ENTIDAD
-sys_physics_update_one_entity::
-    ld h, CMP_PHYS_H
-    ld l, e 
-    ret
-
-
-sys_physics_update::
-    ld hl, testeo
-    call man_entity_for_each
     ret
