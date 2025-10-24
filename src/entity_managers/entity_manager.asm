@@ -200,48 +200,37 @@ man_entity_for_each_movable::
 	.exit
 		ret
 
-man_entity_for_each_gravity::
-	ld de, ATTR_BASE
-	.loop
 
+
+
+man_entity_for_each_gravity::
+	
+	ld de, ATTR_BASE
 	ld a, [de]
 	cp ENTITY_CMP_SENTINEL
 	ret z 
 
-	bit E_BIT_SENTINEL, a 
-	jr nz, .process_and_exit
+	.loop		
+		ld a, [de]
+		bit E_BIT_GRAVITY, a
+		jr z, .next
 
-	bit E_BIT_GRAVITY, a
-	jr z, .continue
+		push af
+		push de
+		push hl
+		call helper_call_hl
+		pop hl
+		pop de
+		pop af	
 
-	push af
-	push de
-	push hl
-	call helper_call_hl
-	.return
-	pop hl
-	pop de
-	pop af
+		.next:
+		bit E_BIT_SENTINEL, a 
+		ret nz
 
-
-	.continue
-	ld a, e 
-	add ATTR_SIZE
-	ld e, a 
-	
-	jr .loop
-
-	.process_and_exit:
-	push af
-	push de
-	push hl
-	call helper_call_hl
-	pop hl
-	pop de
-	pop af	
-
-	.exit
-		ret
+		ld a, e 
+		add ATTR_SIZE
+		ld e, a 
+		jr .loop
 
 
 

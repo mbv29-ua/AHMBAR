@@ -6,7 +6,7 @@ scene_title_screen::
 	ld hl, credits
 	call write_super_extended_dialog
 	call wait_until_A_pressed
-	; call background_fadeout
+	call fadeout
 	ret
 
 
