@@ -81,6 +81,9 @@ Next_Level::
     ;call init_bullet_system
 
     ; Encender pantalla
+    call screen_bg_on
+    call screen_obj_on
+    call screen_window_dialog
     call screen_on
     ret
 

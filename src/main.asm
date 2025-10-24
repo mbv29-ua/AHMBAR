@@ -1,23 +1,31 @@
 INCLUDE "constants.inc"
 INCLUDE "entities/entities.inc"
+INCLUDE "utils/joypad.inc"
 
 SECTION "Entry Point", ROM0[$150]
 
 main::
-    ;call scene_title_screen
+    call scene_title_screen
     ld hl, scene_1
     call load_scene
 
-    ;call init 
+    ; call init 
 
 call wait_vblank
 .main_loop:
-    ;
+
     call update_fire_animation      ; Animate fire tiles during VBlank
+    call update_hud_if_needed       ; Update HUD if flag is set (during VBlank)
     call read_pad
+
+    ; DEBUG: SELECT para perder vida (testing Game Over)
+    ld a, [JUST_PRESSED_BUTTONS]
+    bit BUTTON_SELECT, a
+    call nz, lose_life
+
     ; call move_character
     call update_character_velocities
-    call check_door_collision    ; COMENTADO - No queremos colisiones de puerta
+    call check_door_collision       ; Check door tiles ($C0-$C3) to trigger next level
     call apply_gravity_to_affected_entities
     ;call vertical_speed_to_zero_if_grounded
     call update_all_entities_positions

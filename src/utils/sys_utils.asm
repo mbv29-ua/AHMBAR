@@ -17,6 +17,11 @@ clean_OAM::
     call memreset_256
     ret
 
+clean_bg_map::
+    ld hl, BG_MAP_START
+    ld bc, BG_MAP_SIZE
+    call memreset_65536
+    ret
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; This routine waits until the VBLANK starts
@@ -72,9 +77,31 @@ screen_on::
     ; Bit 3 = 0: BG Map en $9800
     ; Bit 1 = 1: OBJ ON
     ; Bit 0 = 1: BG Display ON
-    ld a, %11100011
-    ldh [rLCDC], a
+    ; ld a, %11100011
+    ; ldh [rLCDC], a
+    ld hl, rLCDC
+    set 7, [hl]
     ret
+
+scree_hud_on:
+    ld hl, rLCDC
+    set 5, [hl]
+    ret
+screen_window_dialog::
+    ld hl, rLCDC
+    set 6, [hl]
+    ret
+
+screen_bg_on::
+    ld hl, rLCDC
+    set 0, [hl]
+    ret
+
+screen_obj_on::
+    ld hl, rLCDC
+    set 1, [hl]
+    ret
+
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

@@ -55,9 +55,11 @@ update_fire_animation::
     and %00000011       ; Wrap around at 4 (0-3)
     ld [wFireAnimFrame], a
 
+
     ; Update fire tiles A4 and A6 in VRAM
     ; Tiles A8, A9, AA, AB are the 4 animation frames
-
+    ; Update ONLY top fire tiles in VRAM
+    ; $84 and $86 = FIRE TOP (animated)
     ; Check which frame we're on
     or a                ; Frame 0?
     jp z, .load_frame0
@@ -68,78 +70,79 @@ update_fire_animation::
     ; Must be frame 3
     jp .load_frame3
 
-
 .load_frame0:
-    ; Copy tile A8 -> A4 (VRAM $8A40)
+    ; Load fireFrame0 -> VRAM $8A40 (tile $A4 - top fire)
     ld de, $8A40
-    ld hl, $8A80        ; Source: tile A8
+    ld hl, fireFrame0
     ld bc, 16
-    call copy_vram_to_vram
+    call copy_to_vram
 
-    ; Copy tile A8 -> A6 (VRAM $8A60)
+    ; Load fireFrame0 -> VRAM $8A60 (tile $A6 - top fire)
     ld de, $8A60
-    ld hl, $8A80        ; Source: tile A8
+    ld hl, fireFrame0
     ld bc, 16
-    call copy_vram_to_vram
+    call copy_to_vram
     ret
 
 .load_frame1:
-    ; Copy tile A9 -> A4 (VRAM $8A40)
+    ; Load fireFrame1 -> VRAM $8A40 (tile $A4 - top fire)
     ld de, $8A40
-    ld hl, $8A90        ; Source: tile A9
+    ld hl, fireFrame1
     ld bc, 16
-    call copy_vram_to_vram
+    call copy_to_vram
 
-    ; Copy tile A9 -> A6 (VRAM $8A60)
+    ; Load fireFrame1 -> VRAM $8A60 (tile $A6 - top fire)
     ld de, $8A60
-    ld hl, $8A90        ; Source: tile A9
+    ld hl, fireFrame1
     ld bc, 16
-    call copy_vram_to_vram
+    call copy_to_vram
     ret
 
 .load_frame2:
-    ; Copy tile AA -> A4 (VRAM $8A40)
+    ; Load fireFrame2 -> VRAM $8A40 (tile $A4 - top fire)
     ld de, $8A40
-    ld hl, $8AA0        ; Source: tile AA
+    ld hl, fireFrame2
     ld bc, 16
-    call copy_vram_to_vram
+    call copy_to_vram
 
-    ; Copy tile AA -> A6 (VRAM $8A60)
+    ; Load fireFrame2 -> VRAM $8A60 (tile $A6 - top fire)
     ld de, $8A60
-    ld hl, $8AA0        ; Source: tile AA
+    ld hl, fireFrame2
     ld bc, 16
-    call copy_vram_to_vram
+    call copy_to_vram
     ret
 
 .load_frame3:
-    ; Copy tile AB -> A4 (VRAM $8A40)
+    ; Load fireFrame3 -> VRAM $8A40 (tile $A4 - top fire)
     ld de, $8A40
-    ld hl, $8AB0        ; Source: tile AB
+    ld hl, fireFrame3
     ld bc, 16
-    call copy_vram_to_vram
+    call copy_to_vram
 
-    ; Copy tile AB -> A6 (VRAM $8A60)
+    ; Load fireFrame3 -> VRAM $8A60 (tile $A6 - top fire)
     ld de, $8A60
-    ld hl, $8AB0        ; Source: tile AB
+    ld hl, fireFrame3
     ld bc, 16
-    call copy_vram_to_vram
+    call copy_to_vram
     ret
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;; copy_vram_to_vram
-;;;; Copies data from VRAM to VRAM (must be called during VBlank)
-;;;;
-;;;; Input:
-;;;;   HL = Source address (VRAM)
-;;;;   DE = Destination address (VRAM)
-;;;;   BC = Number of bytes to copy
-;;;; Destroys: A, BC, DE, HL
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-copy_vram_to_vram:
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; copy_to_vram
+;;; Copies data to VRAM (must be called during VBlank)
+;;;
+;;; Input:
+;;;   HL = Source address (ROM)
+;;;   DE = Destination address (VRAM)
+;;;   BC = Number of bytes to copy
+;;; Destroys: A, BC, DE, HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+copy_to_vram:
 .loop:
-    ld a, [hl+]         ; Load byte from source VRAM
-    ld [de], a          ; Write to destination VRAM
+    ld a, [hl+]         ; Load byte from source
+    ld [de], a          ; Write to VRAM
     inc de              ; Next VRAM address
     dec bc              ; Decrement counter
     ld a, b
