@@ -254,6 +254,7 @@ apply_gravity_to_entity::
 
 apply_gravity_to_affected_entities::
 	ld hl, apply_gravity_to_entity
+	;ld b, E_BIT_GRAVITY
 	call man_entity_for_each_gravity ;;; Cambiar por man_entity_for_each_ gravity
 	ret
 
