@@ -17,6 +17,11 @@ clean_OAM::
     call memreset_256
     ret
 
+clean_bg_map::
+    ld hl, BG_MAP_START
+    ld bc, BG_MAP_SIZE
+    call memreset_65536
+    ret
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; This routine waits until the VBLANK starts
@@ -66,13 +71,37 @@ screen_off::
 screen_on::
     ; Configurar LCDC completo:
     ; Bit 7 = 1: LCD ON
+    ; Bit 6 = 1: Window Tilemap en $9C00
+    ; Bit 5 = 1: Window Enable (para HUD en parte inferior)
     ; Bit 4 = 0: Tiles en $8800 (signed)
     ; Bit 3 = 0: BG Map en $9800
     ; Bit 1 = 1: OBJ ON
     ; Bit 0 = 1: BG Display ON
-    ld a, %10010011
-    ldh [rLCDC], a
+    ; ld a, %11100011
+    ; ldh [rLCDC], a
+    ld hl, rLCDC
+    set 7, [hl]
     ret
+
+scree_hud_on:
+    ld hl, rLCDC
+    set 5, [hl]
+    ret
+screen_window_dialog::
+    ld hl, rLCDC
+    set 6, [hl]
+    ret
+
+screen_bg_on::
+    ld hl, rLCDC
+    set 0, [hl]
+    ret
+
+screen_obj_on::
+    ld hl, rLCDC
+    set 1, [hl]
+    ret
+
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -103,8 +132,9 @@ init_palettes_by_default::
 ;; WARNING: Destroys A
 
 enable_vblank_interrupts::
-    ; Habilitar interrupciones VBlank
-    ld a, IEF_VBLANK
+    ; Habilitar solo interrupciones VBlank (LCD-Stat desactivado)
+    ; Bit 0: VBlank
+    ld a, %00000001     ; Solo bit 0
     ldh [rIE], a
     ret
 
@@ -176,36 +206,36 @@ enable_screen::
     ; No hace nada, la configuración está en screen_on
     ret
 
-init_scroll::
-    ; Establecer scroll según el nivel actual
-    ld a, [wCurrentLevel]
-    cp 1
-    jr z, .level1_scroll
-    cp 2
-    jr z, .level2_scroll
-    cp 3
-    jr z, .level3_scroll
-    ; Por defecto, nivel 1
-.level1_scroll:
-    ld a, LEVEL1_SCX
-    ldh [rSCX], a
-    ld a, LEVEL1_SCY
-    ldh [rSCY], a
-    ret
-
-.level2_scroll:
-    ld a, LEVEL2_SCX
-    ldh [rSCX], a
-    ld a, LEVEL2_SCY
-    ldh [rSCY], a
-    ret
-
-.level3_scroll:
-    ld a, LEVEL3_SCX
-    ldh [rSCX], a
-    ld a, LEVEL3_SCY
-    ldh [rSCY], a
-    ret
+;init_scroll::
+;    ; Establecer scroll según el nivel actual
+;    ld a, [wCurrentLevel]
+;    cp 1
+;    jr z, .level1_scroll
+;    cp 2
+;    jr z, .level2_scroll
+;    cp 3
+;    jr z, .level3_scroll
+;    ; Por defecto, nivel 1
+;.level1_scroll:
+;    ld a, LEVEL1_SCX
+;    ldh [rSCX], a
+;    ld a, LEVEL1_SCY
+;    ldh [rSCY], a
+;    ret
+;
+;.level2_scroll:
+;    ld a, LEVEL2_SCX
+;    ldh [rSCX], a
+;    ld a, LEVEL2_SCY
+;    ldh [rSCY], a
+;    ret
+;
+;.level3_scroll:
+;    ld a, LEVEL3_SCX
+;    ldh [rSCX], a
+;    ld a, LEVEL3_SCY
+;    ldh [rSCY], a
+;    ret
 
 
 ;;;;; No hacer caso aparece asi en el libro! Ejemplo de rutina para actualizar scroll X

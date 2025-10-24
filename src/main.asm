@@ -4,17 +4,18 @@ INCLUDE "entities/entities.inc"
 SECTION "Entry Point", ROM0[$150]
 
 main::
+
     
     ;call scene_title_screen
     call scene_intro_screen
     ld hl, scene_1
     call load_scene
 
-    ;call init 
+    ; call init 
 
 call wait_vblank
 .main_loop:
-    ;
+
     call update_fire_animation      ; Animate fire tiles during VBlank
     call read_pad
     ; call move_character
@@ -49,9 +50,11 @@ init::
     call Load_Current_Level
     call init_scroll
     call init_player_position
-    ;call init_tile_animation        ; Initialize fire animation system
-    ;call init_hud                   ; Initialize HUD (lives & bullets)
-    
+
+    call init_tile_animation        ; Initialize fire animation system
+    call init_hud                   ; Initialize HUD (lives & bullets) - ABAJO de pantalla
+    call init_palettes_by_default
+
     call clean_OAM
     call enable_vblank_interrupts
     call enable_screen
@@ -60,6 +63,8 @@ init::
 
     call screen_on
     
+
+    ; Window ya está activada en screen_on (LCDC bit 5)
 
     ;call man_entity_alloc
     ;call man_entity_alloc

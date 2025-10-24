@@ -1,4 +1,4 @@
-include "constants.inc"
+include "system/text_manager/text_manager_constants.inc"
 
 SECTION "Charmap", ROM0
 

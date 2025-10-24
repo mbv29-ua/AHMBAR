@@ -110,8 +110,6 @@ get_tile_at_player_position::
 
     ; Leer el tile en esa posición
     ld a, [hl]
-
-    call get_tile_at_position
     ret
 
 

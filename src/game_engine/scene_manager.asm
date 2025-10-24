@@ -2,6 +2,10 @@ INCLUDE "scenes/scene_constants.inc"
 INCLUDE "entities/entities.inc"
 INCLUDE "constants.inc"
 
+SECTION "Scene address", WRAM0[$CAF0]
+
+current_scene_info_address: DS 2
+
 SECTION "Scene manager", ROM0
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -15,8 +19,9 @@ SECTION "Scene manager", ROM0
 ;; WARNING: Destroys A, BC, DE, HL
 
 load_scene::
+    call save_current_scene_info_address
+    
     ; Turn off the screen
-    push hl
     call screen_off
 
     ; Clean routines
@@ -28,119 +33,155 @@ load_scene::
     call load_cowboy_sprites
     call load_bullet_sprites
 
-    pop hl
     call load_tileset
     call load_level_map
     call set_initial_scroll
     call init_player
+    ; call init_enemigos_prueba
     call init_palettes_by_default
 
     ; Load scene variables
-    ;call init_counter
+    ;call init_counterload_scene
     ;call init_tile_animation        ; Initialize fire animation system
-    ;call init_hud                   ; Initialize HUD (lives & bullets)
+    call init_hud                   ; Initialize HUD (lives & bullets)
     
     ; Turn on the screen
     call enable_vblank_interrupts
     call enable_screen
+    call screen_bg_on
+    call screen_obj_on
+    call scree_hud_on
+    call screen_window_dialog
     call screen_on
 ret
 
 
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; This routine loads the tileset
+;; This routine saves the current scene information
+;; address
 ;;
 ;; INPUT:
-;;		HL: Address of the scene
+;;      HL: Address of the scene
+;; OUTPUT:
+;;      -   
+;; WARNING: Destroys A and DE
+
+save_current_scene_info_address::
+    ld de, current_scene_info_address
+    
+    ld a, h
+    ld [de], a
+    inc de
+    
+    ld a, l
+    ld [de], a
+    ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine gets the current scene information
+;; address
+;;
+;; INPUT:
+;;      -
+;; OUTPUT:
+;;      HL: Current scene information   
+;; WARNING: Destroys A
+
+get_current_scene_info_address::
+    ld hl, current_scene_info_address
+    ld a, [hl+]
+    ld l, [hl]
+    ld h, a
+    ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine loads the tileset using 
+;; the current scene information
+;;
+;; INPUT:
+;;		-
 ;; OUTPUT:
 ;;		-	
 ;; WARNING: Destroys BC, DE
 
 load_tileset::
 	;; We compute the destiny -> VRAM0_START+SCENE_TILESET_OFFSET
-	push hl
+    call get_current_scene_info_address ; in hl
 	ld de, SCENE_TILESET_OFFSET
 	add hl, de
-	ld e, [hl]
-	inc hl
 	ld d, [hl]
+	inc hl
+	ld e, [hl]
 
 	ld hl, VRAM0_START
     add hl, de
     ld d, h
     ld e, l
-    pop hl
 
-    push hl
+    call get_current_scene_info_address; in hl
     ld bc, SCENE_TILESET_SIZE
     add hl, bc
-    ld a, [hl+]
     ld b, [hl]
-    ld c, a
-    pop hl
+    inc hl
+    ld c, [hl]
 
 
-    push hl
 	;  We obtain the memory address HL where the tileset is 
 	;; from [HL]
     push bc
+    call get_current_scene_info_address ; in hl
     ld bc, SCENE_TILESET
 	add hl, bc
 	ld a, [hl+]
-	ld b, a
-	ld h, [hl]
-	ld l, b
+	ld l, [hl]
+	ld h, a
 	pop bc
 
-
     call memcpy_65536
-
-    pop hl
     ret
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; This routine loads the tilemap
+;; This routine loads the tilemap using 
+;; the current scene information
 ;;
 ;; INPUT:
-;;		HL: Address of the scene
+;;		-
 ;; OUTPUT:
 ;;		-	
 ;; WARNING: Destroys BC, DE
 
 load_level_map::
-
-    push hl
-	;  We obtain the memory address HL where the tilemap is 
-	;; from [HL]
+	;  We obtain the memory address HL where the tilemap is from [HL]
+    call get_current_scene_info_address ; in hl
     ld bc, SCENE_TILEMAP
 	add hl, bc
 	ld a, [hl+]
-	ld b, a
-	ld h, [hl]
-	ld l, b
+	ld l, [hl]
+	ld h, a
 
     ld de, BG_MAP_START
     ld bc, BG_MAP_SIZE
 
     call memcpy_65536
 
-    pop hl
     ret
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; This routine sets the initial scroll
+;; This routine sets the initial scroll using 
+;; the current scene information
 ;;
 ;; INPUT:
-;;		HL: Address of the scene
+;;		-
 ;; OUTPUT:
 ;;		-	
 ;; WARNING: Destroys A and DE
 
 set_initial_scroll::
-	push hl
+	call get_current_scene_info_address ; in hl
     ld d, 0
     ld e, SCENE_STARTING_SCREEN_SCROLL_Y
     add hl, de
@@ -151,28 +192,21 @@ set_initial_scroll::
     add hl, de
     ld a, [hl]
     ldh [rSCX], a
-
-    pop hl
     ret
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; This routine initializes the player
+;; This routine initializes the player using 
+;; the current scene information
 ;;
 ;; INPUT:
-;;		HL: Address of the scene
+;;		-
 ;; OUTPUT:
 ;;		-	
-;; WARNING: Destroys A and DE
+;; WARNING: Destroys A, BC, DE and HL
 
 init_player::
-	push hl
-
-	push hl
-    call man_entity_alloc ; Deja en l el indice
-    ld a, l
-    pop hl
-
+    call get_current_scene_info_address ; in hl
     ld d, 0
     ld e, SCENE_PLAYER_STARTING_Y
     add hl, de
@@ -182,14 +216,10 @@ init_player::
     add hl, de
     ld c, [hl]  ; X coordinate
 
+    call man_entity_alloc ; Deja en l el indice
     ld d, TILE_COWBOY ; tile
-    ld e, 0   ; tile properties
-
-    ld l, a
+    ld e, 0           ; tile properties
     call set_entity_sprite
-
-    ld hl, wPlayerDirection
-    set 0, [hl]
 
     ld h, CMP_ATTR_H
     ld l, ATT_ENTITY_FLAGS
@@ -199,5 +229,43 @@ init_player::
     set PHY_FLAG_GROUNDED, [hl]
     res PHY_FLAG_JUMPING, [hl]
 
-    pop hl
+    ld hl, wPlayerDirection
+    set 0, [hl]
+
+    ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine returns the next scene info using 
+;; the current scene information
+;;
+;; INPUT:
+;;      -
+;; OUTPUT:
+;;      HL: Address of next scene   
+;; WARNING: Destroys A, BC and HL
+
+get_next_scene_info::
+    call get_current_scene_info_address ; in hl
+    ld bc, SCENE_NEXT_SCENE
+    add hl, bc
+    ld a, [hl+]
+    ld l, [hl]
+    ld h, a
+    ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine loads the next scene info using 
+;; the current scene information
+;;
+;; INPUT:
+;;      -
+;; OUTPUT:
+;;      -   
+;; WARNING: Destroys A, BC and HL
+
+next_scene::
+    call get_next_scene_info
+    call load_scene
     ret
