@@ -75,10 +75,10 @@ memreset_256::
 ;; INPUT:
 ;;      HL: Data source
 ;;      DE: Data destiny
-;;       B: Total bytes to be copied
+;;      BC: Total bytes to be copied
 ;; OUTPUT:
 ;;      -
-;; WARNING: Destroys A, B, DE and HL.
+;; WARNING: Destroys A, BC, DE and HL.
 
 memcpy_65536:
     ld a, [hl+]

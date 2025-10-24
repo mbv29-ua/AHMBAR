@@ -1,45 +1,56 @@
 INCLUDE "utils/joypad.inc"
 INCLUDE "constants.inc"
 
+DEF COOLDOWN_STARTING_VALUE EQU 60
+
 SECTION "Bullet System", ROM0
 
-Update_Bullet_System::
-    ld a, [coolDown]
-    cp a, 0
-    jr z, .no_cooldown
-    dec a
-    ld [coolDown], a
-    jr .skip
-    .no_cooldown:
+
+;init_bullet_system::
+;    ; Inicializar array de balas como inactivas
+;    ld hl, wBulletActive
+;    ld [hl], MAX_BULLETS
+;    ret
+
+
+update_bullet_system::
+    call is_magazine_empty
+    ret z
+    call is_there_cooldown
+    jp nz, .cooldown
     call check_button_input
-    jr nz, .skip
-    .render:
-    ;call Update_Bullet    ;; Todo --> quitar gestio del movimiento
-    .skip:
     ret
 
-load_bullet_sprites::
-    ld hl, Tile_Bullet
-    ld de, VRAM0_START + (TILE_BULLET * TILE_SIZE)
-    ld bc, Tile_Bullet_End - Tile_Bullet
-    call memcpy_65536
+    .cooldown
+    ld hl, coolDown
+    dec [hl]
     ret
 
-Init_Bullet_System::
-    ; Inicializar array de balas como inactivas
-    ld hl, wBulletActive
-    ld b, MAX_BULLETS
-    xor a  ; a = BULLET_INACTIVE (0)
-.init_loop:
-    ld [hl+], a
-    dec b
-    jr nz, .init_loop
-    ret
 
-Init_Counter::
+init_counter::
     ld a, COUNTER_START
     ld [wCounterValue], a
-    ; ld [wCounterReload], a
+    ret
+
+
+;; z=1 means empty
+is_magazine_empty::
+    ld a, [wCounterValue]
+    or a
+    ret
+
+
+init_cool_down::
+    ; Activar cooldown de 60 frames (~1 segundo)
+    ld a, COOLDOWN_STARTING_VALUE
+    ld [coolDown], a
+    ret
+
+
+;; Z=1 if cooldown = 0
+is_there_cooldown::
+    ld a, [coolDown]
+    or a
     ret
 
 
@@ -56,100 +67,116 @@ check_button_input::
     call init_cool_down
     ret
 
-check_counter::
-    ld a, [wCounterValue]
-    cp a, 0
-    ; ld b, a
-    ret z
-    call check_cooldown
-    ret
-
-check_cooldown::
-    ; Verificar cooldown: si != 0, retornar (estamos en cooldown)
-    ld a, [coolDown]
-    cp a, 0
-    ret nz
-    call Fire_Bullet
-    ret
-
-Fire_Bullet::
-    ; Buscar una bala libre en el array
-    ld hl, wBulletActive
-    ld b, MAX_BULLETS
-    ld d, 0  ; d = índice de la bala
-.find_free:
-    ld a, [hl+]
-    cp BULLET_INACTIVE
-    jr z, .found_free
-    inc d
-    dec b
-    jr nz, .find_free
-    ret  ; No hay balas libres
-
-.found_free:
-    ; d contiene el índice de la bala libre
-    ; Configurar posición X
-    ; ld e, d
-    ; add hl, de
-
-    ;; When wPlayerDirection is right (1) 
-    ;; in other case (0) left sub 8
-
-    ;; Prove bit wPlayerDirection bit (lef tor right)    
-    ;; TODO: logica de disparo que empiece en la posción correspondiente izda o der
-    call init_bullet
-    
-    ; Activar la bala
-    ;  e, d
-    ; d hl, de
-    ld a, BULLET_ACTIVE ;; TODO : PASAR DE 1 BYTE A BIT
-    ld [wBulletActive], a
-
-    ; Decrementar contador
-    ld hl, wCounterValue
-    dec [hl]
-
-    ret
-
-init_cool_down::
-    ; Activar cooldown de 60 frames (~1 segundo)
-    ld a, 60
-    ld [coolDown], a
-    ret
-
-Update_Bullet::
-    ;; call
-    ;; call
-    ;; call
-    ;ret
 
 
-    ld b, MAX_BULLETS
-    ld c, 0  ; c = índice de la bala
-; pdate_loop:
-    ; push bc
 
-    ; Verificar si la bala está activa
-    ld hl, wBulletActive
-    bit 0, [hl]
-    ; add hl, bc
-    ; ld a, [hl]
-    ; cp BULLET_INACTIVE
-    jr z, .next_bullet
 
-    
-.deactivate:
-    ; Desactivar la bala
-    ld hl, wBulletActive
-    ; ld b, 0
-    ; add hl, bc
-    xor a
-    ld [hl], a
+;;;;;;;;;;;;;;;;;;;;;
 
-.next_bullet:
-    ; pop bc
-    ;  nz, .update_loop
-    ret
+;Init_Bullet_System::
+;    ; Inicializar array de balas como inactivas
+;    ld hl, wBulletActive
+;    ld b, MAX_BULLETS
+;    xor a  ; a = BULLET_INACTIVE (0)
+;.init_loop:
+;    ld [hl+], a
+;    dec b
+;    jr nz, .init_loop
+;    ret
+
+
+
+
+;check_counter::
+;    ld a, [wCounterValue]
+;    cp a, 0
+;    ; ld b, a
+;    ret z
+;    call check_cooldown
+;    ret
+;
+;check_cooldown::
+;    ; Verificar cooldown: si != 0, retornar (estamos en cooldown)
+;    ld a, [coolDown]
+;    cp a, 0
+;    ret nz
+;    call Fire_Bullet
+;    ret
+
+;Fire_Bullet::
+;    ; Buscar una bala libre en el array
+;    ld hl, wBulletActive
+;    ld b, MAX_BULLETS
+;    ld d, 0  ; d = índice de la bala
+;.find_free:
+;    ld a, [hl+]
+;    cp BULLET_INACTIVE
+;    jr z, .found_free
+;    inc d
+;    dec b
+;    jr nz, .find_free
+;    ret  ; No hay balas libres
+;
+;.found_free:
+;    ; d contiene el índice de la bala libre
+;    ; Configurar posición X
+;    ; ld e, d
+;    ; add hl, de
+;
+;    ;; When wPlayerDirection is right (1) 
+;    ;; in other case (0) left sub 8
+;
+;    ;; Prove bit wPlayerDirection bit (lef tor right)    
+;    ;; TODO: logica de disparo que empiece en la posción correspondiente izda o der
+;    call init_bullet
+    ;
+;    ; Activar la bala
+;    ;  e, d
+;    ; d hl, de
+;    ld a, BULLET_ACTIVE ;; TODO : PASAR DE 1 BYTE A BIT
+;    ld [wBulletActive], a
+;
+;    ; Decrementar contador
+;    ld hl, wCounterValue
+;    dec [hl]
+;
+;    ret
+
+
+
+;Update_Bullet::
+;    ;; call
+;    ;; call
+;    ;; call
+;    ;ret
+;
+;
+;    ld b, MAX_BULLETS
+;    ld c, 0  ; c = índice de la bala
+;; pdate_loop:
+;    ; push bc
+;
+;    ; Verificar si la bala está activa
+;    ld hl, wBulletActive
+;    bit 0, [hl]
+;    ; add hl, bc
+;    ; ld a, [hl]
+;    ; cp BULLET_INACTIVE
+;    jr z, .next_bullet
+;
+    ;
+;.deactivate:
+;    ; Desactivar la bala
+;    ld hl, wBulletActive
+;    ; ld b, 0
+;    ; add hl, bc
+;    xor a
+;    ld [hl], a
+;
+;.next_bullet:
+;    ; pop bc
+;    ;  nz, .update_loop
+;    ret
 
 ;render_Bullets::
 ;   ld b, MAX_BULLETS

@@ -6,7 +6,10 @@ SECTION "Entry Point", ROM0[$150]
 main::
     
     ;call scene_title_screen
-    call init 
+    ld hl, scene_1
+    call load_scene
+
+    ;call init 
 
 call wait_vblank
 .main_loop:
@@ -22,7 +25,7 @@ call wait_vblank
     call clamp_player_position       ; Limitar posición del jugador a los bordes del mapa
     call scroll_manager
     ; call render_player
-    ; call Update_Bullet_System
+    call update_bullet_system
     halt
 
     jp .main_loop
@@ -36,8 +39,8 @@ init::
     call load_cowboy_sprites
     call init_player
     call load_bullet_sprites
-    call Init_Bullet_System
-    call Init_Counter
+    ;call init_bullet_system
+    call init_counter
 
     ; Inicializar y cargar nivel inicial
     call Init_Level_System
@@ -62,3 +65,4 @@ init::
     ;call man_entity_alloc
 
     ret
+

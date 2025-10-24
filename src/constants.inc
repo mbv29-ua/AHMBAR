@@ -14,6 +14,7 @@ DEF INTERRUPT_VBLANK         EQU $40
 DEF VRAM0_START         EQU $8000
 DEF VRAM_TILESET_SIZE   EQU 128
 DEF BG_MAP_START        EQU $9800
+DEF BG_MAP_SIZE         EQU 1024
 DEF OAM_START           EQU $FE00
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
