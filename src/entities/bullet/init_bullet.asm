@@ -45,11 +45,11 @@ init_bullet::
     jr .left_speed
 
 .right_speed
-	ld c, BULLET_SPEED ; vx
+	ld d, BULLET_SPEED ; vx
     jr .skip_speed
 
 .left_speed
-	ld c,  -BULLET_SPEED ; vx
+	ld d,  -BULLET_SPEED ; vx
     jr .skip_speed
 
 .skip_speed
