@@ -13,6 +13,7 @@ scene_title_screen::
 title_screen_init::
     call screen_off
     call clean_OAM
+    call clean_bg_map
     call copy_DMA_routine
     call load_fonts
     call init_palettes_by_default

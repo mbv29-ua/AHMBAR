@@ -38,11 +38,15 @@ load_scene::
     ; Load scene variables
     ;call init_counter
     ;call init_tile_animation        ; Initialize fire animation system
-    ;call init_hud                   ; Initialize HUD (lives & bullets)
+    call init_hud                   ; Initialize HUD (lives & bullets)
     
     ; Turn on the screen
     call enable_vblank_interrupts
     call enable_screen
+    call screen_bg_on
+    call screen_obj_on
+    call scree_hud_on
+    call screen_window_dialog
     call screen_on
 ret
 

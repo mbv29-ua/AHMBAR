@@ -63,9 +63,8 @@ init_hud::
 ;;; Destroys: A
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 enable_hud_window::
-    ldh a, [rLCDC]
-    or %00100000        ; Bit 5: Window enable
-    ldh [rLCDC], a
+    ld hl, rLCDC
+    set 5, [hl]        ; Bit 5: Window enable --> Change mgic number(Warning)
     ret
 
 
@@ -78,10 +77,7 @@ clear_hud_area::
     ld hl, $9C00        ; Window tilemap start
     ld b, 64            ; 64 tiles (2 filas de 32)
     ld a, TILE_EMPTY
-.loop:
-    ld [hl+], a
-    dec b
-    jr nz, .loop
+    call memset_256
     ret
 
 
@@ -94,10 +90,7 @@ clear_hud_row::
     ld hl, $9C00        ; Window tilemap start
     ld b, 32            ; 32 tiles (una fila completa)
     ld a, TILE_EMPTY
-.loop:
-    ld [hl+], a
-    dec b
-    jr nz, .loop
+    call memset_256
     ret
 
 
@@ -110,12 +103,7 @@ clear_window_tilemap::
     ld hl, $9C00
     ld bc, $400         ; 1024 bytes (32x32 tiles)
     ld a, TILE_EMPTY
-.loop:
-    ld [hl+], a
-    dec bc
-    ld a, b
-    or c
-    jr nz, .loop
+    call memset_65536
     ret
 
 
