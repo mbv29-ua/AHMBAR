@@ -6,6 +6,7 @@ SECTION "Entry Point", ROM0[$150]
 main::
     
     ;call scene_title_screen
+    call scene_intro_screen
     ld hl, scene_1
     call load_scene
 

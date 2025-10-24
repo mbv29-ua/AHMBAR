@@ -202,9 +202,6 @@ man_entity_for_each_movable::
 	.exit
 		ret
 
-
-
-
 man_entity_for_each_gravity::
 	
 	ld de, ATTR_BASE

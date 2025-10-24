@@ -93,3 +93,9 @@ DB "Mendivil", ENDLINE
 DB "Beltra", ENDLINE
 DB "Automatic", ENDLINE
 DB "Reasoning Team", ENDTEXT
+
+intro_text::
+DB "Hace mucho tiempo,", ENDLINE
+DB "el Ahmbar cambio", ENDLINE
+DB "el destino del ", ENDLINE
+DB "mundo.", ENDTEXT 
