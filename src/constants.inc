@@ -155,3 +155,15 @@ DEF LEVEL3_SCX          EQU 0
 DEF LEVEL3_SCY          EQU 112
 
 
+
+
+
+
+
+;;;;;;;;;;;;;;;
+;;; MACROS
+;;;;;;;;;;;;;;;
+
+MACRO DW_BE
+    DB HIGH(\1), LOW(\1)
+ENDM
