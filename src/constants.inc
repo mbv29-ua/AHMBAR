@@ -79,23 +79,9 @@ DEF PRESSED_BUTTONS      EQU $DFFF    ;; ver que hacer con esto
 DEF JUST_PRESSED_BUTTONS EQU $DFFE    ;; ver que hacer con esto
 DEF RELEASED_BUTTONS     EQU $DFFD    ;; ver que hacer con esto
 
-; Provisional, mover donde toque
+;; Mover donde toque
 DEF CHARMAP_START EQU 128
 DEF CHARMAP_SIZE EQU (198-(128-1))
-
-DEF FIRST_DIALOG_LINE  EQU $9961
-DEF SECOND_DIALOG_LINE EQU $9981
-DEF THIRD_DIALOG_LINE  EQU $99A1
-DEF FOURTH_DIALOG_LINE EQU $99C1
-DEF FIFTH_DIALOG_LINE  EQU $99E1
-DEF SIXTH_DIALOG_LINE  EQU $9A01
-
-DEF TEXTLINE_SIZE EQU 18
-
-DEF ENDLINE EQU 10
-DEF ENDTEXT EQU 11
-
-
 
 DEF TILE_BULLET         EQU $09
 
@@ -114,16 +100,6 @@ DEF PLAYER_START_Y      EQU 72
 DEF PLAYER_SPEED        EQU 2
 DEF PLAYER_JUMP_POWER   EQU 32
 
-; Posiciones iniciales del jugador por nivel
-; Nivel 1: Tile en $9BC1 (X=1, Y=30/0x1E) con scroll (0, 112)
-DEF LEVEL1_PLAYER_X     EQU 16
-DEF LEVEL1_PLAYER_Y     EQU 144
-; Nivel 2: Arriba-izquierda del mapa (columna 0, fila 0)
-DEF LEVEL2_PLAYER_X     EQU 8
-DEF LEVEL2_PLAYER_Y     EQU 8
-; Nivel 3: Por defecto --> no esta hecho mirar de momento
-DEF LEVEL3_PLAYER_X     EQU 80
-DEF LEVEL3_PLAYER_Y     EQU 72
 
 ; Posición del objetivo en píxeles OAM (tile en columna 16, fila 9 - centro del mapa)
 ; Columna 16: 16*8 = 128 píxeles de pantalla + 8 offset OAM = 136
@@ -145,15 +121,25 @@ DEF COUNTER_Y_POS       EQU 16
 
 ; Scroll inicial para cada nivel
 ; Nivel 1: abajo-izquierda (SCX=0, SCY=112)
-DEF LEVEL1_SCX          EQU 0
-DEF LEVEL1_SCY          EQU 112
-; Nivel 2: arriba-izquierda (SCX=0, SCY=0)
-DEF LEVEL2_SCX          EQU 0
-DEF LEVEL2_SCY          EQU 0
-; Nivel 3: abajo-izquierda (SCX=0, SCY=112)
-DEF LEVEL3_SCX          EQU 0
-DEF LEVEL3_SCY          EQU 112
+;DEF LEVEL1_SCX          EQU 0
+;DEF LEVEL1_SCY          EQU 112
+;; Nivel 2: arriba-izquierda (SCX=0, SCY=0)
+;DEF LEVEL2_SCX          EQU 0
+;DEF LEVEL2_SCY          EQU 0
+;; Nivel 3: abajo-izquierda (SCX=0, SCY=112)
+;DEF LEVEL3_SCX          EQU 0
+;DEF LEVEL3_SCY          EQU 112
 
+; Posiciones iniciales del jugador por nivel
+; Nivel 1: Tile en $9BC1 (X=1, Y=30/0x1E) con scroll (0, 112)
+;DEF LEVEL1_PLAYER_X     EQU 16
+;DEF LEVEL1_PLAYER_Y     EQU 144
+;; Nivel 2: Arriba-izquierda del mapa (columna 0, fila 0)
+;DEF LEVEL2_PLAYER_X     EQU 8
+;DEF LEVEL2_PLAYER_Y     EQU 8
+;; Nivel 3: Por defecto --> no esta hecho mirar de momento
+;DEF LEVEL3_PLAYER_X     EQU 80
+;DEF LEVEL3_PLAYER_Y     EQU 72
 
 
 

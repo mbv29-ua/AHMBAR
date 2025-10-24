@@ -56,7 +56,6 @@ load_scene::
 ret
 
 
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; This routine saves the current scene information
 ;; address
@@ -77,6 +76,7 @@ save_current_scene_info_address::
     ld a, l
     ld [de], a
     ret
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; This routine gets the current scene information
@@ -236,7 +236,7 @@ init_player::
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; This routine advances to the next scene using 
+;; This routine returns the next scene info using 
 ;; the current scene information
 ;;
 ;; INPUT:
@@ -245,11 +245,27 @@ init_player::
 ;;      HL: Address of next scene   
 ;; WARNING: Destroys A, BC and HL
 
-get_next_scene::
+get_next_scene_info::
     call get_current_scene_info_address ; in hl
     ld bc, SCENE_NEXT_SCENE
     add hl, bc
     ld a, [hl+]
     ld l, [hl]
     ld h, a
+    ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine loads the next scene info using 
+;; the current scene information
+;;
+;; INPUT:
+;;      -
+;; OUTPUT:
+;;      -   
+;; WARNING: Destroys A, BC and HL
+
+next_scene::
+    call get_next_scene_info
+    call load_scene
     ret

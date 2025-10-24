@@ -9,16 +9,16 @@ SECTION "Collisions", ROM0
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 check_door_collision::
     ; Verificar si estamos en nivel 2, si es así, no hacer nada
-    ld a, [wCurrentLevel]
-    cp 2
-    ret z  ; Si es nivel 2, retornar sin hacer nada
+    ;ld a, [wCurrentLevel]
+    ;cp 2
+    ;ret z  ; Si es nivel 2, retornar sin hacer nada
 
     call get_tile_at_player_position  ; A = tile ID, HL = tilemap address
     call is_tile_door
     ret nz  ; Not a door, return
 
     ; Is a door, change level
-    call Next_Level
+    call next_scene
     ret
 
 

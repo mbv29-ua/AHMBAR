@@ -1,5 +1,6 @@
 include "utils/joypad.inc"
 include "constants.inc"
+include "system/text_manager/text_manager_constants.inc"
 
 SECTION "Dialogs manager", ROM0
 

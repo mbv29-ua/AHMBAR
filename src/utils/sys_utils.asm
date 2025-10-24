@@ -206,36 +206,36 @@ enable_screen::
     ; No hace nada, la configuración está en screen_on
     ret
 
-init_scroll::
-    ; Establecer scroll según el nivel actual
-    ld a, [wCurrentLevel]
-    cp 1
-    jr z, .level1_scroll
-    cp 2
-    jr z, .level2_scroll
-    cp 3
-    jr z, .level3_scroll
-    ; Por defecto, nivel 1
-.level1_scroll:
-    ld a, LEVEL1_SCX
-    ldh [rSCX], a
-    ld a, LEVEL1_SCY
-    ldh [rSCY], a
-    ret
-
-.level2_scroll:
-    ld a, LEVEL2_SCX
-    ldh [rSCX], a
-    ld a, LEVEL2_SCY
-    ldh [rSCY], a
-    ret
-
-.level3_scroll:
-    ld a, LEVEL3_SCX
-    ldh [rSCX], a
-    ld a, LEVEL3_SCY
-    ldh [rSCY], a
-    ret
+;init_scroll::
+;    ; Establecer scroll según el nivel actual
+;    ld a, [wCurrentLevel]
+;    cp 1
+;    jr z, .level1_scroll
+;    cp 2
+;    jr z, .level2_scroll
+;    cp 3
+;    jr z, .level3_scroll
+;    ; Por defecto, nivel 1
+;.level1_scroll:
+;    ld a, LEVEL1_SCX
+;    ldh [rSCX], a
+;    ld a, LEVEL1_SCY
+;    ldh [rSCY], a
+;    ret
+;
+;.level2_scroll:
+;    ld a, LEVEL2_SCX
+;    ldh [rSCX], a
+;    ld a, LEVEL2_SCY
+;    ldh [rSCY], a
+;    ret
+;
+;.level3_scroll:
+;    ld a, LEVEL3_SCX
+;    ldh [rSCX], a
+;    ld a, LEVEL3_SCY
+;    ldh [rSCY], a
+;    ret
 
 
 ;;;;; No hacer caso aparece asi en el libro! Ejemplo de rutina para actualizar scroll X
