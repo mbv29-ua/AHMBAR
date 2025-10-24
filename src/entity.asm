@@ -11,7 +11,7 @@ Player::
 
 SECTION "Player Variables", WRAM0[$CE00]
 wPlayerDirection::  DS 1  ; 0 = izquierda, 1 = derecha
-wBulletActive::     DS 1
+;wBulletActive::     DS 1
 coolDown::          DS 1
 
 ; HUD Variables
@@ -25,9 +25,9 @@ wCounterReload::    DS 1
 wCurrentLevel::     DS 1
 
 
-Bullet::
-    .wBulletY:         DS 1
-    .wBulletX:         DS 1
-    .tile:             DS 1
-    .wDrawAttributes:  DS 1
-    .wBulletDirection: DS 1  ; 0 = izquierda, 1 = derecha
+;Bullet::
+;    .wBulletY:         DS 1
+;    .wBulletX:         DS 1
+;    .tile:             DS 1
+;    .wDrawAttributes:  DS 1
+;    .wBulletDirection: DS 1  ; 0 = izquierda, 1 = derecha

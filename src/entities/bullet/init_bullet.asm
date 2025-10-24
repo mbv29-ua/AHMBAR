@@ -2,27 +2,32 @@ include "constants.inc"
 
 SECTION "Bullet", ROM0
 
+
+load_bullet_sprites::
+    ld hl, Tile_Bullet
+    ld de, VRAM0_START + (TILE_BULLET * TILE_SIZE)
+    ld  b, Tile_Bullet_End - Tile_Bullet
+    call memcpy_256
+    ret
+
+
 init_bullet::
     call man_entity_alloc ; Returns l=entity index
 
+    ;; Change by some flag
     ld a, [wPlayerDirection]
     cp 1
-    jr z, .right
-    jr .left
 
-.right
-    ld a, [Player.wPlayerX]
-    add 8
-    ld c, a
-    jr .skip
+    ld a, [Player.wPlayerX] ;; We keep the flag
+    jr z, .right    
+    .left
+        sub 8
+        jr .skip
+    .right
+        add 8
+    .skip
+        ld c, a
 
-.left
-    ld a, [Player.wPlayerX]
-    sub 8
-    ld c, a
-    jr .skip
-
-.skip
     ; Configurar posición Y
     ; ld e, d
     ; add hl, de
@@ -40,11 +45,11 @@ init_bullet::
     jr .left_speed
 
 .right_speed
-	ld c, BULLET_SPEED ; vx
+	ld d, BULLET_SPEED ; vx
     jr .skip_speed
 
 .left_speed
-	ld c,  -BULLET_SPEED ; vx
+	ld d,  -BULLET_SPEED ; vx
     jr .skip_speed
 
 .skip_speed

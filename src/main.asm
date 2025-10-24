@@ -5,10 +5,14 @@ SECTION "Entry Point", ROM0[$150]
 
 main::
     call scene_title_screen
+    ld hl, scene_1
+    call load_scene
+
     call init 
 
 call wait_vblank
 .main_loop:
+
     call update_fire_animation      ; Animate fire tiles during VBlank
     call read_pad
     ; call move_character
@@ -20,7 +24,7 @@ call wait_vblank
     call clamp_player_position       ; Limitar posición del jugador a los bordes del mapa
     call scroll_manager
     ; call render_player
-    ; call Update_Bullet_System
+    call update_bullet_system
     halt
 
     jp .main_loop
@@ -34,8 +38,8 @@ init::
     call load_cowboy_sprites
     call init_player
     call load_bullet_sprites
-    call Init_Bullet_System
-    call Init_Counter
+    ;call init_bullet_system
+    call init_counter
 
     ; Inicializar y cargar nivel inicial
     call Init_Level_System
@@ -64,21 +68,21 @@ init::
 
 
 ;; DE aqui a abajo ignorar que lo tengo que mover
-testeo::
-    ld h, CMP_PHYS_H
-    ld l, e 
-    set 7, [hl]
-    ret
+;testeo::
+;    ld h, CMP_PHYS_H
+;    ld l, e 
+;    set 7, [hl]
+;    ret
 
 
 ;; DE = ENTIDAD
-sys_physics_update_one_entity::
-    ld h, CMP_PHYS_H
-    ld l, e 
-    ret
+;sys_physics_update_one_entity::
+;    ld h, CMP_PHYS_H
+;    ld l, e 
+;    ret
 
 
-sys_physics_update::
-    ld hl, testeo
-    call man_entity_for_each
-    ret
+;sys_physics_update::
+;    ld hl, testeo
+;    call man_entity_for_each
+;    ret

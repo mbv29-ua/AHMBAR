@@ -209,8 +209,8 @@ update_all_entities_positions::
 apply_gravity_to_entity::
 	;; HL contains the address of the routine,
 	;; so we save it since we want to use HL
-
     push hl
+
 	;; Load entity physics addres in HL
 	ld h, CMP_PHYS_H
 	ld l, e
@@ -227,7 +227,7 @@ apply_gravity_to_entity::
 	;; Add and store
 	call add_bc_de
 
-	;; To avoid infinite acceleration <- TO UNCOMMENT AT SOME POINT
+	;; To avoid infinite acceleration
 	ld a, MAX_GRAVITY
 	cp b
 	jr nz, .store_new_speed ; if equal, we limit the gravity
@@ -254,7 +254,7 @@ apply_gravity_to_entity::
 
 apply_gravity_to_affected_entities::
 	ld hl, apply_gravity_to_entity
-	call man_entity_for_each ;;; Cambiar por man_entity_for_each_ gravity
+	call man_entity_for_each_gravity ;;; Cambiar por man_entity_for_each_ gravity
 	ret
 
 
@@ -284,15 +284,15 @@ vertical_speed_to_zero_if_grounded_to_entity::
 	ret z
 
 	push hl
-	; Detener velocidad vertical y marcar como grounded
+	; Detener velocidad vertical
 	ld h, CMP_PHYS_H
 	ld l, e
-	xor a
-	
+
+	xor a	
 	ld [hl+], a      ; vy = 0
 	ld [hl], a
-	pop hl
 
+	pop hl
 	ret
 
 
