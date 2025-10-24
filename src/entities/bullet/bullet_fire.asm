@@ -6,11 +6,11 @@ DEF COOLDOWN_STARTING_VALUE EQU 60
 SECTION "Bullet System", ROM0
 
 
-init_bullet_system::
-    ; Inicializar array de balas como inactivas
-    ld hl, wBulletActive
-    ld [hl], MAX_BULLETS
-    ret
+;init_bullet_system::
+;    ; Inicializar array de balas como inactivas
+;    ld hl, wBulletActive
+;    ld [hl], MAX_BULLETS
+;    ret
 
 
 update_bullet_system::

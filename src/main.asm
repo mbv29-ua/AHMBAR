@@ -35,7 +35,7 @@ init::
     call load_cowboy_sprites
     call init_player
     call load_bullet_sprites
-    call init_bullet_system
+    ;call init_bullet_system
     call init_counter
 
     ; Inicializar y cargar nivel inicial

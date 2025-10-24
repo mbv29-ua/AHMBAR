@@ -5,10 +5,6 @@ SECTION "Enemies", ROM0
 ;; Example <- To delete in the final version
 
 init_enemigos_prueba::
-	call man_entity_alloc ;Security allocations, until the code is well structured
-	call man_entity_alloc
-	call man_entity_alloc
-
 	;; Example of initializing an enemy (valid for an entity)
 	call man_entity_alloc ; Returns l=entity index
 	ld b, $78 ; Y coordinate
