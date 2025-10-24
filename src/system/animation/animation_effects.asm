@@ -53,7 +53,7 @@ apply_screen_colors_animation_effect::
 
 fadeout::
 	ld hl, fadeout_transition_palette_values
-	ld  d, (fadeout_transition_palette_end-fadeout_transition_palette_values.start)
+	ld  d, (fadeout_transition_palette_end-fadeout_transition_palette_values.start-1)
 	ld  b, 6 ; 1/10 sec per color transition
 	call apply_screen_colors_animation_effect
 	ret
