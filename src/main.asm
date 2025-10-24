@@ -8,7 +8,7 @@ main::
     ld hl, scene_1
     call load_scene
 
-    call init 
+    ; call init 
 
 call wait_vblank
 .main_loop:

@@ -33,6 +33,7 @@ load_scene::
     call load_level_map
     call set_initial_scroll
     call init_player
+    ; call init_enemigos_prueba
     call init_palettes_by_default
 
     ; Load scene variables
