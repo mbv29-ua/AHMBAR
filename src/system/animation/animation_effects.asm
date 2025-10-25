@@ -1,5 +1,7 @@
 INCLUDE "constants.inc"
 
+DEF FADEOUT_SPEED EQU 6
+
 SECTION "Animation transitions", ROM0
 
 fadeout_transition_palette_values::
@@ -54,7 +56,7 @@ apply_screen_colors_animation_effect::
 fadeout::
 	ld hl, fadeout_transition_palette_values
 	ld  d, (fadeout_transition_palette_end-fadeout_transition_palette_values.start-1)
-	ld  b, 6 ; 1/10 sec per color transition
+	ld  b, FADEOUT_SPEED ; 1/10 sec per color transition
 	call apply_screen_colors_animation_effect
 	ret
 
