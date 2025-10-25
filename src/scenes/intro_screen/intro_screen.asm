@@ -9,7 +9,7 @@ wArenaScroll: db
 SECTION "Intro screen scene", ROM0
 
 
-scene_intro_screen::
+scene_intro_screen12::
     call intro_scene_init
 
     ;ld hl, rWX 
@@ -88,7 +88,7 @@ scene_intro_screen::
     
     ret
 
-intro_scene_init::
+intro_scene_init12::
     call screen_off
     call clean_OAM
 
