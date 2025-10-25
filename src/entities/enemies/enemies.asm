@@ -7,7 +7,7 @@ SECTION "Enemies", ROM0
 init_enemigos_prueba::
 	;; Example of initializing an enemy (valid for an entity)
 	call man_entity_alloc ; Returns l=entity index
-	ld b, $78 ; Y coordinate
+	ld b, $48 ; Y coordinate
 	ld c, $14  ; X coordinate
 	ld d, $05 ; tile
 	ld e, 0   ; tile properties

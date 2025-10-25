@@ -4,14 +4,14 @@ INCLUDE "entities/entities.inc"
 SECTION "Entry Point", ROM0[$150]
 
 main::
-<<<<<<< HEAD
+
 
     
     ;call scene_title_screen
     call scene_intro_screen
-=======
+
     ;call scene_title_screen
->>>>>>> miguel
+
     ld hl, scene_1
     call load_scene
 
@@ -37,7 +37,7 @@ call wait_vblank
 
     jp .main_loop
 
-<<<<<<< HEAD
+
 init::
     call screen_off
 
@@ -77,7 +77,7 @@ init::
     ;call man_entity_alloc
 
     ret
-=======
+
 ;init::
 ;    call screen_off
 ;
@@ -114,5 +114,5 @@ init::
 ;    ;call man_entity_alloc
 ;
 ;    ret
->>>>>>> miguel
+
 
