@@ -2,7 +2,7 @@ INCLUDE "scenes/scene_constants.inc"
 INCLUDE "entities/entities.inc"
 INCLUDE "constants.inc"
 
-SECTION "Scene address", WRAM0[$CAF0]
+SECTION "Scene address", WRAM0
 
 current_scene_info_address: DS 2
 
@@ -37,12 +37,12 @@ load_scene::
     call load_level_map
     call set_initial_scroll
     call init_player
-    ; call init_enemigos_prueba
+    call init_enemigos_prueba
     call init_palettes_by_default
 
     ; Load scene variables
     ;call init_counterload_scene
-    ;call init_tile_animation        ; Initialize fire animation system
+    call init_tile_animation        ; Initialize fire animation system
     call init_hud                   ; Initialize HUD (lives & bullets)
     
     ; Turn on the screen

@@ -48,8 +48,15 @@ mult_hl_32::
 ;; OUTPUT:
 ;;		A: A/8	
 
-div_a_8::
+div_a_by_8::
     srl a
     srl a
     srl a
+	ret
+
+
+mult_a_by_8::
+	add a      ; * 2
+    add a      ; * 4
+    add a      ; * 32
 	ret

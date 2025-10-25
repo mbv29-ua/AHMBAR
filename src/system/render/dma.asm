@@ -1,11 +1,6 @@
 INCLUDE "constants.inc"
 INCLUDE "entities/entities.inc"
 
-;; El bloque de las entitie asociado a los sprites
-;  SECTION "Copia OAM", WRAM0, ALIGN[8] <- La direccion de este bloque es ahora SPR_BASE
-;  OAM_copy:: ds 160
-
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;     OAM DMA     ;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;

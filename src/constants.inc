@@ -1,7 +1,16 @@
 ;;; TEMPORARY CONSTANTS
 DEF PLAYER_Y_SPEED EQU 1
 DEF PLAYER_X_SPEED EQU 1
-DEF PLAYER_JUMP_SPEED EQU 2
+DEF PLAYER_JUMP_SPEED EQU 3
+; =============================================================
+; GRAVEDAD ESTO MOVERLO
+; =============================================================
+
+DEF GRAVITY     EQU 32
+DEF MAX_GRAVITY EQU  8 ; To avoid skip two tiles
+; =============================================================
+
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; INTERRUPTS HANDLER CALLERS ADDRESSES
