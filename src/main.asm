@@ -45,11 +45,11 @@ init::
     call init_counter
 
     ; Inicializar y cargar nivel inicial
-    call Init_Level_System
+    ;call Init_Level_System
     call Load_Level1_Tiles
-    call Load_Current_Level
-    call init_scroll
-    call init_player_position
+    ;call Load_Current_Level
+    ;call init_scroll
+    ;call init_player_position
 
     call init_tile_animation        ; Initialize fire animation system
     call init_hud                   ; Initialize HUD (lives & bullets) - ABAJO de pantalla
