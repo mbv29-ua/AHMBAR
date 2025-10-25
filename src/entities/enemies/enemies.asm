@@ -40,7 +40,9 @@ init_enemigos_prueba::
 	call set_entity_physics
 
 	ld h, CMP_ATTR_H
-    ld l, ATT_ENTITY_FLAGS
+	ld a, l
+    add ATT_ENTITY_FLAGS
+    ld l, a
     set E_BIT_GRAVITY, [hl]
 
 	ret
