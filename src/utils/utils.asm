@@ -140,3 +140,20 @@ memreset_65536::
     xor a 
     call memset_65536
     ret
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine simulates a call of the routine
+;; in the address HL.
+;;
+;; INPUT:
+;;      HL: Routine address
+;; OUTPUT:
+;;      -
+;; WARNING: Potentially destroys A, B, C, D and HL.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+helper_call_hl::
+    jp hl
+

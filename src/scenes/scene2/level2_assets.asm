@@ -16,3 +16,6 @@ SECTION "Level 2 Scene", ROM0
 ;    ld bc, Level2_Map_End - Level2_Map
 ;    call memcpy_65536
 ;    ret
+
+scene_2_enemy_spawner::
+	ret

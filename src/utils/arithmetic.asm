@@ -73,3 +73,20 @@ mult_a_by_8::
     add a      ; * 4
     add a      ; * 32
 	ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine computes -A by computing the 
+;; complement 1 of the number and adding 1 to the
+;; result.
+;;
+;; INPUT:
+;;		A: 8-bit integer
+;; OUTPUT:
+;;		A: -A	
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+oposite_of_a::
+	cpl
+	inc a
+	ret

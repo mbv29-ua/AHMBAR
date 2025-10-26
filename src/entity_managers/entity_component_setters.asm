@@ -136,11 +136,11 @@ set_entity_physics::
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Generic function to set entities attributes components
-;;
+;;DEF ATT_ENTITY_FLAGS      RB 1
 ;; Input
 ;;      B: ATT_ENTITY_FLAGS 
-;;      C: PHY_FLAGS
-;;      D: TBA
+;;      C: INTERACTION_FLAGS
+;;      D: PHY_FLAGS
 ;;      E: TBA
 ;;      L: Entity index
 ;; OUTPUT:
@@ -150,6 +150,24 @@ set_entity_physics::
 
 set_entity_attributes::
     ld h, CMP_ATTR_H
+    call set_entity_components
+    ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Generic function to set entities attributes components
+;;
+;; Input
+;;      BC: Address of AI routine 1
+;;      DE: Address of AI routine 2
+;;      L: Entity index
+;; OUTPUT:
+;;      -
+;; WARNING: Destroys H
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+set_entity_AI::
+    ld h, CMP_AI_H
     call set_entity_components
     ret
 
@@ -233,4 +251,23 @@ unset_grounded::
     add PHY_FLAGS
     ld l, a
     res PHY_FLAG_GROUNDED, [hl]
+    ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine checks if an entity is not grounded.
+;;
+;; INPUT:
+;;      E: Entity index
+;; OUTPUT:
+;;      Z=1 if floating, Z=0 if grounded
+;; WARNING: Destroys A and HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+is_floating:
+    ld h, CMP_ATTR_H
+    ld a, e
+    add PHY_FLAGS
+    ld l, a
+    bit PHY_FLAG_GROUNDED, [hl]
     ret

@@ -35,12 +35,15 @@ load_scene::
     ; Load assets
     call load_cowboy_sprites
     call load_bullet_sprites
-
+    call load_frog_tiles
+    call load_fly_tiles
+    
     call load_tileset
     call load_level_map
     call set_initial_scroll
     call init_player
-    call init_enemigos_prueba
+    ; call init_enemigos_prueba
+    call init_enemies
     call init_palettes_by_default
 
     ; Load scene variables
@@ -228,9 +231,21 @@ init_player::
     ld e, 0           ; tile properties
     call set_entity_sprite
 
+;; Revisar
     ld h, CMP_ATTR_H
-    ld l, ATT_ENTITY_FLAGS
-    set E_BIT_GRAVITY, [hl]
+    ld l, E_BIT_PLAYER
+    
+    ; 7: E_BIT_MOVABLE
+    ; 6: E_BIT_GRAVITY
+    ; 5: E_BIT_OUT_OF_BOUNDS
+    ; 4: E_BIT_COLLIDABLE
+    ; 3: E_BIT_DAMAGEABLE
+    ; 2: E_BIT_STICK_TO_EDGES
+    ; 1: TBA
+    ; 0: TBA
+
+    ld l, INTERACTION_FLAGS
+    ld [hl], %11111100
 
     ld l, PHY_FLAGS
     set PHY_FLAG_GROUNDED, [hl]
@@ -278,4 +293,26 @@ next_scene::
     call fade_to_black
     call get_next_scene_info
     call load_scene
+    ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine spaws the enemies using the routine 
+;; specified at the current scene information
+;;
+;; INPUT:
+;;      -
+;; OUTPUT:
+;;      -   
+;; WARNING: Destroys  A, BC, DE and HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+init_enemies::
+    call get_current_scene_info_address ; in hl
+    ld bc, SCENE_ENEMY_SPAWNER
+    add hl, bc
+    ld a, [hl+]
+    ld l, [hl]
+    ld h, a
+    call helper_call_hl
     ret
