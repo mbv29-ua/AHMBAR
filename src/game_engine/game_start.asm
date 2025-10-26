@@ -15,7 +15,8 @@ SECTION "Game start", ROM0
 
 start_game::
 	call set_initial_memory_values
-	ld hl, scene_1
+	; ld hl, scene_1
+    ld hl, scene_1
 	call load_scene 
 	ret
 
