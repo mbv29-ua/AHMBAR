@@ -112,8 +112,6 @@ man_entity_for_each::
 		ret
 
 
-helper_call_hl::
-	jp hl
 
 ;; INPUT: 
 ;;	   L: INDEX ENTITY TO DELETE 
@@ -202,34 +200,6 @@ man_entity_for_each_movable::
 	.exit
 		ret
 
-man_entity_for_each_gravity::
-	
-	ld de, ATTR_BASE
-	ld a, [de]
-	cp ENTITY_CMP_SENTINEL
-	ret z 
-
-	.loop		
-		ld a, [de]
-		bit E_BIT_GRAVITY, a
-		jr z, .next
-
-		push af
-		push de
-		push hl
-		call helper_call_hl
-		pop hl
-		pop de
-		pop af	
-
-		.next:
-		bit E_BIT_SENTINEL, a 
-		ret nz
-
-		ld a, e 
-		add ATTR_SIZE
-		ld e, a 
-		jr .loop
 
 ;; -------------------------------------------------------------------
 ;; man_entity_for_each_of_type
@@ -285,4 +255,88 @@ man_entity_for_each_type::
 
 
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine processes a routine only for those
+;; entities identified as enemies.
+;;
+;; INPUT:
+;;		HL: Routine to apply to each enemy
+;; OUTPUT:
+;;		-	
+;; WARNING: Destroys A, BC and DE
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+man_entity_for_each_enemy::
+	
+	ld de, ATTR_BASE
+	ld a, [de]
+	cp ENTITY_CMP_SENTINEL
+	ret z 
+
+	.loop		
+		ld a, [de]
+		bit E_BIT_ENEMY, a
+		jr z, .next
+
+		push af
+		push de
+		push hl
+		call helper_call_hl
+		pop hl
+		pop de
+		pop af	
+
+		.next:
+		bit E_BIT_SENTINEL, a 
+		ret nz
+
+		ld a, e 
+		add ATTR_SIZE
+		ld e, a 
+		jr .loop
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine processes a routine only for those
+;; entities affected by gravity.
+;;
+;; INPUT:
+;;		HL: Routine
+;; OUTPUT:
+;;		-	
+;; WARNING: Destroys A, BC and DE
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+man_entity_for_each_gravity::
+	
+	ld de, ATTR_BASE
+	ld a, [de]
+	cp ENTITY_CMP_SENTINEL
+	ret z 
+
+	.loop:
+		ld b, 0
+		ld c, INTERACTION_FLAGS
+		call add_bc_de
+
+		ld a, [bc]				; BC is the address of the INTERACTION_FLAGS
+		bit E_BIT_GRAVITY, a
+		jr z, .next
+
+		push af
+		push de
+		push hl
+		call helper_call_hl
+		pop hl
+		pop de
+		pop af	
+
+		.next:
+		ld a, [de]				; DE is the address of the ATT_ENTITY_FLAGS
+		bit E_BIT_SENTINEL, a 
+		ret nz
+
+		ld a, e 
+		add ATTR_SIZE
+		ld e, a 
+		jr .loop

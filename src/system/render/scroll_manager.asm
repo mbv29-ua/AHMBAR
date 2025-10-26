@@ -43,6 +43,8 @@ scroll_manager::
     ; Hacemos scroll up
     ldh a, [rSCY]
     dec a  ; Incrementar SCY muestra más del mapa superior
+    ;ld hl, PlayerSpeed.wY
+    ;add [hl]
     ldh [rSCY], a
 
     ; Retrasamos al jugador para compensar
@@ -65,6 +67,8 @@ scroll_manager::
     ; Hacemos scroll down
     ldh a, [rSCY]
     inc a  ; Incrementar SCY muestra más del mapa inferior
+    ;ld hl, PlayerSpeed.wY
+    ;add [hl]
     ldh [rSCY], a
 
     ; Retrasamos al jugador para compensar

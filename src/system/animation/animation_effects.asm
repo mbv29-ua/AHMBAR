@@ -59,7 +59,7 @@ apply_screen_colors_animation_effect::
 
 fadeout::
 	ld hl, fadeout_transition_palette_values
-	ld  d, (fadeout_transition_palette_values.end-fadeout_transition_palette_values.start-1)
+	ld  d, (fadeout_transition_palette_values.end-fadeout_transition_palette_values.start-1)+1
 	ld  b, FADEOUT_SPEED ; 1/10 sec per color transition
 	call apply_screen_colors_animation_effect
 	ret
@@ -84,7 +84,7 @@ fadeout::
 
 fade_to_black::
 	ld hl, fade_to_black_transition_palette_values
-	ld  d, (fade_to_black_transition_palette_values.end-fade_to_black_transition_palette_values.start-1)
+	ld  d, (fade_to_black_transition_palette_values.end-fade_to_black_transition_palette_values.start-1)+1
 	ld  b, FADEOUT_SPEED ; 1/10 sec per color transition
 	call apply_screen_colors_animation_effect
 	ret
