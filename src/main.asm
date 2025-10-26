@@ -1,5 +1,6 @@
 INCLUDE "constants.inc"
 INCLUDE "entities/entities.inc"
+INCLUDE "utils/joypad.inc"
 
 SECTION "Entry Point", ROM0[$150]
 
@@ -14,16 +15,20 @@ call wait_vblank
 .main_loop:
 
     call update_fire_animation      ; Animate fire tiles during VBlank
+    call render_hud                 ; Actualizar HUD en VBlank
     call read_pad
-    ; call move_character
+
+    ; DEBUG: SELECT para perder 1 vida
+    ld a, [JUST_PRESSED_BUTTONS]
+    bit BUTTON_SELECT, a
+    call nz, lose_life
+
     call update_character_velocities
-    call check_door_collision    ; COMENTADO - No queremos colisiones de puerta
+    call check_door_collision
     call apply_gravity_to_affected_entities
-    ;call vertical_speed_to_zero_if_grounded
     call update_all_entities_positions
-    call clamp_player_position       ; Limitar posición del jugador a los bordes del mapa
+    call clamp_player_position
     call scroll_manager
-    ; call render_player
     call update_bullet_system
     halt
 

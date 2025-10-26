@@ -1,4 +1,5 @@
 INCLUDE "constants.inc"
+INCLUDE "entities/entities.inc"
 
 SECTION "HUD System", ROM0
 
@@ -237,14 +238,11 @@ lose_life::
     ; Decrementar vida
     dec [hl]
 
-    ; Actualizar HUD
-    call render_lives
-
-    ; TODO: Si vidas == 0, llamar game_over
+    ; Si vidas == 0, llamar game_over
     ld a, [hl]
     cp 0
     ret nz
-    ; call game_over  ; Implementar después
+    call game_over
     ret
 
 
@@ -265,9 +263,6 @@ use_bullet::
     ; Decrementar balas
     dec [hl]
 
-    ; Actualizar HUD
-    call render_bullets
-
     ; Retornar con zero flag cleared (hay balas)
     or a, 1
     ret
@@ -283,3 +278,33 @@ reload_bullets::
     ld [wPlayerBullets], a
     call render_bullets
     ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; game_over
+;;; Muestra pantalla de Game Over y reinicia el juego
+;;; Destroys: ALL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+game_over::
+    ; Simplemente resetear vidas y balas, y recargar la escena
+    call fadeout
+
+    ; Resetear vidas y balas
+    ld a, MAX_LIVES
+    ld [wPlayerLives], a
+    ld a, MAX_BULLETS
+    ld [wPlayerBullets], a
+
+    ; Resetear nivel a 1
+    ld a, 1
+    ld [wCurrentLevel], a
+
+    ; Recargar scene_1 completo
+    ld hl, scene_1
+    call load_scene
+
+    ; Reinicializar enemigos
+    call init_enemigos_prueba
+
+    ; SALTAR directamente al main loop en lugar de volver
+    jp main.main_loop
