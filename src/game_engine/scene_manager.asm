@@ -216,6 +216,23 @@ set_initial_scroll::
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 init_player::
+    call man_entity_alloc ; Deja en l el indice - pero asumimos que siempre es 0
+    call set_player_initial_position
+    ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine sets the player in the initial 
+;; position according to the current scene information
+;;
+;; INPUT:
+;;      -
+;; OUTPUT:
+;;      -   
+;; WARNING: Destroys A, BC, DE and HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+set_player_initial_position::
     call get_current_scene_info_address ; in hl
     ld d, 0
     ld e, SCENE_PLAYER_STARTING_Y
@@ -226,17 +243,9 @@ init_player::
     add hl, de
     ld c, [hl]  ; X coordinate
 
-    ; Guardar posición de spawn para respawn de picas
-    push bc
-    ld a, b
-    ld [wSpawnPlayerY], a
-    ld a, c
-    ld [wSpawnPlayerX], a
-    pop bc
-
-    call man_entity_alloc ; Deja en l el indice
     ld d, TILE_COWBOY ; tile
     ld e, 0           ; tile properties
+    ld l, 0
     call set_entity_sprite
 
 ;; Revisar

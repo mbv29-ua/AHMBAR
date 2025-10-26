@@ -121,24 +121,29 @@ check_collectible_collision::
 ;;; Destroys: A, HL
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 restore_player_position::
-    ; Restaurar Y desde posición de spawn del scene
-    ld hl, SPR_BASE + (0 * SPR_SIZE) + SPR_Y
-    ld a, [wSpawnPlayerY]
-    ld [hl], a
-
-    ; Restaurar X desde posición de spawn del scene
-    inc hl  ; HL ahora apunta a SPR_X
-    ld a, [wSpawnPlayerX]
-    ld [hl], a
-
-    ; Resetear velocidades a 0 para evitar que siga cayendo
-    ld hl, PHYS_BASE + (0 * PHYS_SIZE) + PHY_VY
-    xor a
-    ld [hl+], a  ; VY = 0
-    ld [hl+], a  ; VY_COMA = 0
-    ld [hl+], a  ; VX = 0
-    ld [hl], a   ; VX_COMA = 0
+    call wait_vblank
+    call set_player_initial_position
+    call set_initial_scroll
     ret
+
+;    ; Restaurar Y desde posición de spawn del scene
+;    ld hl, SPR_BASE + (0 * SPR_SIZE) + SPR_Y
+;    ld a, [wSpawnPlayerY]
+;    ld [hl], a
+;
+;    ; Restaurar X desde posición de spawn del scene
+;    inc hl  ; HL ahora apunta a SPR_X
+;    ld a, [wSpawnPlayerX]
+;    ld [hl], a
+;
+;    ; Resetear velocidades a 0 para evitar que siga cayendo
+;    ld hl, PHYS_BASE + (0 * PHYS_SIZE) + PHY_VY
+;    xor a
+;    ld [hl+], a  ; VY = 0
+;    ld [hl+], a  ; VY_COMA = 0
+;    ld [hl+], a  ; VX = 0
+;    ld [hl], a   ; VX_COMA = 0
+;    ret
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
