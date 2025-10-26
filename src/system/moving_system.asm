@@ -365,3 +365,157 @@ manage_right_collisions::
 ;	ld c, [hl]
 ;	call get_tile_at_position
 ;	ret
+
+
+
+
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine moves the E-th entity one pixel
+;; to the left.
+;;
+;; INPUT:
+;;		E: Entity index
+;; OUTPUT:
+;;		-	
+;; WARNING: Destroys A and HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+move_entity_one_pixel_to_left::
+	ld h, CMP_SPRIT_H
+	ld a, e
+	add SPR_X
+	ld l, a
+	dec [hl]
+	ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine moves each entity one pixel to the
+;; left. This is useful for scrolling correctly.
+;;
+;; INPUT:
+;;		-
+;; OUTPUT:
+;;		-	
+;; WARNING: Destroys ... (lo que destruya man_entity_for_each) 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+move_all_entities_positions_one_pixel_to_left::
+	ld hl, move_entity_one_pixel_to_left
+	call man_entity_for_each
+	ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine moves the E-th entity one pixel
+;; to the right.
+;;
+;; INPUT:
+;;		E: Entity index
+;; OUTPUT:
+;;		-	
+;; WARNING: Destroys A and HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+move_entity_one_pixel_to_right::
+	ld h, CMP_SPRIT_H
+	ld a, e
+	add SPR_X
+	ld l, a
+	inc [hl]
+	ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine moves each entity one pixel to the
+;; right. It is useful for scrolling correctly.
+;;
+;; INPUT:
+;;		-
+;; OUTPUT:
+;;		-	
+;; WARNING: Destroys ... (lo que destruya man_entity_for_each) 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+move_all_entities_positions_one_pixel_to_right::
+	ld hl, move_entity_one_pixel_to_right
+	call man_entity_for_each
+	ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine moves the E-th entity one pixel
+;; down.
+;;
+;; INPUT:
+;;		E: Entity index
+;; OUTPUT:
+;;		-	
+;; WARNING: Destroys A and HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+move_entity_one_pixel_down::
+	ld h, CMP_SPRIT_H
+	ld a, e
+	add SPR_Y
+	ld l, a
+	inc [hl]
+	ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine moves each entity one pixel down,
+;; It is useful for scrolling correctly.
+;;
+;; INPUT:
+;;		-
+;; OUTPUT:
+;;		-	
+;; WARNING: Destroys ... (lo que destruya man_entity_for_each) 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+move_all_entities_positions_one_pixel_down::
+	ld hl, move_entity_one_pixel_down
+	call man_entity_for_each
+	ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine moves the E-th entity one pixel
+;; up.
+;;
+;; INPUT:
+;;		E: Entity index
+;; OUTPUT:
+;;		-	
+;; WARNING: Destroys A and HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+move_entity_one_pixel_up::
+	ld h, CMP_SPRIT_H
+	ld a, e
+	add SPR_Y
+	ld l, a
+	dec [hl]
+	ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine moves each entity one pixel up.
+;; It is useful for scrolling correctly.
+;;
+;; INPUT:
+;;		-
+;; OUTPUT:
+;;		-	
+;; WARNING: Destroys ... (lo que destruya man_entity_for_each) 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+move_all_entities_positions_one_pixel_up::
+	ld hl, move_entity_one_pixel_up
+	call man_entity_for_each
+	ret
