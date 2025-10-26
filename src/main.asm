@@ -26,6 +26,12 @@ call wait_vblank
     call update_character_velocities
     call process_all_enemies_AIs
     call apply_gravity_to_affected_entities
+
+    ; IMPORTANTE: Destruir balas ANTES de actualizar posiciones
+    call destroy_bullets_out_of_bounds ; Destroy bullets that are off-screen FIRST
+    call check_bullet_wall_collision  ; Destroy bullets hitting walls
+    call check_bullet_enemy_collision ; Check bullet-enemy collisions
+
     call update_all_entities_positions
     call clamp_player_position
     call scroll_manager

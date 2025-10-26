@@ -1,4 +1,5 @@
 include "constants.inc"
+include "entities/entities.inc"
 
 SECTION "Bullet", ROM0
 
@@ -35,13 +36,14 @@ load_bullet_sprites::
 
 init_bullet::
     call man_entity_alloc ; Returns l=entity index
+    push af  ; Guardar índice de entidad
 
     ;; Change by some flag
     ld a, [wPlayerDirection]
     cp 1
 
     ld a, [Player.wPlayerX] ;; We keep the flag
-    jr z, .right    
+    jr z, .right
     .left
         sub 8
         jr .skip
@@ -62,7 +64,7 @@ init_bullet::
 
     ld a, [wPlayerDirection]
     cp 1
-    ld b, 0 ; vy 
+    ld b, 0 ; vy
     jr z, .right_speed
     jr .left_speed
 
@@ -75,6 +77,16 @@ init_bullet::
     jr .skip_speed
 
 .skip_speed
-
 	call set_entity_physics
+
+    ; Configurar flags: la bala NO debe existir fuera de bounds
+    ; Esto evita que el sistema la haga "wrapear"
+    pop af  ; Recuperar índice
+    ld h, CMP_ATTR_H
+    ld l, a
+    inc l  ; Apuntar a INTERACTION_FLAGS
+    ld a, [hl]
+    res E_BIT_OUT_OF_BOUNDS, a  ; Asegurar que NO puede salir de bounds
+    ld [hl], a
+
     ret

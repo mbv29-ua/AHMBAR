@@ -74,6 +74,7 @@ enemy_spawn::
 	call spawner_set_enemy_sprite
 	call spawner_set_enemy_speed
 	call spawner_set_enemy_flags
+	call spawner_set_enemy_health
 	call spawner_set_enemy_AI
 
 	ret
@@ -211,6 +212,42 @@ spawner_set_enemy_flags::
 	ld l, a
     pop hl
     ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine sets the enemy health from definition.
+;;
+;; INPUT:
+;;		 A: Entity index
+;;      HL: Enemy attributes information address
+;; OUTPUT:
+;;      -
+;; WARNING: Destroys DE
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+spawner_set_enemy_health::
+	push hl
+	push af
+
+	; Load health from enemy definition
+	ld d, 0
+	ld e, ENEMY_LIFE
+	add hl, de
+	ld d, [hl]  ; D = enemy health
+
+	; Set health in entity
+	pop af  ; A = entity index
+	ld h, CMP_ATTR_H
+	ld l, a  ; L = entity index
+	push af
+	ld a, l
+	add ENTITY_HEALTH  ; A = entity index + offset
+	ld l, a  ; HL apunta a ENTITY_HEALTH
+	ld [hl], d  ; Store health
+	pop af
+
+	pop hl
+	ret
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
