@@ -8,6 +8,7 @@ SECTION "Collisions", ROM0
 ;;;
 ;;; Destroys: A, BC, HL
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 check_door_collision::
     call get_tile_at_player_position  ; A = tile ID, HL = tilemap address
     call is_tile_door
@@ -25,6 +26,7 @@ check_door_collision::
 ;;;
 ;;; Destroys: A, BC, HL
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 check_deadly_collision::
     call get_tile_at_player_position  ; A = tile ID
     call is_tile_deadly
@@ -43,6 +45,7 @@ check_deadly_collision::
 ;;;
 ;;; Destroys: A, BC, HL
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 check_collectible_collision::
     call get_tile_at_player_position  ; A = tile ID, HL = tilemap address
     call is_tile_collectible

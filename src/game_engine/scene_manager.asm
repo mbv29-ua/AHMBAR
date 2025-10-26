@@ -6,6 +6,8 @@ SECTION "Scene address", WRAM0
 
 current_scene_info_address: DS 2
 
+wCurrentLevel: DS 2
+
 SECTION "Scene manager", ROM0
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -17,6 +19,7 @@ SECTION "Scene manager", ROM0
 ;; OUTPUT:
 ;;		-	
 ;; WARNING: Destroys A, BC, DE, HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 load_scene::
     call save_current_scene_info_address
@@ -47,10 +50,9 @@ load_scene::
     
     ; Turn on the screen
     call enable_vblank_interrupts
-    call enable_screen
     call screen_bg_on
     call screen_obj_on
-    call scree_hud_on
+    call screen_hud_on
     call screen_window_dialog
     call screen_on
 ret
@@ -65,6 +67,7 @@ ret
 ;; OUTPUT:
 ;;      -   
 ;; WARNING: Destroys A and DE
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 save_current_scene_info_address::
     ld de, current_scene_info_address
@@ -87,6 +90,7 @@ save_current_scene_info_address::
 ;; OUTPUT:
 ;;      HL: Current scene information   
 ;; WARNING: Destroys A
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 get_current_scene_info_address::
     ld hl, current_scene_info_address
@@ -104,7 +108,8 @@ get_current_scene_info_address::
 ;;		-
 ;; OUTPUT:
 ;;		-	
-;; WARNING: Destroys BC, DE
+;; WARNING: Destroys A, BC, DE and HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 load_tileset::
 	;; We compute the destiny -> VRAM0_START+SCENE_TILESET_OFFSET
@@ -126,7 +131,6 @@ load_tileset::
     ld b, [hl]
     inc hl
     ld c, [hl]
-
 
 	;  We obtain the memory address HL where the tileset is 
 	;; from [HL]
@@ -151,7 +155,8 @@ load_tileset::
 ;;		-
 ;; OUTPUT:
 ;;		-	
-;; WARNING: Destroys BC, DE
+;; WARNING: Destroys A, BC, DE and HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 load_level_map::
 	;  We obtain the memory address HL where the tilemap is from [HL]
@@ -178,7 +183,8 @@ load_level_map::
 ;;		-
 ;; OUTPUT:
 ;;		-	
-;; WARNING: Destroys A and DE
+;; WARNING: Destroys A, DE and HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 set_initial_scroll::
 	call get_current_scene_info_address ; in hl
@@ -204,6 +210,7 @@ set_initial_scroll::
 ;; OUTPUT:
 ;;		-	
 ;; WARNING: Destroys A, BC, DE and HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 init_player::
     call get_current_scene_info_address ; in hl
@@ -236,14 +243,15 @@ init_player::
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; This routine returns the next scene info using 
-;; the current scene information
+;; This routine returns the next scene information
+;; address using the current scene information
 ;;
 ;; INPUT:
 ;;      -
 ;; OUTPUT:
 ;;      HL: Address of next scene   
 ;; WARNING: Destroys A, BC and HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 get_next_scene_info::
     call get_current_scene_info_address ; in hl
@@ -264,6 +272,7 @@ get_next_scene_info::
 ;; OUTPUT:
 ;;      -   
 ;; WARNING: Destroys A, BC and HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 next_scene::
     call get_next_scene_info

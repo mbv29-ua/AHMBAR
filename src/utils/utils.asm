@@ -15,6 +15,7 @@ SECTION "utils", ROM0
 ;; OUTPUT:
 ;;      -
 ;; WARNING: Destroys A, B, DE and HL.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 memcpy_256::
     ld a, [hl+]
@@ -38,6 +39,7 @@ memcpy_256::
 ;; OUTPUT:
 ;;      -
 ;; WARNING: Destroys B and HL.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 memset_256::
     ld [hl+], a
@@ -58,6 +60,7 @@ memset_256::
 ;; OUTPUT:
 ;;      -
 ;; WARNING: Destroys A, B and HL.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 memreset_256::
     xor a
@@ -79,6 +82,7 @@ memreset_256::
 ;; OUTPUT:
 ;;      -
 ;; WARNING: Destroys A, BC, DE and HL.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 memcpy_65536:
     ld a, [hl+]
@@ -104,6 +108,7 @@ memcpy_65536:
 ;; OUTPUT:
 ;;      -
 ;; WARNING: Destroys A, B, C, D and HL.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 memset_65536::
     ld d, a
@@ -129,6 +134,7 @@ memset_65536::
 ;; OUTPUT:
 ;;      -
 ;; WARNING: Destroys A, B, C, D and HL.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 memreset_65536::
     xor a 

@@ -8,6 +8,7 @@ SECTION "Game Over Scene", ROM0
 ;;; Pantalla de Game Over
 ;;; Muestra estadísticas y permite reiniciar
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 scene_game_over::
     call game_over_init
 
@@ -54,71 +55,6 @@ game_over_init::
     ret
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; restart_game
-;;; Reinicia el juego desde el principio
-;;; Resetea variables y vuelve al nivel 1
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-restart_game::
-    call screen_off
-
-    ; Resetear vidas y balas
-    ld a, MAX_LIVES
-    ld [wPlayerLives], a
-
-    ld a, MAX_BULLETS
-    ld [wPlayerBullets], a
-
-    ; Resetear nivel a 1
-    ld a, 1
-    ld [wCurrentLevel], a
-
-    ; Limpiar flag de HUD
-    xor a
-    ld [wHUDNeedsUpdate], a
-
-    ; Cargar nivel 1
-    call Init_Level_System
-    call Load_Level1_Tiles
-    call Load_Current_Level
-    call init_scroll
-    call init_player_position
-    call init_hud
-
-    ; Reiniciar entidades
-    call man_entity_init
-    call load_cowboy_sprites
-    call init_player
-    call load_bullet_sprites
-
-    ; Encender pantalla
-    call screen_bg_on
-    call screen_obj_on
-
-    ; Reactivar Window (HUD) - Setear bit 5 de LCDC
-    ld a, [rLCDC]
-    set 5, a
-    ld [rLCDC], a
-
-    call screen_on
-
-    ret
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; wait_until_start_pressed
-;;; Espera hasta que se presione START
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-wait_until_start_pressed::
-.loop:
-    call wait_a_frame
-    call read_pad
-
-    ld a, [PRESSED_BUTTONS]
-    bit BUTTON_START, a
-    jr z, .loop  ; Si START no está presionado, seguir esperando
-
-    ret
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

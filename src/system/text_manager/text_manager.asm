@@ -4,13 +4,36 @@ include "system/text_manager/text_manager_constants.inc"
 
 SECTION "Dialogs manager", ROM0
 
-; Input HL: linea
+;; TODO: Change the code to use BG $9C00 and a window, 
+;; and write a while loop to display all the text in the window
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine cleans a line of the text.
+;; position
+;;
+;; INPUT
+;;      HL: line to be cleaned
+;; OUTPUT:
+;;      -
+;; WARNING: Destroys B and HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 clean_line::
    ld  b, TEXTLINE_SIZE
    call memreset_256
    ret
 
-; Esta funcion limpia el cuadro de dialogo
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine cleans the dialog box
+;;
+;; INPUT
+;;      -
+;; OUTPUT:
+;;      -
+;; WARNING: Destroys A, B and HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 clean_dialog_box::
    ld hl, FIRST_DIALOG_LINE
    call clean_line
@@ -26,9 +49,18 @@ clean_dialog_box::
 ret
 
 
-; HL: text
-; DE: line
-; Output: A contains ENDLINE or ENDTEXT
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine cleans a line of the text.
+;; position
+;;
+;; INPUT
+;; 		HL: text address
+;; 		DE: line to write the text
+;; OUTPUT:
+;;      	A: ENDLINE or ENDTEXT
+;; WARNING: Destroys A, DE and HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 write_line::
 	.loop:
 		; We wait 3 or 1 frames depending if A is pressed or not
@@ -59,7 +91,16 @@ write_line::
 		jr .loop
 
 
-; HL: Dialog
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine writes a two lines text
+;;
+;; INPUT
+;; 		HL: text address
+;; OUTPUT:
+;;      	A: ENDLINE or ENDTEXT
+;; WARNING: Destroys A, DE and HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 write_short_dialog:
 	.loop:
 		ld de, FIFTH_DIALOG_LINE
@@ -77,7 +118,16 @@ write_short_dialog:
 		jr .loop
 
 
-; HL: Dialog
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine writes a four lines text
+;;
+;; INPUT
+;; 		HL: text address
+;; OUTPUT:
+;;      	A: ENDLINE or ENDTEXT
+;; WARNING: Destroys A, DE and HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 write_extended_dialog:
 	.loop:
 		ld de, THIRD_DIALOG_LINE
@@ -104,7 +154,17 @@ write_extended_dialog:
 		call clean_dialog_box
 		jr .loop
 
-; HL: Dialog
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine writes a six lines text
+;;
+;; INPUT
+;; 		HL: text address
+;; OUTPUT:
+;;      	A: ENDLINE or ENDTEXT
+;; WARNING: Destroys A, DE and HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 write_super_extended_dialog:
 	.loop:
 		ld de, FIRST_DIALOG_LINE

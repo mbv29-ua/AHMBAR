@@ -1,36 +1,16 @@
 INCLUDE "constants.inc"
 
-SECTION "sys", ROM0
+SECTION "System utils", ROM0
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; This routine cleans the OAM
-;;
-;; INPUT:
-;;      -
-;; OUTPUT:
-;;      -
-;; WARNING: Destroys B and HL
-
-clean_OAM::
-    ld hl, OAM_START
-    ld b, OAM_SIZE
-    call memreset_256
-    ret
-
-clean_bg_map::
-    ld hl, BG_MAP_START
-    ld bc, BG_MAP_SIZE
-    call memreset_65536
-    ret
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; This routine waits until the VBLANK starts
+;; This routine waits until the VBLANK starts.
 ;;
 ;; INPUT:
 ;;      -
 ;; OUTPUT:
 ;;      -
 ;; WARNING: Destroys A and HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 wait_vblank::
     ld hl, rLY
@@ -42,13 +22,48 @@ wait_vblank::
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine cleans the OAM.
+;;
+;; INPUT:
+;;      -
+;; OUTPUT:
+;;      -
+;; WARNING: Destroys B and HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+clean_OAM::
+    ld hl, OAM_START
+    ld  b, OAM_SIZE
+    call memreset_256
+    ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine cleans the BG MAP memory.
+;;
+;; INPUT:
+;;      -
+;; OUTPUT:
+;;      -
+;; WARNING: Destroys BC and HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+clean_bg_map::
+    ld hl, BG_MAP_START
+    ld bc, BG_MAP_SIZE
+    call memreset_65536
+    ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; This routine turns off the GameBoy LCD.
 ;;
 ;; INPUT:
 ;;      -
 ;; OUTPUT:
 ;;      -
-;; WARNING: Destroys HL
+;; WARNING: Destroys A and HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 screen_off::
     di
@@ -60,48 +75,98 @@ screen_off::
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Configurar LCDC completo:
+;; Bit 7 = 1: LCD ON
+;; Bit 6 = 1: Window Tilemap en $9C00
+;; Bit 5 = 1: Window Enable (para HUD en parte inferior)
+;; Bit 4 = 0: Tiles en $8800 (signed)
+;; Bit 3 = 0: BG Map en $9800
+;; Bit 1 = 1: OBJ ON
+;; Bit 0 = 1: BG Display ON
+;; ld a, %11100011
+;; ldh [rLCDC], a
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; This routine turns off the GameBoy LCD.
 ;;
 ;; INPUT:
 ;;      -
 ;; OUTPUT:
 ;;      -
-;; WARNING: Destroys A
+;; WARNING: Destroys HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 screen_on::
-    ; Configurar LCDC completo:
-    ; Bit 7 = 1: LCD ON
-    ; Bit 6 = 1: Window Tilemap en $9C00
-    ; Bit 5 = 1: Window Enable (para HUD en parte inferior)
-    ; Bit 4 = 0: Tiles en $8800 (signed)
-    ; Bit 3 = 0: BG Map en $9800
-    ; Bit 1 = 1: OBJ ON
-    ; Bit 0 = 1: BG Display ON
-    ; ld a, %11100011
-    ; ldh [rLCDC], a
     ld hl, rLCDC
     set 7, [hl]
     ret
 
-scree_hud_on:
-    ld hl, rLCDC
-    set 5, [hl]
-    ret
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine enables the tilemap in $9C00 used
+;; for dialog windows.
+;;
+;; INPUT:
+;;      -
+;; OUTPUT:
+;;      -
+;; WARNING: Destroys HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 screen_window_dialog::
     ld hl, rLCDC
     set 6, [hl]
     ret
 
-screen_bg_on::
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine display the dialog window
+;;
+;; INPUT:
+;;      -
+;; OUTPUT:
+;;      -
+;; WARNING: Destroys HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+screen_hud_on:
     ld hl, rLCDC
-    set 0, [hl]
+    set 5, [hl]
     ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine activates the mode to show 
+;; sprites in the screen
+;;
+;; INPUT:
+;;      -
+;; OUTPUT:
+;;      -
+;; WARNING: Destroys HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 screen_obj_on::
     ld hl, rLCDC
     set 1, [hl]
     ret
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine activates the backgrounds
+;;
+;; INPUT:
+;;      -
+;; OUTPUT:
+;;      -
+;; WARNING: Destroys HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+screen_bg_on::
+    ld hl, rLCDC
+    set 0, [hl]
+    ret
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -113,6 +178,7 @@ screen_obj_on::
 ;; OUTPUT:
 ;;      -
 ;; WARNING: Destroys A
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 init_palettes_by_default::
     ld a, DEFAULT_PALETTE
@@ -130,6 +196,7 @@ init_palettes_by_default::
 ;; OUTPUT:
 ;;      -
 ;; WARNING: Destroys A
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 enable_vblank_interrupts::
     ; Habilitar solo interrupciones VBlank (LCD-Stat desactivado)
@@ -147,6 +214,7 @@ enable_vblank_interrupts::
 ;; OUTPUT:
 ;;      -
 ;; WARNING: Destroys A and HL.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 wait_a_frame::
     ld hl, rLY
@@ -169,13 +237,13 @@ wait_a_frame::
 ;; OUTPUT:
 ;;      -
 ;; WARNING: Destroys A, B and HL.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 wait_x_frames::
     call wait_a_frame
     dec b    
     jr nz, wait_x_frames
     ret
-
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -187,6 +255,7 @@ wait_x_frames::
 ;; OUTPUT:
 ;;      -
 ;; WARNING: Destroys BC, DE and HL.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 load_fonts::
     ld hl, fonts
@@ -202,9 +271,9 @@ load_fonts::
 
 
 
-enable_screen::
-    ; No hace nada, la configuración está en screen_on
-    ret
+; enable_screen::
+;    ; No hace nada, la configuración está en screen_on
+;    ret
 
 ;init_scroll::
 ;    ; Establecer scroll según el nivel actual

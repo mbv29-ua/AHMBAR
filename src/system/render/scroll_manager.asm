@@ -1,7 +1,6 @@
 include "constants.inc"
 
-SECTION "Scroll Manager", ROM0
-
+;;; Mirar lo de los offsets de la pantalla
 DEF SCROLL_OFFSET               EQU 48 ;; This can be changed and it sets the others
 
 DEF SCREEN_OFFSET_VERTICAL      EQU 16
@@ -13,7 +12,21 @@ DEF DOWN_SCROLL_OFFSET      EQU 144 + SCREEN_OFFSET_VERTICAL - SCROLL_OFFSET - T
 DEF RIGHT_SCROLL_OFFSET     EQU 160 - SCROLL_OFFSET - SCREEN_OFFSET_HORIZONTAL
 DEF LEFT_SCROLL_OFFSET      EQU SCROLL_OFFSET + SCREEN_OFFSET_HORIZONTAL + TILE_OFFSET
 
-;;; Mirar lo de los offsets de la pantalla
+
+
+SECTION "Scroll Manager", ROM0
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine scrolls according to the player
+;; position
+;;
+;; INPUT
+;;      -
+;; OUTPUT:
+;;      -
+;; WARNING: Destroys A and HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 scroll_manager::
 ; Scroll up
 .scroll_up

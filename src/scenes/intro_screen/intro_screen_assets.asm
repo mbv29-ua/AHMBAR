@@ -4,9 +4,6 @@ SECTION "intro screen scene", ROM0
 scene_intro_screen::
 	call intro_scene_init
 
-    
-
-
     .scroll:
         call update_all_entities_positions
         ld hl, rSCX
@@ -29,7 +26,6 @@ intro_scene_init::
     call man_entity_init
     call init_personaje_animacion
     call enable_vblank_interrupts
-    call enable_screen
     call screen_obj_on
     call screen_on
     ret
