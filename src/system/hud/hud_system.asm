@@ -1,5 +1,6 @@
 INCLUDE "constants.inc"
 INCLUDE "entities/entities.inc"
+INCLUDE "utils/joypad.inc"
 
 SECTION "HUD System", ROM0
 
@@ -281,13 +282,62 @@ reload_bullets::
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; wait_for_start
+;;; Espera hasta que se presione START
+;;; Destroys: A
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+wait_for_start::
+.loop:
+    halt
+    call read_pad
+    ld a, [JUST_PRESSED_BUTTONS]
+    bit BUTTON_START, a
+    jr z, .loop
+    ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; game_over
 ;;; Muestra pantalla de Game Over y reinicia el juego
 ;;; Destroys: ALL
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 game_over::
-    ; Simplemente resetear vidas y balas, y recargar la escena
     call fadeout
+    call screen_off
+
+    ; Limpiar pantalla
+    call clean_OAM
+    call clean_bg_map
+
+    ; Cargar tiles del juego SIN offset (desde tile 0) para Game Over
+    ld hl, tiles
+    ld de, VRAM0_START  ; Cargar desde $8000 (tile 0)
+    ld bc, tiles_end - tiles
+    call memcpy_65536
+
+    ; Cargar tilemap de Game Over
+    ld hl, GameOver_Map
+    ld de, BG_MAP_START
+    ld bc, GameOver_Map_End - GameOver_Map
+    call memcpy_65536
+
+    ; Ajustar scroll - Y=0, X=32 (un poco a la derecha)
+    xor a
+    ldh [rSCY], a
+    ld a, 32
+    ldh [rSCX], a
+
+    ; Desactivar Window (HUD)
+    ld a, [rLCDC]
+    res 5, a
+    ld [rLCDC], a
+
+    ; Encender pantalla solo con BG
+    call screen_bg_on
+    call screen_on
+
+    ; Esperar que el jugador presione START para continuar
+    call wait_for_start
 
     ; Resetear vidas y balas
     ld a, MAX_LIVES
@@ -299,6 +349,8 @@ game_over::
     ld a, 1
     ld [wCurrentLevel], a
 
+    call fadeout
+
     ; Recargar scene_1 completo
     ld hl, scene_1
     call load_scene
@@ -306,5 +358,5 @@ game_over::
     ; Reinicializar enemigos
     call init_enemigos_prueba
 
-    ; SALTAR directamente al main loop en lugar de volver
+    ; SALTAR directamente al main loop
     jp main.main_loop
