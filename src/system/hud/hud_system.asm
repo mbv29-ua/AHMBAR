@@ -5,130 +5,218 @@ SECTION "HUD System", ROM0
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; HUD Constants
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; Tile indices (not VRAM addresses)
-DEF TILE_HEART_FULL  EQU $8F    ; Corazón completo (tile index)
-DEF TILE_HEART_HALF  EQU $90    ; Medio corazón (tile index)
-DEF TILE_EMPTY       EQU $80    ; Tile vacío (primer tile del banco de tiles)
+; Tile indices
+DEF TILE_HEART_FULL  EQU $D0    ; Corazón completo
+DEF TILE_HEART_HALF  EQU $D1    ; Medio corazón
+DEF TILE_EMPTY       EQU $80    ; Tile vacío
+; TILE_BULLET ya definido en constants.inc como $09
 
+; HUD positions in Window tilemap
+DEF HUD_ROW          EQU 0      ; Primera fila de la Window
 DEF HUD_LIVES_START_X    EQU 1  ; Posición X inicial de corazones
-DEF HUD_BULLETS_START_X  EQU 17 ; Posición X del contador de balas
+DEF HUD_BULLETS_START_X  EQU 14 ; Posición X inicial de balas
 
-; MAX_BULLETS e INITIAL_PLAYER_LIVES están definidos en constants.inc
+; MAX_LIVES y MAX_BULLETS definidos en constants.inc
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; init_hud
 ;;; Inicializa el sistema HUD
-;;; - Configura vidas iniciales (4)
+;;; - Configura vidas iniciales (8 = 4 corazones)
 ;;; - Configura balas iniciales (5)
-;;; - Activa la Window layer
+;;; - Configura Window layer para HUD
+;;; DEBE llamarse con la pantalla APAGADA
 ;;; Destroys: A, HL
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 init_hud::
     ; Inicializar vidas y balas
-    ld a, INITIAL_PLAYER_LIVES
+    ld a, MAX_LIVES
     ld [wPlayerLives], a
 
     ld a, MAX_BULLETS
     ld [wPlayerBullets], a
 
-    ; Renderizar HUD inicial usando OAM (sprites)
+    ; Configurar Window para HUD (parte inferior de la pantalla)
+    ; WY = 136 (144 - 8 = última fila visible)
+    ld a, 136
+    ldh [rWY], a
+
+    ; WX = 7 (posición estándar de Window - offset de 7 pixels desde la izquierda)
+    ld a, 7
+    ldh [rWX], a
+
+    ; NO usar LCD-Stat interrupt, HUD permanece abajo
+    ; Limpiar solo la primera fila del tilemap de Window
+    call clear_hud_row
+
+    ; Renderizar HUD inicial
     call render_hud
+
+    ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; enable_hud_window
+;;; Activa la Window layer en LCDC
+;;; DEBE llamarse después de screen_on
+;;; Destroys: A
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+enable_hud_window::
+    ld hl, rLCDC
+    set 5, [hl]        ; Bit 5: Window enable --> Change mgic number(Warning)
+    ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; clear_hud_area
+;;; Limpia las primeras 2 filas del tilemap de la Window
+;;; Destroys: A, B, HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+clear_hud_area::
+    ld hl, $9C00        ; Window tilemap start
+    ld b, 64            ; 64 tiles (2 filas de 32)
+    ld a, TILE_EMPTY
+    call memset_256
+    ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; clear_hud_row
+;;; Limpia solo la primera fila del tilemap de la Window
+;;; Destroys: A, B, HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+clear_hud_row::
+    ld hl, $9C00        ; Window tilemap start
+    ld b, 32            ; 32 tiles (una fila completa)
+    ld a, TILE_EMPTY
+    call memset_256
+    ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; clear_window_tilemap
+;;; Limpia el tilemap de la Window ($9C00-$9FFF)
+;;; Destroys: A, BC, HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+clear_window_tilemap::
+    ld hl, $9C00
+    ld bc, $400         ; 1024 bytes (32x32 tiles)
+    ld a, TILE_EMPTY
+    call memset_65536
     ret
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; render_hud
-;;; Renderiza el HUD completo (vidas y balas)
+;;; Renderiza el HUD completo (vidas, balas, nivel)
 ;;; Destroys: A, BC, DE, HL
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 render_hud::
-    ; call render_lives  ; TODO: Implementar cuando tengamos tiles de corazones
+    call render_separator_line
+    call render_lives
     call render_bullets
+    call render_level_number
     ret
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; render_lives
 ;;; Renderiza los corazones según las vidas actuales
-;;; 4 vidas = 2 corazones completos
-;;; 3 vidas = 1 corazón completo + 1 medio
-;;; 2 vidas = 1 corazón completo
-;;; 1 vida  = 1 medio corazón
+;;; 8 vidas = 4 corazones completos (D0 D0 D0 D0)
+;;; 7 vidas = 3 completos + 1 medio (D0 D0 D0 D1)
+;;; 6 vidas = 3 completos (D0 D0 D0)
+;;; 5 vidas = 2 completos + 1 medio (D0 D0 D1)
+;;; ... etc
+;;; 1 vida  = 1 medio corazón (D1)
 ;;; 0 vidas = vacío
 ;;; Destroys: A, BC, DE, HL
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 render_lives::
-    ; Calcular dirección base en Window tilemap ($9C00)
-    ld hl, $9C00  ; Window tilemap start
+    ; Calcular dirección base en Window tilemap ($9C00 + HUD_LIVES_START_X)
+    ld hl, $9C00
     ld bc, HUD_LIVES_START_X
     add hl, bc
 
+    ; Cargar vidas actuales
     ld a, [wPlayerLives]
+    ld b, a             ; B = vidas restantes
 
-    ; Corazón 1
+    ; Renderizar 4 corazones (8 medios corazones)
+    ld c, 4             ; C = contador de corazones (4 total)
+
+.loop_heart:
+    ; Verificar si quedan >= 2 vidas para corazón completo
+    ld a, b
     cp 2
-    jr c, .heart1_half_or_empty  ; Si vidas < 2, check medio o vacío
-    ; Corazón completo
-    ld [hl], TILE_HEART_FULL
-    jr .heart2
+    jr nc, .full_heart
 
-.heart1_half_or_empty:
+    ; Verificar si queda 1 vida para medio corazón
     cp 1
-    jr nz, .heart1_empty
-    ; Medio corazón
-    ld [hl], TILE_HEART_HALF
-    jr .heart2
+    jr z, .half_heart
 
-.heart1_empty:
-    ld [hl], TILE_EMPTY
+    ; No quedan vidas, corazón vacío
+    ld a, TILE_EMPTY
+    ld [hl+], a
+    jr .next_heart
 
-.heart2:
-    inc hl  ; Siguiente posición
-    ld a, [wPlayerLives]
+.full_heart:
+    ld a, TILE_HEART_FULL
+    ld [hl+], a
+    ld a, b
+    sub 2               ; Restar 2 vidas
+    ld b, a
+    jr .next_heart
 
-    cp 4
-    jr z, .heart2_full
-    cp 3
-    jr c, .heart2_empty  ; Si vidas < 3, vacío
-    ; Si vidas == 3, medio corazón
-    ld [hl], TILE_HEART_HALF
-    ret
+.half_heart:
+    ld a, TILE_HEART_HALF
+    ld [hl+], a
+    dec b               ; Restar 1 vida
+    jr .next_heart
 
-.heart2_full:
-    ld [hl], TILE_HEART_FULL
-    ret
-
-.heart2_empty:
-    ld [hl], TILE_EMPTY
+.next_heart:
+    dec c
+    jr nz, .loop_heart
     ret
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; render_bullets
-;;; Renderiza el contador de balas (0-5) usando OAM sprite
-;;; Destroys: A, HL
+;;; Renderiza 5 balas en fila (tile $09)
+;;; Las balas activas se muestran, las gastadas se muestran vacías
+;;; Destroys: A, BC, DE, HL
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 render_bullets::
-    ; Usar OAM_COUNTER (definido en constants.inc como $FE04)
-    ld hl, OAM_COUNTER
+    ; Calcular dirección base en Window tilemap ($9C00 + HUD_BULLETS_START_X)
+    ld hl, $9C00
+    ld bc, HUD_BULLETS_START_X
+    add hl, bc
 
-    ; Y position (arriba de la pantalla)
-    ld a, COUNTER_Y_POS  ; Definido en constants.inc
-    ld [hl+], a
-
-    ; X position (derecha de la pantalla)
-    ld a, COUNTER_X_POS  ; Definido en constants.inc
-    ld [hl+], a
-
-    ; Tile - convertir número de balas (0-5) a tile ($95-$9A)
+    ; Cargar balas actuales
     ld a, [wPlayerBullets]
-    add TILE_DIGIT_0  ; $95 + balas = tile correcto
+    ld b, a             ; B = balas restantes
+
+    ; Renderizar 5 balas
+    ld c, 5             ; C = contador de balas (5 total)
+
+.loop_bullet:
+    ; Verificar si quedan balas
+    ld a, b
+    or a
+    jr z, .empty_bullet
+
+    ; Mostrar bala activa
+    ld a, TILE_BULLET
+    ld [hl+], a
+    dec b               ; Restar 1 bala
+    jr .next_bullet
+
+.empty_bullet:
+    ; Mostrar espacio vacío
+    ld a, TILE_EMPTY
     ld [hl+], a
 
-    ; Attributes (palette 0, no flip)
-    ld a, %00010000  ; Usar paleta 1
-    ld [hl], a
-
+.next_bullet:
+    dec c
+    jr nz, .loop_bullet
     ret
 
 
@@ -149,14 +237,17 @@ lose_life::
     ; Decrementar vida
     dec [hl]
 
-    ; Actualizar HUD
-    call render_lives
+    ; Marcar que HUD necesita actualizarse
+    push hl
+    ld a, 1
+    ld [wHUDNeedsUpdate], a
+    pop hl
 
-    ; TODO: Si vidas == 0, llamar game_over
+    ; Si vidas == 0, llamar game_over
     ld a, [hl]
     cp 0
     ret nz
-    ; call game_over  ; Implementar después
+    call game_over
     ret
 
 
@@ -177,8 +268,9 @@ use_bullet::
     ; Decrementar balas
     dec [hl]
 
-    ; Actualizar HUD
-    call render_bullets
+    ; Marcar que HUD necesita actualizarse (no renderizar aquí por VRAM timing)
+    ld a, 1
+    ld [wHUDNeedsUpdate], a
 
     ; Retornar con zero flag cleared (hay balas)
     or a, 1
@@ -193,5 +285,132 @@ use_bullet::
 reload_bullets::
     ld a, MAX_BULLETS
     ld [wPlayerBullets], a
-    call render_bullets
+
+    ; Marcar que HUD necesita actualizarse
+    ld a, 1
+    ld [wHUDNeedsUpdate], a
+    ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; update_hud_if_needed
+;;; Actualiza el HUD si la flag wHUDNeedsUpdate está activada
+;;; DEBE llamarse durante VBlank
+;;; Destroys: A, BC, DE, HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+update_hud_if_needed::
+    ld a, [wHUDNeedsUpdate]
+    or a
+    ret z  ; Si flag = 0, no hacer nada
+
+    ; Limpiar flag
+    xor a
+    ld [wHUDNeedsUpdate], a
+
+    ; Actualizar HUD completo
+    call render_hud
+    ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; game_over
+;;; Llamada cuando el jugador se queda sin vidas
+;;; Transiciona a la pantalla de Game Over
+;;; NO RETORNA - salta a scene_game_over
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+game_over::
+    ; Hacer fade out
+    call fadeout
+
+    ; Saltar a escena de Game Over (no retorna)
+    jp scene_game_over
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; render_separator_line
+;;; Dibuja una línea horizontal de píxeles en la primera fila del HUD
+;;; para separar visualmente el juego del HUD
+;;; Destroys: A, BC, HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+render_separator_line::
+    ; Dibujar línea en la primera fila de Window tilemap
+    ; Usar tile $81 (o el que sea una línea horizontal en tus tiles)
+    ld hl, $9C00        ; Window tilemap start
+    ld b, 32            ; 32 tiles (ancho completo)
+    ld a, $81           ; Tile de línea horizontal (ajustar según tus tiles)
+.draw_line:
+    ld [hl+], a
+    dec b
+    jr nz, .draw_line
+    ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; render_level_number
+;;; Renderiza "LV X" donde X es el número de nivel actual
+;;; Centrado en el HUD
+;;; Destroys: A, BC, DE, HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+render_level_number::
+    ; Posición centrada: columna 14-16 (centro de 32 tiles)
+    ld hl, $9C00 + 14   ; Primera fila, columna 14
+
+    ; Escribir "L" (tile 139 = L)
+    ld a, 139
+    ld [hl+], a
+
+    ; Escribir "V" (tile 149 = V)
+    ld a, 149
+    ld [hl+], a
+
+    ; Espacio
+    ld a, 198
+    ld [hl+], a
+
+    ; Número del nivel actual (1, 2, 3...)
+    ld a, [wCurrentLevel]
+    add 188             ; 188 = tile '0', así 1+188=189='1'
+    ld [hl], a
+
+    ; DEBUG: Mostrar tile bajo el jugador (columnas 20-22)
+    ld hl, $9C00 + 20
+    ; Texto "T:"
+    ld a, 147  ; T
+    ld [hl+], a
+    ld a, 186  ; :
+    ld [hl+], a
+
+    ; Obtener tile bajo jugador y mostrar en hex
+    push hl
+    call get_tile_at_player_position
+    pop hl
+    ; A contiene el tile ID
+    ; Mostrar los dos dígitos hex
+    push af
+    srl a
+    srl a
+    srl a
+    srl a
+    ; A = nibble alto
+    cp 10
+    jr c, .digit_high
+    add 128 - 10  ; A-F
+    jr .write_high
+.digit_high:
+    add 188  ; 0-9
+.write_high:
+    ld [hl+], a
+
+    pop af
+    and $0F
+    ; A = nibble bajo
+    cp 10
+    jr c, .digit_low
+    add 128 - 10  ; A-F
+    jr .write_low
+.digit_low:
+    add 188  ; 0-9
+.write_low:
+    ld [hl], a
+
     ret

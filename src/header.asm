@@ -2,7 +2,8 @@
 ;    reti
 
 SECTION "LCD Interrupt", ROM0[$48]
-    reti
+    jp lcd_stat_handler
+    ds 5, 0
 
 SECTION "Timer Interrupt", ROM0[$50]
     reti

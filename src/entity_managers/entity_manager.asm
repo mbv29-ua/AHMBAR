@@ -159,11 +159,11 @@ man_entity_free::
 
 man_entity_for_each_movable::
 	ld de, ATTR_BASE
-	.loop
-
 	ld a, [de]
 	cp ENTITY_CMP_SENTINEL
 	ret z 
+
+	.loop
 
 	bit E_BIT_SENTINEL, a 
 	jr nz, .process_and_exit
@@ -189,6 +189,8 @@ man_entity_for_each_movable::
 	jr .loop
 
 	.process_and_exit:
+	bit E_BIT_MOVABLE, a
+	jr z, .exit
 	push af
 	push de
 	push hl
@@ -201,47 +203,85 @@ man_entity_for_each_movable::
 		ret
 
 man_entity_for_each_gravity::
+	
 	ld de, ATTR_BASE
-	.loop
-
 	ld a, [de]
 	cp ENTITY_CMP_SENTINEL
 	ret z 
 
-	bit E_BIT_SENTINEL, a 
-	jr nz, .process_and_exit
+	.loop		
+		ld a, [de]
+		bit E_BIT_GRAVITY, a
+		jr z, .next
 
-	bit E_BIT_GRAVITY, a
-	jr z, .continue
+		push af
+		push de
+		push hl
+		call helper_call_hl
+		pop hl
+		pop de
+		pop af	
 
-	push af
-	push de
-	push hl
-	call helper_call_hl
-	.return
-	pop hl
-	pop de
-	pop af
+		.next:
+		bit E_BIT_SENTINEL, a 
+		ret nz
 
+		ld a, e 
+		add ATTR_SIZE
+		ld e, a 
+		jr .loop
 
-	.continue
-	ld a, e 
-	add ATTR_SIZE
-	ld e, a 
+;; -------------------------------------------------------------------
+;; man_entity_for_each_of_type
+;;
+;;    INPUT:
+;;    B  -> Bit a comprobar (0–7)
+;;    HL -> Dirección de la rutina a ejecutar (callback)
+;;
+;;    Recorre todas las entidades y llama a la rutina si el bit B está activo.
+;; -------------------------------------------------------------------
+man_entity_for_each_type::
 	
-	jr .loop
+	ld de, ATTR_BASE
+	ld a, [de]
+	cp ENTITY_CMP_SENTINEL
+	ret z 
 
-	.process_and_exit:
-	push af
-	push de
-	push hl
-	call helper_call_hl
-	pop hl
-	pop de
-	pop af	
+	.loop		
+		ld a, [de]
+		ld c, a 
 
-	.exit
-		ret
+		;; mascara
+		ld a, 1 
+		ld d, b 
+		.mask_loop:
+			or a 
+			dec d 
+			jr c, .mask_done ;; si era b = 0 nos salimos
+			sla a 
+			jr nz, .mask_loop
+		.mask_done:
+			and c 
+			jr z, .next
+		
+		jr z, .next
+
+		push af
+		push de
+		push hl
+		call helper_call_hl
+		pop hl
+		pop de
+		pop af	
+
+		.next:
+		bit E_BIT_SENTINEL, a 
+		ret nz
+
+		ld a, e 
+		add ATTR_SIZE
+		ld e, a 
+		jr .loop
 
 
 

@@ -1,4 +1,4 @@
-INCLUDE "tile_properties.inc"
+INCLUDE "system/collision_manager/collisions.inc"
 
 SECTION "Tile Properties Functions", ROM0
 
@@ -13,15 +13,15 @@ SECTION "Tile Properties Functions", ROM0
 ;;;   Z flag = set if tile has no properties (empty)
 ;;; Destroys: HL
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-get_tile_properties::
-    ; Add tile ID as offset to table base address
-    ld hl, tile_properties_table
-    ld d, 0
-    ld e, a         ; DE = tile ID (0-255)
-    add hl, de      ; HL = table base + tile ID
-    ld a, [hl]      ; Load property byte
-    or a            ; Set Z flag if properties == 0
-    ret
+;get_tile_properties::
+;    ; Add tile ID as offset to table base address
+;    ld hl, tile_properties_table
+;    ld d, 0
+;    ld e, a         ; DE = tile ID (0-255)
+;    add hl, de      ; HL = table base + tile ID
+;    ld a, [hl]      ; Load property byte
+;    or a            ; Set Z flag if properties == 0
+;    ret
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -31,13 +31,13 @@ get_tile_properties::
 ;;; Input:
 ;;;   A = Tile ID
 ;;; Output:
-;;;   Z flag = clear if solid, set if not solid
+;;;   Z flag: z=1 means it is solid, z=0 means it is not
 ;;;   A = Property flags (preserved for chaining)
 ;;; Destroys: HL
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 is_tile_solid::
-    call get_tile_properties
-    bit 0, a        ; Test TILE_PROP_SOLID bit
+    and TILE_GROUP_MASK
+    cp SOLID_TILE
     ret
 
 
@@ -48,14 +48,15 @@ is_tile_solid::
 ;;; Input:
 ;;;   A = Tile ID
 ;;; Output:
-;;;   Z flag = clear if deadly, set if not deadly
+;;;   Z flag: z=1 means it is deadly, z=0 means it is not
 ;;;   A = Property flags (preserved for chaining)
 ;;; Destroys: HL
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 is_tile_deadly::
-    call get_tile_properties
-    bit 1, a        ; Test TILE_PROP_DEADLY bit
+    and TILE_GROUP_MASK
+    cp DEADLY_TILE
     ret
+
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -65,13 +66,13 @@ is_tile_deadly::
 ;;; Input:
 ;;;   A = Tile ID
 ;;; Output:
-;;;   Z flag = clear if door, set if not door
+;;;   Z flag: z=1 means it is door, z=0 means it is not
 ;;;   A = Property flags (preserved for chaining)
 ;;; Destroys: HL
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 is_tile_door::
-    call get_tile_properties
-    bit 2, a        ; Test TILE_PROP_DOOR bit
+    and TILE_GROUP_MASK
+    cp DOOR_TILE
     ret
 
 
@@ -82,11 +83,12 @@ is_tile_door::
 ;;; Input:
 ;;;   A = Tile ID
 ;;; Output:
-;;;   Z flag = clear if collectible, set if not collectible
+;;;   Z flag: z=1 means it is collectible, z=0 means it is not
 ;;;   A = Property flags (preserved for chaining)
 ;;; Destroys: HL
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 is_tile_collectible::
-    call get_tile_properties
-    bit 3, a        ; Test TILE_PROP_COLLECTIBLE bit
+    and TILE_GROUP_MASK
+    cp COLLECTIBLE_TILE
     ret
+

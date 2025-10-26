@@ -1,49 +1,112 @@
 INCLUDE "utils/joypad.inc"
 INCLUDE "constants.inc"
 
+DEF COOLDOWN_STARTING_VALUE EQU 60
+
 SECTION "Bullet System", ROM0
 
-Update_Bullet_System::
-    ld a, [coolDown]
-    cp a, 0
-    jr z, .no_cooldown
-    dec a
+
+;init_bullet_system::
+;    ; Inicializar array de balas como inactivas
+;    ld hl, wBulletActive
+;    ld [hl], MAX_BULLETS
+;    ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine manages the bullet system: 
+;; creates bullets when possible and updates
+;; cooldown if exists.
+;;
+;; INPUT
+;;      -
+;; OUTPUT:
+;;      -
+;; WARNING: Destroys A, BC??, DE?? and HL??
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+update_bullet_system::
+    call is_magazine_empty
+    ret z
+    call is_there_cooldown
+    jp nz, .cooldown
+    call check_button_input_and_shoot
+    ret
+
+    .cooldown
+    ld hl, coolDown
+    dec [hl]
+    ret
+
+
+init_counter::
+    ; Ya no se usa, wPlayerBullets se inicializa en init_hud
+    ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine checks if there are available bullets
+;; by looking at memory position [wPlayerBullets]
+;;
+;; INPUT
+;;      -
+;; OUTPUT:
+;;      Z=1 if empty, Z=0 if there is at least one bullet
+;; WARNING: Destroys A
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+is_magazine_empty::
+    ld a, [wPlayerBullets]
+    or a
+    ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine starts the cooldown after shooting
+;;
+;; INPUT
+;;      -
+;; OUTPUT:
+;;      -
+;; WARNING: Destroys A
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+init_cool_down::
+    ; Activar cooldown de 60 frames (~1 segundo)
+    ld a, COOLDOWN_STARTING_VALUE
     ld [coolDown], a
-    jr .skip
-    .no_cooldown:
-    call check_button_input
-    jr nz, .skip
-    .render:
-    ;call Update_Bullet    ;; Todo --> quitar gestio del movimiento
-    .skip:
-    ret
-
-load_bullet_sprites::
-    ld hl, Tile_Bullet
-    ld de, VRAM0_START + (TILE_BULLET * TILE_SIZE)
-    ld bc, Tile_Bullet_End - Tile_Bullet
-    call memcpy_65536
-    ret
-
-Init_Bullet_System::
-    ; Inicializar array de balas como inactivas
-    ld hl, wBulletActive
-    ld b, MAX_BULLETS
-    xor a  ; a = BULLET_INACTIVE (0)
-.init_loop:
-    ld [hl+], a
-    dec b
-    jr nz, .init_loop
-    ret
-
-Init_Counter::
-    ld a, COUNTER_START
-    ld [wCounterValue], a
-    ; ld [wCounterReload], a
     ret
 
 
-check_button_input::
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine checks if there is cooldown
+;;
+;; INPUT
+;;      -
+;; OUTPUT:
+;;      Z=1 if cooldown, Z=0 otherwise.
+;; WARNING: Destroys A
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+is_there_cooldown::
+    ld a, [coolDown]
+    or a
+    ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine checks if the shoot button is
+;; pressed, and fires a bullet if this is the case.
+;; Alse, sets cooldown to avoid multiple shots. 
+;;
+;; INPUT
+;;      -
+;; OUTPUT:
+;;      -
+;; WARNING: Destroys ???
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+check_button_input_and_shoot::
     ld a, [PRESSED_BUTTONS]
     bit BUTTON_B, a
     ret z
@@ -56,100 +119,116 @@ check_button_input::
     call init_cool_down
     ret
 
-check_counter::
-    ld a, [wCounterValue]
-    cp a, 0
-    ; ld b, a
-    ret z
-    call check_cooldown
-    ret
-
-check_cooldown::
-    ; Verificar cooldown: si != 0, retornar (estamos en cooldown)
-    ld a, [coolDown]
-    cp a, 0
-    ret nz
-    call Fire_Bullet
-    ret
-
-Fire_Bullet::
-    ; Buscar una bala libre en el array
-    ld hl, wBulletActive
-    ld b, MAX_BULLETS
-    ld d, 0  ; d = índice de la bala
-.find_free:
-    ld a, [hl+]
-    cp BULLET_INACTIVE
-    jr z, .found_free
-    inc d
-    dec b
-    jr nz, .find_free
-    ret  ; No hay balas libres
-
-.found_free:
-    ; d contiene el índice de la bala libre
-    ; Configurar posición X
-    ; ld e, d
-    ; add hl, de
-
-    ;; When wPlayerDirection is right (1) 
-    ;; in other case (0) left sub 8
-
-    ;; Prove bit wPlayerDirection bit (lef tor right)    
-    ;; TODO: logica de disparo que empiece en la posción correspondiente izda o der
-    call init_bullet
-    
-    ; Activar la bala
-    ;  e, d
-    ; d hl, de
-    ld a, BULLET_ACTIVE ;; TODO : PASAR DE 1 BYTE A BIT
-    ld [wBulletActive], a
-
-    ; Decrementar contador
-    ld hl, wCounterValue
-    dec [hl]
-
-    ret
-
-init_cool_down::
-    ; Activar cooldown de 60 frames (~1 segundo)
-    ld a, 60
-    ld [coolDown], a
-    ret
-
-Update_Bullet::
-    ;; call
-    ;; call
-    ;; call
-    ;ret
 
 
-    ld b, MAX_BULLETS
-    ld c, 0  ; c = índice de la bala
-; pdate_loop:
-    ; push bc
 
-    ; Verificar si la bala está activa
-    ld hl, wBulletActive
-    bit 0, [hl]
-    ; add hl, bc
-    ; ld a, [hl]
-    ; cp BULLET_INACTIVE
-    jr z, .next_bullet
 
-    
-.deactivate:
-    ; Desactivar la bala
-    ld hl, wBulletActive
-    ; ld b, 0
-    ; add hl, bc
-    xor a
-    ld [hl], a
+;;;;;;;;;;;;;;;;;;;;;
 
-.next_bullet:
-    ; pop bc
-    ;  nz, .update_loop
-    ret
+;Init_Bullet_System::
+;    ; Inicializar array de balas como inactivas
+;    ld hl, wBulletActive
+;    ld b, MAX_BULLETS
+;    xor a  ; a = BULLET_INACTIVE (0)
+;.init_loop:
+;    ld [hl+], a
+;    dec b
+;    jr nz, .init_loop
+;    ret
+
+
+
+
+;check_counter::
+;    ld a, [wCounterValue]
+;    cp a, 0
+;    ; ld b, a
+;    ret z
+;    call check_cooldown
+;    ret
+;
+;check_cooldown::
+;    ; Verificar cooldown: si != 0, retornar (estamos en cooldown)
+;    ld a, [coolDown]
+;    cp a, 0
+;    ret nz
+;    call Fire_Bullet
+;    ret
+
+;Fire_Bullet::
+;    ; Buscar una bala libre en el array
+;    ld hl, wBulletActive
+;    ld b, MAX_BULLETS
+;    ld d, 0  ; d = índice de la bala
+;.find_free:
+;    ld a, [hl+]
+;    cp BULLET_INACTIVE
+;    jr z, .found_free
+;    inc d
+;    dec b
+;    jr nz, .find_free
+;    ret  ; No hay balas libres
+;
+;.found_free:
+;    ; d contiene el índice de la bala libre
+;    ; Configurar posición X
+;    ; ld e, d
+;    ; add hl, de
+;
+;    ;; When wPlayerDirection is right (1) 
+;    ;; in other case (0) left sub 8
+;
+;    ;; Prove bit wPlayerDirection bit (lef tor right)    
+;    ;; TODO: logica de disparo que empiece en la posción correspondiente izda o der
+;    call init_bullet
+    ;
+;    ; Activar la bala
+;    ;  e, d
+;    ; d hl, de
+;    ld a, BULLET_ACTIVE ;; TODO : PASAR DE 1 BYTE A BIT
+;    ld [wBulletActive], a
+;
+;    ; Decrementar contador
+;    ld hl, wCounterValue
+;    dec [hl]
+;
+;    ret
+
+
+
+;Update_Bullet::
+;    ;; call
+;    ;; call
+;    ;; call
+;    ;ret
+;
+;
+;    ld b, MAX_BULLETS
+;    ld c, 0  ; c = índice de la bala
+;; pdate_loop:
+;    ; push bc
+;
+;    ; Verificar si la bala está activa
+;    ld hl, wBulletActive
+;    bit 0, [hl]
+;    ; add hl, bc
+;    ; ld a, [hl]
+;    ; cp BULLET_INACTIVE
+;    jr z, .next_bullet
+;
+    ;
+;.deactivate:
+;    ; Desactivar la bala
+;    ld hl, wBulletActive
+;    ; ld b, 0
+;    ; add hl, bc
+;    xor a
+;    ld [hl], a
+;
+;.next_bullet:
+;    ; pop bc
+;    ;  nz, .update_loop
+;    ret
 
 ;render_Bullets::
 ;   ld b, MAX_BULLETS
@@ -220,18 +299,5 @@ Update_Bullet::
 ;   jr nz, .render_loop
 ;   ret
 
-Render_Counter::
-    ld a, [wCounterValue]
-    add TILE_DIGIT_0
-    ld b, a
-    
-    ld hl, OAM_COUNTER
-    ld a, COUNTER_Y_POS
-    ld [hl+], a
-    ld a, COUNTER_X_POS
-    ld [hl+], a
-    ld a, b
-    ld [hl+], a
-    ld a, %00010000
-    ld [hl], a
-    ret
+; Render_Counter eliminado - ya no se usa
+; El HUD de balas se renderiza con render_bullets() en hud_system.asm

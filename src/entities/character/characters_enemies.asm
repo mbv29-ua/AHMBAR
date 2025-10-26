@@ -4,6 +4,19 @@ INCLUDE "constants.inc"
 SECTION "Character Sprites", ROM0
 
 
+;; QUITAR CONSTANTES MAGICAS
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine loads the bullet sprite in the 
+;; VRAM.
+;;
+;; INPUT
+;;      -
+;; OUTPUT:
+;;      -
+;; WARNING: Destroys A, BC, DE and HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 load_cowboy_sprites::
     ; Cargar sprite de la bola negra (jugador)
     ld hl, Cowboy_Sprites
@@ -45,20 +58,23 @@ load_cowboy_sprites::
 ;    ret
 
 ; ESTE ES EL BUENO, LUEGO LO DESCOMENTAMOS
-init_player::
-    call man_entity_alloc ; Deja en l el indice
-
-    ld b, PLAYER_START_Y ; Y coordinate
-    ld c, PLAYER_START_X  ; X coordinate
-    ld d, TILE_COWBOY ; tile
-    ld e, 0   ; tile properties
-    call set_entity_sprite
-
-    ld hl, wPlayerDirection
-    set 0, [hl]
-
-    ld h, CMP_ATTR_H
-    ld l, PHY_FLAGS
-    set PHY_FLAG_GROUNDED, [hl]
-    res PHY_FLAG_JUMPING, [hl]
-    ret
+;init_player::
+;    call man_entity_alloc ; Deja en l el indice
+;
+;    ld b, PLAYER_START_Y ; Y coordinate
+;    ld c, PLAYER_START_X  ; X coordinate
+;    ld d, TILE_COWBOY ; tile
+;    ld e, 0   ; tile properties
+;    call set_entity_sprite
+;
+;    ld hl, wPlayerDirection
+;    set 0, [hl]
+;
+;    ld h, CMP_ATTR_H
+;    ld l, ATT_ENTITY_FLAGS
+;    set E_BIT_GRAVITY, [hl]
+;
+;    ld l, PHY_FLAGS
+;    set PHY_FLAG_GROUNDED, [hl]
+;    res PHY_FLAG_JUMPING, [hl]
+;    ret
