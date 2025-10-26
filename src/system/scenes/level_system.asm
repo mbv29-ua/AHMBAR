@@ -98,22 +98,22 @@ SECTION "Level System", ROM0
 
 
 ; Verifica si el jugador tocó el cuadrado objetivo
-Check_Level_Change::
-    ; Verificar si X está en el rango del objetivo
-    ld a, [Player.wPlayerX]
-    cp GOAL_X_MIN
-    ret c                   ; X < GOAL_X_MIN, no hay colisión
-    cp GOAL_X_MAX
-    ret nc                  ; X >= GOAL_X_MAX, no hay colisión
-
-    ; Verificar si Y está en el rango del objetivo
-    ld a, [Player.wPlayerY]
-    cp GOAL_Y_MIN
-    ret c                   ; Y < GOAL_Y_MIN, no hay colisión
-    cp GOAL_Y_MAX
-    ret nc                  ; Y >= GOAL_Y_MAX, no hay colisión
-
-    ; ¡El jugador tocó el objetivo! Cambiar de nivel
-
-    call next_scene
-    ret
+;Check_Level_Change::
+;    ; Verificar si X está en el rango del objetivo
+;    ld a, [Player.wPlayerX]
+;    cp GOAL_X_MIN
+;    ret c                   ; X < GOAL_X_MIN, no hay colisión
+;    cp GOAL_X_MAX
+;    ret nc                  ; X >= GOAL_X_MAX, no hay colisión
+;
+;    ; Verificar si Y está en el rango del objetivo
+;    ld a, [Player.wPlayerY]
+;    cp GOAL_Y_MIN
+;    ret c                   ; Y < GOAL_Y_MIN, no hay colisión
+;    cp GOAL_Y_MAX
+;    ret nc                  ; Y >= GOAL_Y_MAX, no hay colisión
+;
+;    ; ¡El jugador tocó el objetivo! Cambiar de nivel
+;
+;    call next_scene
+;    ret

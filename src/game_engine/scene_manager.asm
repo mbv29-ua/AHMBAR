@@ -275,6 +275,7 @@ get_next_scene_info::
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 next_scene::
+    call fade_to_black
     call get_next_scene_info
     call load_scene
     ret

@@ -248,9 +248,34 @@ get_uppermost_y_coordinate_below_tile::
 
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; get_tile_at_player_position
+;;; Calculates which tile the player is standing on
+;;;
+;;; Output:
+;;;   A = Tile ID at player position
+;;;   HL = Address in tilemap ($9800 + offset)
+;;; Destroys: BC
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+get_tile_at_player_position::
+    ld a, [Player.wPlayerY]
+    ld b, a
+    ld a, [Player.wPlayerX]
+    ld c, a
+    call get_tile_at_position_y_x
+    ret
 
 
+
+
+
+
+
+
+
+
+;;;;;;;;;;;;;;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; get_tile_at_position
@@ -312,7 +337,10 @@ get_tile_at_position_new::
 ;;;   HL = Address in tilemap ($9800 + offset)
 ;;; Destroys: BC
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-get_tile_at_player_position::
+
+;; ESTA FUNCION TIENE UN FALLO
+
+get_tile_at_player_position_error::
     ; Tile X = (Player.wPlayerX + SCX - 8) / 8
     ldh a, [rSCX]
     ld b, a
@@ -341,7 +369,8 @@ get_tile_at_player_position::
     sla a  ; * 4
     sla a  ; * 8
     sla a  ; * 16
-    sla a  ; * 32
+    sla a  ; * 32   <= Esta operacion es erronea, ya que x32 un valor 
+           ;           de 5 bits puede dar lugar a un valor de mas de 8 bits  
     add c  ; + Tile X
     ld c, a  ; c = offset bajo
 

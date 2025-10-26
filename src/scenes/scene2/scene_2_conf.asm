@@ -4,8 +4,8 @@ SECTION "Scene 2", ROM0
 
 scene_2::
 
-.starting_y: 		DB 8							; SCENE_PLAYER_STARTING_Y
-.starting_x: 		DB 8							; SCENE_PLAYER_STARTING_X
+.starting_y: 		DB $28							; SCENE_PLAYER_STARTING_Y
+.starting_x: 		DB $40							; SCENE_PLAYER_STARTING_X
 .initial_scroll_y: 	DB 0 							; SCENE_STARTING_SCREEN_SCROLL_Y
 .initial_scroll_x:	DB 0							; SCENE_STARTING_SCREEN_SCROLL_X
 .tileset:			DW_BE tiles					    ; SCENE_TILESET ; Se almacen como LOW/HIGH

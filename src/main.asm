@@ -29,8 +29,8 @@ call wait_vblank
     call clamp_player_position       ; Limitar posición del jugador a los bordes del mapa
     call scroll_manager
     ; call render_player
-    call check_door_collision       ; Check door tiles ($C0-$C3) to trigger next level
     
+    call check_door_collision       ; Check door tiles ($C0-$C3) to trigger next level
     call update_bullet_system
     halt
 
