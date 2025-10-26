@@ -48,8 +48,9 @@ scroll_manager::
     ldh [rSCY], a
 
     ; Retrasamos al jugador para compensar
-    ld hl, Player.wPlayerY
-    inc [hl]
+    ;ld hl, Player.wPlayerY
+    ;inc [hl]
+    call move_all_entities_positions_one_pixel_down
 .end_scroll_up
 
 ; Scroll down
@@ -72,8 +73,9 @@ scroll_manager::
     ldh [rSCY], a
 
     ; Retrasamos al jugador para compensar
-    ld hl, Player.wPlayerY
-    dec [hl]
+    ;ld hl, Player.wPlayerY
+    ;dec [hl]
+    call move_all_entities_positions_one_pixel_up
 .end_scroll_down
 
 ; Scroll right
@@ -94,8 +96,9 @@ scroll_manager::
     ldh [rSCX], a
 
     ; Retrasamos al jugador para compensar
-    ld hl, Player.wPlayerX
-    dec [hl]
+    ;ld hl, Player.wPlayerX
+    ;dec [hl]
+    call move_all_entities_positions_one_pixel_to_left
 .end_scroll_right
 
 
@@ -117,8 +120,9 @@ scroll_manager::
     ldh [rSCX], a
 
     ; Retrasamos al jugador para compensar
-    ld hl, Player.wPlayerX
-    inc [hl]
+    ;ld hl, Player.wPlayerX
+    ;inc [hl]
+    call move_all_entities_positions_one_pixel_to_right
 .end_scroll_left
 
 ret
