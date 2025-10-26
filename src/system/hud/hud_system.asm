@@ -1,4 +1,6 @@
 INCLUDE "constants.inc"
+INCLUDE "entities/entities.inc"
+INCLUDE "utils/joypad.inc"
 
 SECTION "HUD System", ROM0
 
@@ -14,7 +16,7 @@ DEF TILE_EMPTY       EQU $80    ; Tile vacío
 ; HUD positions in Window tilemap
 DEF HUD_ROW          EQU 0      ; Primera fila de la Window
 DEF HUD_LIVES_START_X    EQU 1  ; Posición X inicial de corazones
-DEF HUD_BULLETS_START_X  EQU 14 ; Posición X inicial de balas
+DEF HUD_BULLETS_START_X  EQU 12 ; Posición X inicial de balas (movido a la izquierda)
 
 ; MAX_LIVES y MAX_BULLETS definidos en constants.inc
 
@@ -185,6 +187,16 @@ render_lives::
 ;;; Destroys: A, BC, DE, HL
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 render_bullets::
+    ; DEBUG: Mostrar número de balas en decimal primero
+    ld hl, $9C00 + HUD_BULLETS_START_X - 2
+    ld a, [wPlayerBullets]
+    add 188  ; 188 = tile '0'
+    ld [hl+], a
+
+    ; Espacio
+    ld a, 198
+    ld [hl+], a
+
     ; Calcular dirección base en Window tilemap ($9C00 + HUD_BULLETS_START_X)
     ld hl, $9C00
     ld bc, HUD_BULLETS_START_X

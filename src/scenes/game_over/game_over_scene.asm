@@ -12,9 +12,6 @@ SECTION "Game Over Scene", ROM0
 scene_game_over::
     call game_over_init
 
-    ; Escribir "GAME OVER" directamente en el tilemap
-    call draw_game_over_text
-
     ; Esperar a que presione START para reiniciar
     call wait_until_start_pressed
 
@@ -34,19 +31,29 @@ game_over_init::
 
     ; Limpiar sprites OAM completamente
     call clean_OAM
-
     call clean_bg_map
-    call copy_DMA_routine
-    call load_fonts
+
+    ; Cargar tiles del juego SIN offset (desde tile 0)
+    ld hl, tiles
+    ld de, VRAM0_START
+    ld bc, tiles_end - tiles
+    call memcpy_65536
+
+    ; Cargar tilemap de Game Over
+    ld hl, GameOver_Map
+    ld de, BG_MAP_START
+    ld bc, GameOver_Map_End - GameOver_Map
+    call memcpy_65536
+
     call init_palettes_by_default
 
-    ; Centrar scroll mejor: X=0, Y=16 (para centrar verticalmente)
+    ; Ajustar scroll: X=32 (derecha), Y=0
     xor a
-    ldh [rSCX], a
-    ld a, 16
     ldh [rSCY], a
+    ld a, 32
+    ldh [rSCX], a
 
-    ; Desactivar Window (HUD) - Limpiar bit 5 de LCDC
+    ; Desactivar Window (HUD)
     ld a, [rLCDC]
     res 5, a
     ld [rLCDC], a

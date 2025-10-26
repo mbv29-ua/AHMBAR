@@ -226,6 +226,14 @@ init_player::
     add hl, de
     ld c, [hl]  ; X coordinate
 
+    ; Guardar posición de spawn para respawn de picas
+    push bc
+    ld a, b
+    ld [wSpawnPlayerY], a
+    ld a, c
+    ld [wSpawnPlayerX], a
+    pop bc
+
     call man_entity_alloc ; Deja en l el indice
     ld d, TILE_COWBOY ; tile
     ld e, 0           ; tile properties

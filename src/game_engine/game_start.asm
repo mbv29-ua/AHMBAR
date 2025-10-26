@@ -43,9 +43,10 @@ set_initial_memory_values::
     ld a, 1
     ld [wCurrentLevel], a
 
-    ; Limpiar flag de HUD
+    ; Limpiar flags
     xor a
     ld [wHUDNeedsUpdate], a
+    ld [wSpikeCooldown], a  ; Inicializar cooldown de picas a 0
 
     ret
 

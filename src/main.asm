@@ -14,6 +14,7 @@ call wait_vblank
 
     call update_fire_animation      ; Animate fire tiles during VBlank
     call update_hud_if_needed       ; Update HUD if flag is set (during VBlank)
+    call update_spike_cooldown      ; Decrement spike damage cooldown
     call read_pad
 
     ; DEBUG: SELECT para perder vida (testing Game Over)
@@ -25,13 +26,14 @@ call wait_vblank
     call update_character_velocities
     call process_all_enemies_AIs
     call apply_gravity_to_affected_entities
-    ;call vertical_speed_to_zero_if_grounded
     call update_all_entities_positions
-    call clamp_player_position       ; Limitar posición del jugador a los bordes del mapa
+    call clamp_player_position
     call scroll_manager
     ; call render_player
-    
+
     call check_door_collision       ; Check door tiles ($C0-$C3) to trigger next level
+    call check_deadly_collision     ; Check deadly tiles (spikes) to damage player
+    call check_enemy_collision      ; Check collision with enemies
     call update_bullet_system
     halt
 
