@@ -2,17 +2,13 @@ SECTION "Collisions", ROM0
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; check_door_collision
-;;; Checks if player is touching a door tile
+;;; Checks if player is touching a door tile (tiles $C0-$C3)
 ;;; and triggers level transition if true
+;;; Door tiles have bits 4,5,6 = %010 (DOOR_TILE group)
 ;;;
 ;;; Destroys: A, BC, HL
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 check_door_collision::
-    ; Verificar si estamos en nivel 2, si es así, no hacer nada
-    ;ld a, [wCurrentLevel]
-    ;cp 2
-    ;ret z  ; Si es nivel 2, retornar sin hacer nada
-
     call get_tile_at_player_position  ; A = tile ID, HL = tilemap address
     call is_tile_door
     ret nz  ; Not a door, return

@@ -17,6 +17,7 @@ coolDown::          DS 1
 ; HUD Variables
 wPlayerLives::      DS 1  ; Vidas del jugador (0-4)
 wPlayerBullets::    DS 1  ; Balas disponibles (0-5)
+wHUDNeedsUpdate::   DS 1  ; Flag: 1 = HUD necesita actualizarse en próximo VBlank
 
 
 wCounterValue::     DS 1

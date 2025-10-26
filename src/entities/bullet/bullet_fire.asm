@@ -28,14 +28,14 @@ update_bullet_system::
 
 
 init_counter::
-    ld a, COUNTER_START
-    ld [wCounterValue], a
+    ; Ya no se usa, wPlayerBullets se inicializa en init_hud
     ret
 
 
 ;; z=1 means empty
+;; Usa wPlayerBullets en vez de wCounterValue
 is_magazine_empty::
-    ld a, [wCounterValue]
+    ld a, [wPlayerBullets]
     or a
     ret
 
@@ -247,18 +247,5 @@ check_button_input::
 ;   jr nz, .render_loop
 ;   ret
 
-Render_Counter::
-    ld a, [wCounterValue]
-    add TILE_DIGIT_0
-    ld b, a
-    
-    ld hl, OAM_COUNTER
-    ld a, COUNTER_Y_POS
-    ld [hl+], a
-    ld a, COUNTER_X_POS
-    ld [hl+], a
-    ld a, b
-    ld [hl+], a
-    ld a, %00010000
-    ld [hl], a
-    ret
+; Render_Counter eliminado - ya no se usa
+; El HUD de balas se renderiza con render_bullets() en hud_system.asm
