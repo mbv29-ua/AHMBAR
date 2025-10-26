@@ -112,8 +112,6 @@ man_entity_for_each::
 		ret
 
 
-helper_call_hl::
-	jp hl
 
 ;; INPUT: 
 ;;	   L: INDEX ENTITY TO DELETE 
@@ -159,11 +157,11 @@ man_entity_free::
 
 man_entity_for_each_movable::
 	ld de, ATTR_BASE
-	.loop
-
 	ld a, [de]
 	cp ENTITY_CMP_SENTINEL
 	ret z 
+
+	.loop
 
 	bit E_BIT_SENTINEL, a 
 	jr nz, .process_and_exit
@@ -189,6 +187,8 @@ man_entity_for_each_movable::
 	jr .loop
 
 	.process_and_exit:
+	bit E_BIT_MOVABLE, a
+	jr z, .exit
 	push af
 	push de
 	push hl
@@ -201,9 +201,16 @@ man_entity_for_each_movable::
 		ret
 
 
-
-
-man_entity_for_each_gravity::
+;; -------------------------------------------------------------------
+;; man_entity_for_each_of_type
+;;
+;;    INPUT:
+;;    B  -> Bit a comprobar (0–7)
+;;    HL -> Dirección de la rutina a ejecutar (callback)
+;;
+;;    Recorre todas las entidades y llama a la rutina si el bit B está activo.
+;; -------------------------------------------------------------------
+man_entity_for_each_type::
 	
 	ld de, ATTR_BASE
 	ld a, [de]
@@ -212,7 +219,21 @@ man_entity_for_each_gravity::
 
 	.loop		
 		ld a, [de]
-		bit E_BIT_GRAVITY, a
+		ld c, a 
+
+		;; mascara
+		ld a, 1 
+		ld d, b 
+		.mask_loop:
+			or a 
+			dec d 
+			jr c, .mask_done ;; si era b = 0 nos salimos
+			sla a 
+			jr nz, .mask_loop
+		.mask_done:
+			and c 
+			jr z, .next
+		
 		jr z, .next
 
 		push af
@@ -234,4 +255,88 @@ man_entity_for_each_gravity::
 
 
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine processes a routine only for those
+;; entities identified as enemies.
+;;
+;; INPUT:
+;;		HL: Routine to apply to each enemy
+;; OUTPUT:
+;;		-	
+;; WARNING: Destroys A, BC and DE
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+man_entity_for_each_enemy::
+	
+	ld de, ATTR_BASE
+	ld a, [de]
+	cp ENTITY_CMP_SENTINEL
+	ret z 
+
+	.loop		
+		ld a, [de]
+		bit E_BIT_ENEMY, a
+		jr z, .next
+
+		push af
+		push de
+		push hl
+		call helper_call_hl
+		pop hl
+		pop de
+		pop af	
+
+		.next:
+		bit E_BIT_SENTINEL, a 
+		ret nz
+
+		ld a, e 
+		add ATTR_SIZE
+		ld e, a 
+		jr .loop
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine processes a routine only for those
+;; entities affected by gravity.
+;;
+;; INPUT:
+;;		HL: Routine
+;; OUTPUT:
+;;		-	
+;; WARNING: Destroys A, BC and DE
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+man_entity_for_each_gravity::
+	
+	ld de, ATTR_BASE
+	ld a, [de]
+	cp ENTITY_CMP_SENTINEL
+	ret z 
+
+	.loop:
+		ld b, 0
+		ld c, INTERACTION_FLAGS
+		call add_bc_de
+
+		ld a, [bc]				; BC is the address of the INTERACTION_FLAGS
+		bit E_BIT_GRAVITY, a
+		jr z, .next
+
+		push af
+		push de
+		push hl
+		call helper_call_hl
+		pop hl
+		pop de
+		pop af	
+
+		.next:
+		ld a, [de]				; DE is the address of the ATT_ENTITY_FLAGS
+		bit E_BIT_SENTINEL, a 
+		ret nz
+
+		ld a, e 
+		add ATTR_SIZE
+		ld e, a 
+		jr .loop

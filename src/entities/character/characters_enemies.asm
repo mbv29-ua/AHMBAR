@@ -6,6 +6,17 @@ SECTION "Character Sprites", ROM0
 
 ;; QUITAR CONSTANTES MAGICAS
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine loads the bullet sprite in the 
+;; VRAM.
+;;
+;; INPUT
+;;      -
+;; OUTPUT:
+;;      -
+;; WARNING: Destroys A, BC, DE and HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 load_cowboy_sprites::
     ; Cargar sprite de la bola negra (jugador)
     ld hl, Cowboy_Sprites

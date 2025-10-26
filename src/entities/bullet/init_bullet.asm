@@ -3,6 +3,17 @@ include "constants.inc"
 SECTION "Bullet", ROM0
 
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine loads the bullet sprite in the 
+;; VRAM.
+;;
+;; INPUT
+;;      -
+;; OUTPUT:
+;;      -
+;; WARNING: Destroys A, BC, DE and HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 load_bullet_sprites::
     ld hl, Tile_Bullet
     ld de, VRAM0_START + (TILE_BULLET * TILE_SIZE)
@@ -10,6 +21,17 @@ load_bullet_sprites::
     call memcpy_256
     ret
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine creates a bullet entity and sets
+;; its component initial values
+;;
+;; INPUT
+;;      -
+;; OUTPUT:
+;;      -
+;; WARNING: Destroys A, BC, DE and HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 init_bullet::
     call man_entity_alloc ; Returns l=entity index

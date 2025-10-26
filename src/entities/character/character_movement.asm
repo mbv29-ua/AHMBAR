@@ -5,6 +5,18 @@ INCLUDE "entities/entities.inc"
 SECTION "Character Movement", ROM0
 
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine checks the pressed buttons and
+;; updates the player speed Vy and Vx according
+;; to the inputs.
+;;
+;; INPUT
+;;      -
+;; OUTPUT:
+;;      -
+;; WARNING: Destroys A, DE and HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 update_character_velocities::
 
     ld a, [PRESSED_BUTTONS]
@@ -72,14 +84,18 @@ update_character_velocities::
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; clamp_player_position
-;;; Limita la posición del jugador para que no salga de los bordes del mapa
-;;; Debe llamarse DESPUÉS de aplicar físicas
-;;;
-;;; Input: None
-;;; Output: None
-;;; Destroys: A, HL
+;; clamp_player_position
+;; Limits the player position to keep it inside the 
+;; limits of the map.
+;; Must be called AFTER applying all the physics
+;;
+;; INPUT
+;;      L: Entity index
+;; OUTPUT:
+;;      -
+;; WARNING: Destroys A, HL
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 clamp_player_position::
     ; Límite X izquierdo (mínimo)
     ld a, [Player.wPlayerX]
