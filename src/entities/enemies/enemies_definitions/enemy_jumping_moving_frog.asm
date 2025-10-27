@@ -1,19 +1,19 @@
 INCLUDE "constants.inc"
 INCLUDE "entities/enemies/enemies.inc"
 
-SECTION "Jumping frog", ROM0
+SECTION "Jumping moving frog", ROM0
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; This file contains the definition of a static 
 ;; frog enemy. It jumps in the same position.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-jumping_frog::
+jumping_moving_frog::
 
-.initial_tile: 			DB FROG_TILE 	;; ENEMY_TILE
-.initial_sprite_attrs: 	DB  0		 	;; ENEMY_INITAL_SPRITE_ATTRIBUTES
-.initial_y_speed: 		DB -2 		 	;; ENEMY_INITIAL_VY_SPEED
-.initial_x_speed: 		DB  0		 	;; ENEMY_INITIAL_VX_SPEED
+.initial_tile: 			DB DARKFROG_TILE ;; ENEMY_TILE
+.initial_sprite_attrs: 	DB  0		 	 ;; ENEMY_INITAL_SPRITE_ATTRIBUTES
+.initial_y_speed: 		DB -2 		 	 ;; ENEMY_INITIAL_VY_SPEED
+.initial_x_speed: 		DB  1		 	 ;; ENEMY_INITIAL_VX_SPEED
 
 .enemy_flags: DB %00001000 				;; ENEMY_FLAGS
 ;; 3 E_BIT_INTELLIGENT_ENEMY
@@ -34,9 +34,9 @@ jumping_frog::
 .end_definition:
 
 
-load_frog_tiles::
-    ld hl, frog_tile
-    ld de, (VRAM0_START+FROG_TILE*TILE_SIZE)
-    ld bc, frog_tile.end - frog_tile.start
+load_darkfrog_tiles::
+    ld hl, dark_frog_tile
+    ld de, (VRAM0_START+DARKFROG_TILE*TILE_SIZE)
+    ld bc, dark_frog_tile.end - dark_frog_tile.start
     call memcpy_65536
     ret

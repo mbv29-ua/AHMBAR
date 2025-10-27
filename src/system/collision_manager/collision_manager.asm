@@ -39,6 +39,7 @@ get_tile_at_position_y_x::
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; This routine gets the tile at the memory addres HL.
+;; We need to read it outside Mode 3: VRAM -> LCD
 ;;
 ;; INPUT:
 ;;      HL: memory address of the tile
@@ -47,6 +48,10 @@ get_tile_at_position_y_x::
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 get_tile_at_position_hl::
+    ld a, [rSTAT]
+    cp %11000000 ; if no carry, then we are in mode 3
+    jr nc, get_tile_at_position_hl
+
     ld a, [hl]
     ret
 

@@ -1,4 +1,10 @@
 INCLUDE "entities/entities.inc"
+
+SECTION "Entity Manager RAM variables", WRAM0
+
+has_been_freed:: DS 1
+
+
 SECTION "Entity Manager Code", ROM0
 
 
@@ -298,6 +304,47 @@ man_entity_for_each_enemy::
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; This routine processes a routine only for those
+;; entities identified as intelligent enemies.
+;;
+;; INPUT:
+;;		HL: Routine to apply to each enemy
+;; OUTPUT:
+;;		-	
+;; WARNING: Destroys A, BC and DE
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+man_entity_for_each_intelligent_enemy::
+	
+	ld de, ATTR_BASE
+	ld a, [de]
+	cp ENTITY_CMP_SENTINEL
+	ret z 
+
+	.loop		
+		ld a, [de]
+		bit E_BIT_INTELLIGENT_ENEMY, a
+		jr z, .next
+
+		push af
+		push de
+		push hl
+		call helper_call_hl
+		pop hl
+		pop de
+		pop af	
+
+		.next:
+		bit E_BIT_SENTINEL, a 
+		ret nz
+
+		ld a, e 
+		add ATTR_SIZE
+		ld e, a 
+		jr .loop
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine processes a routine only for those
 ;; entities affected by gravity.
 ;;
 ;; INPUT:
@@ -335,6 +382,58 @@ man_entity_for_each_gravity::
 		ld a, [de]				; DE is the address of the ATT_ENTITY_FLAGS
 		bit E_BIT_SENTINEL, a 
 		ret nz
+
+		ld a, e 
+		add ATTR_SIZE
+		ld e, a 
+		jr .loop
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine processes a routine only for those
+;; entities affected when they are ouside the screen.
+;;
+;; INPUT:
+;;		HL: Routine
+;; OUTPUT:
+;;		-	
+;; WARNING: Destroys A, BC and DE
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+man_entity_for_each_not_living_out_of_screen::
+	
+	ld de, ATTR_BASE
+	ld a, [de]
+	cp ENTITY_CMP_SENTINEL
+	ret z 
+
+	.loop:
+		ld b, 0
+		ld c, INTERACTION_FLAGS
+		call add_bc_de
+
+		ld a, [bc]				; BC is the address of the INTERACTION_FLAGS
+		bit E_BIT_OUT_OF_SCREEN, a
+		jr nz, .next
+
+		push af
+		push de
+		push hl
+		call helper_call_hl
+		pop hl
+		pop de
+		pop af	
+
+		.next:
+		ld a, [de]				; DE is the address of the ATT_ENTITY_FLAGS
+		bit E_BIT_SENTINEL, a 
+		ret nz
+
+		;; Estas tres lineas deberia hacerlas el free
+		ld a, [has_been_freed]
+		or a ; We check if it is zero
+		jr z, .loop ; if it has been freed, then we do not increase the index
 
 		ld a, e 
 		add ATTR_SIZE

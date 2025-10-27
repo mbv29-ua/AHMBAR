@@ -6,6 +6,7 @@ SECTION "Entry Point", ROM0[$150]
 
 main::
     call scene_title_screen
+    call scene_title_screen
     ; call scene_intro_screen
     call start_game
 
@@ -24,6 +25,7 @@ call wait_vblank
 
     ; call move_character
     call update_character_velocities
+    call apply_intelligent_behavior_to_enemies
     call process_all_enemies_AIs
     call apply_gravity_to_affected_entities
 

@@ -172,6 +172,43 @@ set_entity_AI::
     ret
 
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Generic function to set entities attributes components
+;;
+;; Input
+;;      BC: Address of AI routine 2
+;;      DE: Address of entity definition
+;;      L: Entity index
+;; OUTPUT:
+;;      -
+;; WARNING: Destroys H
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+set_entity_ID::
+    ld h, CMP_SONIA_H
+    call set_entity_components
+    ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine gets the entity definition component.
+;;
+;; Input
+;;      L: Entity index
+;; OUTPUT
+;;      B: value 1
+;;      C: value 2
+;;      D: value 3
+;;      E: value 4
+;; WARNING: Destroys H
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+get_entity_definition_component::
+    ld h, CMP_SONIA_H
+    call get_entity_components
+    ret 
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; This routine sets the entity vertical speed to
 ;; zero.

@@ -76,6 +76,7 @@ enemy_spawn::
 	call spawner_set_enemy_flags
 	call spawner_set_enemy_health
 	call spawner_set_enemy_AI
+	call spawner_set_enemy_ID
 
 	ret
 	
@@ -284,3 +285,75 @@ spawner_set_enemy_AI::
 	; We retrive the original inputs
     pop hl
     ret
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine sets the enemy ID, that is
+;; that is necessary for some AIs.
+;;
+;; INPUT:
+;;		 A: Entity index
+;;      HL: Enemy attributes information address
+;; OUTPUT:
+;;      -
+;; WARNING: Destroys BC and DE
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+spawner_set_enemy_ID::
+	push hl
+	
+    ; Load AI 1
+    ld b, 0
+    ld c, 0
+    ; Load enemy definition address
+	ld d, h
+	ld e, l
+	ld l, a ; entity index
+	call set_entity_ID
+
+	; We retrive the original inputs
+    pop hl
+    ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine gets the enemy initial speed Vx
+;; specified in the definition file.
+;;
+;; INPUT:
+;;      HL: Enemy attributes information address
+;; OUTPUT:
+;;       A: Enemy speed
+;; WARNING: Destroys DE
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+get_enemy_definition_vx::
+	push hl
+	ld d, 0
+	ld e, ENEMY_INITIAL_VX_SPEED
+	add hl, de
+	ld a, [hl]
+	pop hl
+	ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine gets the enemy initial speed Vx
+;; specified in the definition file.
+;;
+;; INPUT:
+;;      HL: Enemy attributes information address
+;; OUTPUT:
+;;       A: Enemy speed
+;; WARNING: Destroys DE
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+get_enemy_definition_vy::
+	push hl
+	ld d, 0
+	ld e, ENEMY_INITIAL_VY_SPEED
+	add hl, de
+	ld a, [hl]
+	pop hl
+	ret
