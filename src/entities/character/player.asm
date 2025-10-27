@@ -49,12 +49,4 @@ enemy_damage::
     ; Marcar que HUD necesita actualizarse
     ld a, 1
     ld [wHUDNeedsUpdate], a
-
-    ; Verificar si llegó a 0 vidas para game over
-    ld a, [wPlayerLives]
-    or a
-    ret nz
-
-    ; Si llegó a 0 vidas, game over
-    call game_over
     ret

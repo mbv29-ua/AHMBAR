@@ -81,15 +81,11 @@ spike_damage::
     ld [wHUDNeedsUpdate], a
 
     ; Respawn en posición anterior (restaurar posición guardada)
+    call fade_to_black
+
     call restore_player_position
-
-    ; Verificar si llegó a 0 vidas para game over
-    ld a, [wPlayerLives]
-    cp 0
-    ret nz
-
-    ; Si llegó a 0 vidas, game over
-    call game_over
+    call fade_to_original
+    
     ret
 
 

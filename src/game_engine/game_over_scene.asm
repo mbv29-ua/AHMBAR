@@ -47,12 +47,14 @@ game_over_init::
 
     call init_palettes_by_default
 
+    ; RUTINA DE SYS_UTILS - Reiniciar el scroll
     ; Ajustar scroll: X=32 (derecha), Y=0
     xor a
     ldh [rSCY], a
     ld a, 32
     ldh [rSCX], a
 
+    ; RUTINA DE SYS_UTILS
     ; Desactivar Window (HUD)
     ld a, [rLCDC]
     res 5, a
@@ -69,6 +71,7 @@ game_over_init::
 ;;; Dibuja "GAME OVER" con tiles de bricks y antorchas
 ;;; Crea un diseño visual usando los tiles del juego
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; TODO: TILEMAP AND MEMCPY_65536
 draw_game_over_text::
     ; Marco superior decorativo (fila 4-5)
     ; Fila 4: Línea de bricks

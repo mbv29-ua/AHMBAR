@@ -67,5 +67,3 @@ restart_game::
     di ; No interrupts
     ld sp, $FFFE ; We restart the stack
     jp main ; With jp and no call to avoid filling the stack with unnecesary values
-
-

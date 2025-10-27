@@ -263,11 +263,6 @@ lose_life::
     ld [wHUDNeedsUpdate], a
     pop hl
 
-    ; Si vidas == 0, llamar game_over
-    ld a, [hl]
-    cp 0
-    ret nz
-    call game_over
     ret
 
 

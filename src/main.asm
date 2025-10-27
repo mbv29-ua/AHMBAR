@@ -43,6 +43,8 @@ main::
     call check_deadly_collision     ; Check deadly tiles (spikes) to damage player
     call check_enemy_collision      ; Check collision with enemies
     call update_bullet_system
+
+    call check_lives
     halt
 
     jp .main_loop
