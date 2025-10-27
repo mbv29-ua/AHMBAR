@@ -254,7 +254,7 @@ set_player_initial_position::
     
     ; 7: E_BIT_MOVABLE
     ; 6: E_BIT_GRAVITY
-    ; 5: E_BIT_OUT_OF_BOUNDS
+    ; 5: E_BIT_OUT_OF_SCREEN
     ; 4: E_BIT_COLLIDABLE
     ; 3: E_BIT_DAMAGEABLE
     ; 2: E_BIT_STICK_TO_EDGES

@@ -86,7 +86,7 @@ init_bullet::
     ld l, a
     inc l  ; Apuntar a INTERACTION_FLAGS
     ld a, [hl]
-    res E_BIT_OUT_OF_BOUNDS, a  ; Asegurar que NO puede salir de bounds
+    res E_BIT_OUT_OF_SCREEN, a  ; Asegurar que NO puede salir de bounds
     ld [hl], a
 
     ret
