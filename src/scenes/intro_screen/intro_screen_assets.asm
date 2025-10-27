@@ -1,6 +1,6 @@
 INCLUDE "constants.inc"
 INCLUDE "entities/entities.inc"
-SECTION "intro screen scene", ROM0
+SECTION "intro screen scene", ROMX
 
 scene_intro_screen::
 	call intro_scene_init
@@ -40,10 +40,10 @@ intro_scene_init::
     call clean_OAM
     call clean_bg_map
     call copy_DMA_routine
-    call Load_letras_intro_Tiles
-    call Load_start_Map
     call init_palettes_by_default
     call man_entity_init
+    call Load_intro_Tiles
+    call Load_intro_Map
     call init_personaje_animacion
     call enable_vblank_interrupts
     call screen_obj_on
@@ -53,10 +53,10 @@ intro_scene_init::
 menu_start_init::
 call screen_off
 call clean_OAM
-call clean_bg_map
+call clean_bg_map    
 call init_palettes_by_default
-call Load_intro_Tiles
-call Load_intro_Map
+call Load_letras_intro_Tiles
+call Load_start_Map
 call enable_vblank_interrupts
 call screen_obj_on
 call screen_on

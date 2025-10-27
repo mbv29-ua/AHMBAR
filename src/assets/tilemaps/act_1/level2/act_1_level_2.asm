@@ -1,4 +1,4 @@
-SECTION "level2", ROM0
+SECTION "level2", ROMX 
 
 Level2_Map::
 DB $A0,$80,$80,$80,$80,$80,$80,$80,$80,$A0
