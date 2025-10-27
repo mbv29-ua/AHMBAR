@@ -2,7 +2,7 @@ INCLUDE "utils/joypad.inc"
 INCLUDE "constants.inc"
 INCLUDE "entities/entities.inc"
 
-SECTION "Character Movement", ROM0
+SECTION "Character Movement", ROMX
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
