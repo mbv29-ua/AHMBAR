@@ -35,6 +35,7 @@ SECTION "Animation effects", ROM0
 ;; OUTPUT:
 ;;      -
 ;; WARNING: Destroys A, B, C, D and HL.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 apply_screen_colors_animation_effect::
 	ld c, b ; We save the number of frames	
@@ -60,6 +61,7 @@ apply_screen_colors_animation_effect::
 ;; OUTPUT:
 ;;      -
 ;; WARNING: Destroys A, B, C, D and HL.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 fadeout::
 	ld hl, fadeout_transition_palette_values
@@ -85,6 +87,7 @@ fadeout::
 ;; OUTPUT:
 ;;      -
 ;; WARNING: Destroys A, B, C, D and HL.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 fade_to_black::
 	ld hl, fade_to_black_transition_palette_values
@@ -102,6 +105,7 @@ fade_to_black::
 ;; OUTPUT:
 ;;      -
 ;; WARNING: Destroys A, B, C, D and HL.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 fade_to_original::
 	ld hl, fade_to_original_transition_palette_values

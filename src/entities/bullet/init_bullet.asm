@@ -38,7 +38,6 @@ load_bullet_sprites::
 
 init_bullet::
     call man_entity_alloc ; Returns l=entity index
-    push af  ; Guardar índice de entidad
 
     ;; Change by some flag
     ld a, [wPlayerDirection]
@@ -83,12 +82,14 @@ init_bullet::
 
     ; Configurar flags: la bala NO debe existir fuera de bounds
     ; Esto evita que el sistema la haga "wrapear"
-    pop af  ; Recuperar índice
+
     ld h, CMP_ATTR_H
+    ld a, INTERACTION_FLAGS
+    add l
     ld l, a
-    inc l  ; Apuntar a INTERACTION_FLAGS
     ld a, [hl]
-    res E_BIT_OUT_OF_SCREEN, a  ; Asegurar que NO puede salir de bounds
+    set E_BIT_DIES_OUT_OF_SCREEN, a  ; Asegurar que NO puede salir de bounds
+    set E_BIT_COLLIDABLE, a          ; Collides
     ld [hl], a
 
     ret
