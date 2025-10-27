@@ -1,7 +1,7 @@
 INCLUDE "constants.inc"
 INCLUDE "utils/joypad.inc"
 
-SECTION "Title screen scene", ROMX
+SECTION "Title screen scene", ROM0
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; This routine shows the title screen with menu.
