@@ -140,12 +140,14 @@ update_fire_animation::
 ;;; Destroys: A, BC, DE, HL
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 copy_to_vram:
-.loop:
-    ld a, [hl+]         ; Load byte from source
-    ld [de], a          ; Write to VRAM
-    inc de              ; Next VRAM address
-    dec bc              ; Decrement counter
-    ld a, b
-    or c                ; Check if BC = 0
-    jr nz, .loop        ; Continue if not zero
+    call memcpy_65536
     ret
+;    .loop:
+;        ld a, [hl+]         ; Load byte from source
+;        ld [de], a          ; Write to VRAM
+;        inc de              ; Next VRAM address
+;        dec bc              ; Decrement counter
+;        ld a, b
+;        or c                ; Check if BC = 0
+;        jr nz, .loop        ; Continue if not zero
+;        ret

@@ -31,8 +31,9 @@ get_tile_at_position_y_x::
     ld a, c
     call convert_x_to_tx
     ld c, a
-    call calculate_address_from_tx_and_ty
-    call get_tile_at_position_hl
+    ; call calculate_address_from_tx_and_ty
+    ; call get_tile_at_position_hl
+    call get_tile_at_position
     pop de
     ret
 
@@ -48,10 +49,6 @@ get_tile_at_position_y_x::
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 get_tile_at_position_hl::
-    ld a, [rSTAT]
-    cp %11000000 ; if no carry, then we are in mode 3
-    jr nc, get_tile_at_position_hl
-
     ld a, [hl]
     ret
 
@@ -134,8 +131,7 @@ convert_x_to_tx:
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Calculates an VRAM Tilemap Address from itx tile
 ;; coordinates (TX, TY). The tilemap is 32x32, and
-;; address $9800 is assumed as the address of tile (0,0)
-;; in tile coordinates.
+;; address is given by the scene configuration.
 ;;
 ;; INPUT:
 ;;      B: TY coordinate
@@ -149,14 +145,17 @@ calculate_address_from_tx_and_ty:
     ld l, b
     call mult_hl_32
 
-    ; Calculate full address: $9800 + offset
-    ld de, BG_MAP_START
-    add hl, de
-
     ; Add Tile X
     ld d, 0
     ld e, c ; DE = Tile X 
     add hl, de
+
+    ; Calculate full address: $9800 + offset
+    push hl
+    call get_current_tilemap_address ; Returns tilemap address in DE
+    pop hl
+    add hl, de
+
     ret
 
 
@@ -389,127 +388,3 @@ get_tile_at_player_position_error::
     ret
 
 
-
-
-
-
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; get_tile_at_position
-;;; Gets the tile ID at a specific pixel position
-;;;
-;;; Input:
-;;;   B = Y position (pixels)
-;;;   C = X position (pixels)
-;;; Output:
-;;;   A = Tile ID at that position
-;;;   HL = Address in tilemap
-;;; Destroys: DE
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;get_tile_at_position::
-;    ; Tile X = (X + SCX - 8) / 8
-;    ldh a, [rSCX]
-;    add c
-;    sub 8           ; OAM offset
-;    srl a
-;    srl a
-;    srl a
-;    ld e, a         ; E = Tile X
-;
-;    ; Tile Y = (Y + SCY - 17) / 8
-;    ldh a, [rSCY]
-;    add b
-;    sub 16
-;    srl a
-;    srl a
-;    srl a
-;    ld d, a         ; D = Tile Y
-;
-;    ; Calculate tilemap offset: Tile Y * 32 + Tile X
-;    ; Using 16-bit arithmetic to avoid overflow
-;    ; HL = Tile Y * 32
-;    ld h, 0
-;    ld l, d         ; HL = Tile Y
-;    add hl, hl      ; * 2
-;    add hl, hl      ; * 4
-;    add hl, hl      ; * 8
-;    add hl, hl      ; * 16
-;    add hl, hl      ; * 32
-;
-;    ; Add Tile X
-;    ld d, 0         ; DE = Tile X
-;    add hl, de      ; HL = (Tile Y * 32) + Tile X
-;
-;    ; Calculate full address: $9800 + offset
-;    ld de, $9800
-;    add hl, de
-;
-;    ; Read tile at position
-;    ld a, [hl]
-;    ret
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; get_tile_at_entity_position
-;;; Gets the tile ID at an entity's specific pixel position
-;;;
-;;; Input:
-;;;   E = Entity index (points to Y component)
-;;;   B = Y offset to add to entity's Y position
-;;;   C = X offset to add to entity's X position
-;;; Output:
-;;;   A = Tile ID at that position
-;;;   HL = Address in tilemap
-;;; Destroys: DE, BC
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;get_tile_at_entity_position::
-;    ; Get entity Y position
-;    ld d, CMP_SPRIT_H
-;    ld a, [de]      ; A = entity Y
-;    add b           ; Add Y offset
-;    ld b, a         ; B = final Y position
-;
-;    ; Get entity X position
-;    inc e
-;    ld a, [de]      ; A = entity X
-;    add c           ; Add X offset
-;    ld c, a         ; C = final X position
-;    dec e           ; Restore E to point to entity Y
-;
-;    ; Now call get_tile_at_position with B=Y, C=X
-;    call get_tile_at_position
-;    ret
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; get_tile_at_entity_position_x
-;;; Gets the tile ID at an entity's specific pixel position
-;;; VARIANT: E points to X component instead of Y
-;;;
-;;; Input:
-;;;   E = Entity index (points to X component)
-;;;   B = Y offset to add to entity's Y position
-;;;   C = X offset to add to entity's X position
-;;; Output:
-;;;   A = Tile ID at that position
-;;;   HL = Address in tilemap
-;;; Destroys: DE, BC
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;get_tile_at_entity_position_x::
-;    ; Get entity X position
-;    ld d, CMP_SPRIT_H
-;    ld a, [de]      ; A = entity X
-;    add c           ; Add X offset
-;    ld c, a         ; C = final X position
-;
-;    ; Get entity Y position
-;    dec e
-;    ld a, [de]      ; A = entity Y
-;    add b           ; Add Y offset
-;    ld b, a         ; B = final Y position
-;    inc e           ; Restore E to point to X
-;
-;    ; Now call get_tile_at_position with B=Y, C=X
-;    call get_tile_at_position
-;    ret

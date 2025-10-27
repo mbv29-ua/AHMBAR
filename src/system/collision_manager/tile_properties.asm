@@ -3,28 +3,6 @@ INCLUDE "system/collision_manager/collisions.inc"
 SECTION "Tile Properties Functions", ROM0
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; get_tile_properties
-;;; Returns the property flags for a given tile ID
-;;;
-;;; Input:
-;;;   A = Tile ID (0x00-0xFF)
-;;; Output:
-;;;   A = Property flags byte
-;;;   Z flag = set if tile has no properties (empty)
-;;; Destroys: HL
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;get_tile_properties::
-;    ; Add tile ID as offset to table base address
-;    ld hl, tile_properties_table
-;    ld d, 0
-;    ld e, a         ; DE = tile ID (0-255)
-;    add hl, de      ; HL = table base + tile ID
-;    ld a, [hl]      ; Load property byte
-;    or a            ; Set Z flag if properties == 0
-;    ret
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; is_tile_solid
 ;;; Checks if a tile blocks movement
 ;;;

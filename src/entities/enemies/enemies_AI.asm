@@ -1,5 +1,5 @@
+INCLUDE "constants.inc"
 INCLUDE "entities/entities.inc"
-INCLUDE "system/sprite_constants.inc"
 
 DEF MOVING_COOLDOWN 		EQU 10 ; About three seconds
 DEF JUMPING_COOLDOWN 		EQU 120 ; About three seconds

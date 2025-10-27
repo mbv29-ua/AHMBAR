@@ -3,53 +3,6 @@ INCLUDE "entities/enemies/enemies.inc"
 
 SECTION "Enemies", ROM0
 
-;; Example <- To delete in the final version
-
-init_enemigos_prueba::
-	;; Example of initializing an enemy (valid for an entity)
-	call man_entity_alloc ; Returns l=entity index
-	ld b, $48 ; Y coordinate
-	ld c, $14  ; X coordinate
-	ld d, $05 ; tile
-	ld e, 0   ; tile properties
-	call set_entity_sprite
-	ld b, -1 ; vy 
-	;ld c,  0 ; vx
-	ld d,  0 ; vx
-	call set_entity_physics
-
-	call man_entity_alloc ; Returns l=entity index
-	ld b, $55 ; Y coordinate
-	ld c, $56  ; X coordinate
-	ld d, $07 ; tile
-	ld e, %11001010   ; tile properties
-	call set_entity_sprite	
-	ld b,  1 ; vy
-	;ld c, -1 ; vx
-	ld d, -1 ; vx
-	call set_entity_physics
-
-	call man_entity_alloc ; Returns l=entity index
-	ld b, 60 ; Y coordinate
-	ld c, 40  ; X coordinate
-	ld d, $09 ; tile
-	ld e, 0   ; tile properties
-	call set_entity_sprite
-	ld b,  0 ; vy
-	;ld c,  1 ; vx
-	ld d,  1 ; vx
-	call set_entity_physics
-
-	ld h, CMP_ATTR_H
-	ld a, l
-    add ATT_ENTITY_FLAGS
-    ld l, a
-    set E_BIT_GRAVITY, [hl]
-
-	ret
-
-
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; This routine spawns an enemy of a certain type
 ;; given by HL in a certain possition (C,B).
@@ -357,3 +310,44 @@ get_enemy_definition_vy::
 	ld a, [hl]
 	pop hl
 	ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; damage_enemy
+;;; Causes 3 damage to an enemy
+;;; If health reaches 0, enemy is destroyed
+;;;
+;;; Input: A = enemy index
+;;; Destroys: HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+damage_enemy::
+    ; Guardar índice del enemigo
+    ld b, a  ; B = enemy index
+
+    ; Obtener vida actual del enemigo
+    ld h, CMP_ATTR_H
+    ld l, a  ; L = enemy index
+    ld a, l
+    add ENTITY_HEALTH  ; A = enemy index + offset ENTITY_HEALTH
+    ld l, a  ; HL ahora apunta a ENTITY_HEALTH del enemigo
+    ld a, [hl]  ; A = vida actual
+
+    ; Si tiene menos de 3 de vida, poner a 0
+    cp 3
+    jr c, .kill_enemy
+
+    ; Restar 3 de vida
+    sub 3
+    ld [hl], a
+    ret
+
+.kill_enemy:
+    ; Poner vida a 0
+    xor a
+    ld [hl], a
+
+    ; Marcar enemigo como FREE (destruirlo)
+    ld h, CMP_ATTR_H
+    ld l, b  ; L = enemy index (recuperado de B)
+    res E_BIT_FREE, [hl]
+    ret

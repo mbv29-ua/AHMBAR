@@ -1,6 +1,7 @@
 INCLUDE "constants.inc"
 INCLUDE "entities/entities.inc"
 INCLUDE "utils/joypad.inc"
+INCLUDE "src/system/hud/hud_constants.inc"
 
 SECTION "HUD System", ROM0
 
@@ -10,7 +11,7 @@ SECTION "HUD System", ROM0
 ; Tile indices
 DEF TILE_HEART_FULL  EQU $D0    ; Corazón completo
 DEF TILE_HEART_HALF  EQU $D1    ; Medio corazón
-DEF TILE_EMPTY       EQU $80    ; Tile vacío
+DEF TILE_EMPTY       EQU $00    ; Tile vacío
 ; TILE_BULLET ya definido en constants.inc como $09
 
 ; HUD positions in Window tilemap
@@ -113,10 +114,10 @@ clear_window_tilemap::
 ;;; Destroys: A, BC, DE, HL
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 render_hud::
-    call render_separator_line
+    ; call render_separator_line
     call render_lives
     call render_bullets
-    call render_level_number
+    ; call render_level_number
     ret
 
 
@@ -186,7 +187,13 @@ render_lives::
 ;;; Las balas activas se muestran, las gastadas se muestran vacías
 ;;; Destroys: A, BC, DE, HL
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; TODO : SPLIT BULLET GAME AND BULLET HUD
+;; - init_bullet_hud
+;; - update_bullet_hud
+
 render_bullets::
+
+    ;call wait_vblank
     ; DEBUG: Mostrar número de balas en decimal primero
     ld hl, $9C00 + HUD_BULLETS_START_X - 2
     ld a, [wPlayerBullets]
@@ -213,6 +220,7 @@ render_bullets::
     ; Verificar si quedan balas
     ld a, b
     or a
+
     jr z, .empty_bullet
 
     ; Mostrar bala activa

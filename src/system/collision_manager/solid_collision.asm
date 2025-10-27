@@ -1,6 +1,5 @@
 INCLUDE "constants.inc"
 INCLUDE "entities/entities.inc"
-INCLUDE "tile_properties.inc"
 
 SECTION "Solid Collision Detection", ROM0
 

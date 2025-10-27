@@ -1,5 +1,7 @@
-include "constants.inc"
-include "entities/entities.inc"
+INCLUDE "constants.inc"
+INCLUDE "entities/entities.inc"
+INCLUDE "src/system/hud/hud_constants.inc"
+
 
 SECTION "Bullet", ROM0
 

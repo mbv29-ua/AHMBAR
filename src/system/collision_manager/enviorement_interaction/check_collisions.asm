@@ -115,39 +115,6 @@ check_collectible_collision::
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; restore_player_position
-;;; Restores player to spawn position (scene starting position)
-;;; Used for spike respawn
-;;;
-;;; Destroys: A, HL
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-restore_player_position::
-    call wait_vblank
-    call set_player_initial_position
-    call set_initial_scroll
-    ret
-
-;    ; Restaurar Y desde posición de spawn del scene
-;    ld hl, SPR_BASE + (0 * SPR_SIZE) + SPR_Y
-;    ld a, [wSpawnPlayerY]
-;    ld [hl], a
-;
-;    ; Restaurar X desde posición de spawn del scene
-;    inc hl  ; HL ahora apunta a SPR_X
-;    ld a, [wSpawnPlayerX]
-;    ld [hl], a
-;
-;    ; Resetear velocidades a 0 para evitar que siga cayendo
-;    ld hl, PHYS_BASE + (0 * PHYS_SIZE) + PHY_VY
-;    xor a
-;    ld [hl+], a  ; VY = 0
-;    ld [hl+], a  ; VY_COMA = 0
-;    ld [hl+], a  ; VX = 0
-;    ld [hl], a   ; VX_COMA = 0
-;    ret
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; update_spike_cooldown
 ;;; Decrements spike cooldown timer each frame
 ;;; Should be called once per frame in main loop
@@ -242,40 +209,6 @@ check_enemy_collision::
     cp 32  ; NUM_ENTITIES
     jr nz, .loop_entities
 
-    ret
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; enemy_damage
-;;; Called when player collides with enemy
-;;; Loses 1 life and activates cooldown
-;;;
-;;; Destroys: A, HL
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-enemy_damage::
-    ; Activar cooldown de 60 frames (1 segundo)
-    ld a, 60
-    ld [wSpikeCooldown], a
-
-    ; Perder 1 vida
-    ld hl, wPlayerLives
-    ld a, [hl]
-    or a
-    ret z  ; Si ya está en 0, no hacer nada
-
-    dec [hl]
-
-    ; Marcar que HUD necesita actualizarse
-    ld a, 1
-    ld [wHUDNeedsUpdate], a
-
-    ; Verificar si llegó a 0 vidas para game over
-    ld a, [wPlayerLives]
-    or a
-    ret nz
-
-    ; Si llegó a 0 vidas, game over
-    call game_over
     ret
 
 
@@ -429,47 +362,6 @@ check_bullet_enemy_collision::
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; damage_enemy
-;;; Causes 3 damage to an enemy
-;;; If health reaches 0, enemy is destroyed
-;;;
-;;; Input: A = enemy index
-;;; Destroys: HL
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-damage_enemy::
-    ; Guardar índice del enemigo
-    ld b, a  ; B = enemy index
-
-    ; Obtener vida actual del enemigo
-    ld h, CMP_ATTR_H
-    ld l, a  ; L = enemy index
-    ld a, l
-    add ENTITY_HEALTH  ; A = enemy index + offset ENTITY_HEALTH
-    ld l, a  ; HL ahora apunta a ENTITY_HEALTH del enemigo
-    ld a, [hl]  ; A = vida actual
-
-    ; Si tiene menos de 3 de vida, poner a 0
-    cp 3
-    jr c, .kill_enemy
-
-    ; Restar 3 de vida
-    sub 3
-    ld [hl], a
-    ret
-
-.kill_enemy:
-    ; Poner vida a 0
-    xor a
-    ld [hl], a
-
-    ; Marcar enemigo como FREE (destruirlo)
-    ld h, CMP_ATTR_H
-    ld l, b  ; L = enemy index (recuperado de B)
-    res E_BIT_FREE, [hl]
-    ret
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; check_bullet_wall_collision
 ;;; Destroys bullets that collide with solid tiles
 ;;;
@@ -578,33 +470,8 @@ check_bullet_wall_collision::
 ;;;
 ;;; Note: Tilemap is 32x32 tiles, stored row-major at $9800
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 get_tile_at_position:
-    ; Limitar coordenadas a rango válido (0-31)
-    ld a, b
-    and $1F  ; Máscara para 0-31
-    ld b, a
-
-    ld a, c
-    and $1F  ; Máscara para 0-31
-    ld c, a
-
-    ; Calcular offset en el tilemap: Y * 32 + X
-    ld h, 0
-    ld l, b  ; HL = Y
-    add hl, hl  ; HL = Y * 2
-    add hl, hl  ; HL = Y * 4
-    add hl, hl  ; HL = Y * 8
-    add hl, hl  ; HL = Y * 16
-    add hl, hl  ; HL = Y * 32
-
-    ld d, 0
-    ld e, c
-    add hl, de  ; HL = Y * 32 + X
-
-    ; Añadir base del tilemap
-    ld de, $9800  ; BG_MAP_START
-    add hl, de
-
-    ; Leer tile
-    ld a, [hl]
+    call calculate_address_from_tx_and_ty
+    call get_tile_at_position_hl
     ret

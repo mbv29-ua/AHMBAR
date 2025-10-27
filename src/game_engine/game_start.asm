@@ -1,4 +1,5 @@
 INCLUDE "constants.inc"
+INCLUDE "system/hud/hud_constants.inc"
 
 SECTION "Game start", ROM0
 

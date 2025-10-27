@@ -1,7 +1,5 @@
 INCLUDE "entities/entities.inc"
 INCLUDE "constants.inc"
-INCLUDE "system/sprite_constants.inc"
-
 
 DEF PLAYER_HEIGHT EQU 8
 DEF PLAYER_WIDTH  EQU 8
@@ -81,23 +79,6 @@ new_update_entity_position::
 	ld [de], a
 	dec e
 	ret
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; This routine updates the E-th entity position.
-;;
-;; INPUT:
-;;		E: Entity index
-;; OUTPUT:
-;;		-	
-;; WARNING: Destroys ???
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;update_all_entities_positions::
-;	;ld hl, original_update_entity_position
-;	ld hl, new_update_entity_position
-;	call man_entity_for_each ;;; de <- direccion deatributos entidad ;;; Cambiar por man_entity_for_each_movable
-;	ret
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -341,38 +322,6 @@ manage_right_collisions::
 	;call set_horizontal_speed_to_zero
 	call right_tile_snap
 	ret
-
-
-
-
-
-
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; Gets the tile ID at a specific pixel position
-;;;
-;;; Input:
-;;;      -
-;;; Output:
-;;;   A = Tile ID at that position
-;;;   HL = Address in tilemap
-;;; Destroys: DE
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;get_tile_at_expected_position::
-;	ld hl, temporal_new_y_position
-;	ld b, [hl]
-;	ld hl, temporal_new_x_position
-;	ld c, [hl]
-;	call get_tile_at_position
-;	ret
-
-
-
-
-
-
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

@@ -33,6 +33,7 @@ load_scene::
     call man_entity_init
 
     ; Load assets
+    call load_numbers
     call load_cowboy_sprites
     call load_bullet_sprites
     call load_frog_tiles
@@ -274,6 +275,21 @@ set_player_initial_position::
     ret
 
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; restore_player_position
+;;; Restores player to spawn position (scene starting position)
+;;; Used for spike respawn
+;;;
+;;; Destroys: A, HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+restore_player_position::
+    call wait_vblank
+    call set_player_initial_position
+    call set_initial_scroll
+    ret
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; This routine returns the next scene information
 ;; address using the current scene information
@@ -332,4 +348,24 @@ init_enemies::
     ld l, [hl]
     ld h, a
     call helper_call_hl
+    ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine returns the address of the tilemap
+;;
+;; INPUT:
+;;      -
+;; OUTPUT:
+;;      DE: Address of current scene tilemap    
+;; WARNING: Destroys  A, BC and HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+get_current_tilemap_address::
+    call get_current_scene_info_address ; in hl
+    ld bc, SCENE_TILEMAP
+    add hl, bc
+    ld d, [hl]
+    inc l
+    ld e, [hl]
     ret
