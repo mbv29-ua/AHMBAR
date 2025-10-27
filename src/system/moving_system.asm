@@ -1,5 +1,7 @@
 INCLUDE "entities/entities.inc"
 INCLUDE "constants.inc"
+INCLUDE "system/sprite_constants.inc"
+
 
 DEF PLAYER_HEIGHT EQU 8
 DEF PLAYER_WIDTH  EQU 8
@@ -317,7 +319,7 @@ manage_up_collisions::
 manage_left_collisions::
 	call new_check_entity_collision_left
 	ret nz
-	call set_horizontal_speed_to_zero
+	;call set_horizontal_speed_to_zero
 	call left_tile_snap
 	ret
 
@@ -336,7 +338,7 @@ manage_left_collisions::
 manage_right_collisions::
 	call new_check_entity_collision_right
 	ret nz
-	call set_horizontal_speed_to_zero
+	;call set_horizontal_speed_to_zero
 	call right_tile_snap
 	ret
 
@@ -518,4 +520,92 @@ move_entity_one_pixel_up::
 move_all_entities_positions_one_pixel_up::
 	ld hl, move_entity_one_pixel_up
 	call man_entity_for_each
+	ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine flips the sprite of the E-th
+;; and changes its Vx speed and its Vy to point
+;; towards the player.
+;;
+;; INPUT:
+;;		E: Entity index
+;; OUTPUT:
+;;		-	
+;; WARNING: Destroys A, B and HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+apply_enemy_intelligent_behavior::
+	
+	ld a, [Player.wPlayerX]
+	ld b, a
+
+	; Compare coordinates X
+	ld h, CMP_SPRIT_H
+	ld a, e
+	add SPR_X
+	ld l, a
+	ld a, [hl] ; Entity position
+
+	cp b
+	jr nc, .left_oriented
+
+	.right_oriented:
+
+		; Set orientation
+		ld h, CMP_SPRIT_H
+		ld a, e
+		add SPR_ATTR
+		ld l, a
+		set E_BIT_FLIP_X, [hl] ; 1 means flipped
+		
+		; Set vertical speed
+		ld h, CMP_PHYS_H
+		ld a, e
+		add PHY_VX
+		ld l, a
+
+		ld a, [hl]
+		call abs_value_a
+		ld [hl], a
+
+	ret
+
+	.left_oriented:
+
+		ld h, CMP_SPRIT_H
+		ld a, e
+		add SPR_ATTR
+		ld l, a
+		res E_BIT_FLIP_X, [hl] ; 0 means original
+
+		; Set vertical speed
+		ld h, CMP_PHYS_H
+		ld a, e
+		add PHY_VX
+		ld l, a
+
+		ld a, [hl]
+		call abs_value_a
+		call oposite_of_a
+		ld [hl], a
+
+	ret
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine flips the sprite of intelligent 
+;; enemies so look at the player.
+;;
+;; INPUT:
+;;		-
+;; OUTPUT:
+;;		-	
+;; WARNING: Destroys ... (lo que destruya man_entity_for_each) 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+apply_intelligent_behavior_to_enemies::
+	ld hl, apply_enemy_intelligent_behavior
+	call man_entity_for_each_intelligent_enemy
 	ret

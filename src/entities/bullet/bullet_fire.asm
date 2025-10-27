@@ -39,9 +39,9 @@ update_bullet_system::
     ret
 
 
-init_counter::
-    ; Ya no se usa, wPlayerBullets se inicializa en init_hud
-    ret
+; init_counter::
+;    ; Ya no se usa, wPlayerBullets se inicializa en init_hud
+;    ret
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

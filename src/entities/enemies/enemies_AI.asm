@@ -1,6 +1,7 @@
 INCLUDE "entities/entities.inc"
+INCLUDE "system/sprite_constants.inc"
 
-DEF MOVING_COOLDOWN 		EQU 60 ; About three seconds
+DEF MOVING_COOLDOWN 		EQU 10 ; About three seconds
 DEF JUMPING_COOLDOWN 		EQU 120 ; About three seconds
 DEF ENEMY_JUMPING_SPEED 	EQU 2 ; About three seconds
 
@@ -50,13 +51,6 @@ AI_jumping_enemy::
 	or [hl] ; We check if the component is zero
 	jr nz, .update_cooldown 
 
-	; Enemy jumps
-	ld h, CMP_PHYS_H
-	ld a, e
-	add PHY_VY
-	ld l, a 
-	ld [hl], -ENEMY_JUMPING_SPEED 
-
 	; Starts cooldown
 	ld h, CMP_CONT_H
 	ld a, e
@@ -65,10 +59,45 @@ AI_jumping_enemy::
 	ld [hl], JUMPING_COOLDOWN 
 
 	call unset_grounded
+
+	; Enemy jumps with direction
+
+	push de ; we want to keep E
+	ld l, e
+	call get_entity_definition_component
+	ld h, d
+	ld l, e
+	call get_enemy_definition_vy
+	ld b, a
+	call get_enemy_definition_vx
+	ld c, a
+	pop de ; we want to keep E
+
+	push de
+	ld h, CMP_SPRIT_H
+	ld a, e
+	add SPR_ATTR
+	ld l, a 
+	bit E_BIT_FLIP_X, [hl]
+	ld l, e  ; Recuperamos el indice
+	ld a, c
+	jr z, .continue
+	
+	; We flip the direction of the speed
+	call oposite_of_a
+
+	.continue:
+	ld c, 0
+	ld d, a
+	ld e, 0
+	call set_entity_physics
+
+	pop de
 	ret
 
 	.update_cooldown:
 		dec [hl] ; decrements cooldown 
+		call set_horizontal_speed_to_zero
 	ret
 
 

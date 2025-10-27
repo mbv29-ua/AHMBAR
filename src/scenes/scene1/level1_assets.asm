@@ -30,6 +30,8 @@ SECTION "Level 1 Tiles", ROM0
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 scene_1_enemy_spawner::
+	call load_darkfrog_tiles
+
 	ld  b, $78
 	ld  c, $40
 	ld hl, jumping_frog
@@ -42,7 +44,7 @@ scene_1_enemy_spawner::
 
 	ld  b, $38
 	ld  c, $68
-	ld hl, jumping_frog
+	ld hl, jumping_moving_frog
 	call enemy_spawn
 
 	ld  b, $58
