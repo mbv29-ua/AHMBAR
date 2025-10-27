@@ -10,7 +10,7 @@
 ;   Compression          : None.
 ;   Counter              : None.
 ;   Tile size            : 8 x 8
-;   Tiles                : 0 to 51
+;   Tiles                : 0 to 52
 ;
 ;   Palette colors       : None.
 ;   SGB Palette          : None.
@@ -167,8 +167,12 @@ DB $1C,$1C,$22,$22,$22,$22,$1C,$1C
 DB $22,$22,$22,$22,$1C,$1C,$00,$00
 DB $1C,$1C,$22,$22,$22,$22,$1E,$1E
 DB $02,$02,$22,$22,$1C,$1C,$00,$00
+; Tile extra vacio
 DB $00,$00,$00,$00,$00,$00,$00,$00
 DB $00,$00,$00,$00,$00,$00,$00,$00
+; Tile selector de menu (bola negra)
+DB $00,$00,$18,$18,$3C,$3C,$3C,$3C
+DB $3C,$3C,$18,$18,$00,$00,$00,$00
 .end:
 
 ; End of FONTS.Z80

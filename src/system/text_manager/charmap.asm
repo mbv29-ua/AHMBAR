@@ -98,4 +98,35 @@ intro_text::
 DB "Hace mucho tiempo,", ENDLINE
 DB "el Ahmbar cambio", ENDLINE
 DB "el destino del ", ENDLINE
-DB "mundo.", ENDTEXT 
+DB "mundo.", ENDTEXT
+
+; Menu principal (centrado, mas abajo)
+menu_title::
+
+DB "", ENDLINE
+DB "       AHMBAR", ENDLINE
+DB "", ENDLINE
+DB "      Start Game", ENDLINE
+DB "      Controls", ENDLINE
+DB "      Credits", ENDTEXT
+
+; Pantalla de controles (centrado)
+controls_text::
+DB "", ENDLINE
+DB "    CONTROLS", ENDLINE
+DB "", ENDLINE
+DB "  D-PAD: Move", ENDLINE
+DB "  A: Jump", ENDLINE
+DB "  B: Shoot", ENDLINE
+DB "", ENDLINE
+DB " Press A to return", ENDTEXT
+
+; Pantalla de creditos
+credits_screen::
+DB "    CREDITS", ENDLINE
+DB "", ENDLINE
+DB " Sonia Mendivil", ENDLINE
+DB " Miguel Beltra", ENDLINE
+DB "Jaime Hernandez", ENDLINE
+DB "", ENDLINE
+DB "   Press A", ENDTEXT

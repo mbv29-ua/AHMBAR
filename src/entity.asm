@@ -18,3 +18,6 @@ wCounterValue::     DS 1
 wCounterReload::    DS 1
 
 ;wCurrentLevel::     DS 1
+
+; Menu Variables
+wMenuOption::       DS 1  ; Opción seleccionada del menú (0 = Start Game, 1 = Controls)

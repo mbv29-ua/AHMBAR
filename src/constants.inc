@@ -102,7 +102,7 @@ DEF DEFAULT_PALETTE EQU %11100100
 ;;; BUTTONS
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-DEF PRESSED_BUTTONS      EQU $DFFF    ;; ver que hacer con esto
+DEF PRESSED_BUTTONS      EQU $DFFF   
 DEF JUST_PRESSED_BUTTONS EQU $DFFE    ;; ver que hacer con esto
 DEF RELEASED_BUTTONS     EQU $DFFD    ;; ver que hacer con esto
 
