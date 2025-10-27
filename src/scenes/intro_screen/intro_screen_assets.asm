@@ -79,9 +79,9 @@ Load_intro_Map::
 
 Load_letras_intro_Tiles::
 
-    ld hl, letras_inicio
+    ld hl, city_street
     ld de, VRAM0_START + 128 * TILE_SIZE 
-    ld bc, letras_inicio.end - letras_inicio
+    ld bc, city_street.end - city_street
     call memcpy_65536
     ret
 
