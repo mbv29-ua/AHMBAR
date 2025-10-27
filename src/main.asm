@@ -45,11 +45,6 @@ call wait_vblank
 
     jp .main_loop
 
-<<<<<<< HEAD
-init::
-    call screen_off
-=======
->>>>>>> origin/develop
 
 ;init::
 ;    call screen_off
@@ -91,41 +86,6 @@ init::
 ;
 ;    ret
 
-<<<<<<< HEAD
-    call load_cowboy_sprites
-    call init_player
-    call load_bullet_sprites
-    ;call init_bullet_system
-    call init_counter
-
-    ; Inicializar y cargar nivel inicial
-    ;call Init_Level_System
-    call Load_Level1_Tiles
-    ;call Load_Current_Level
-    ;call init_scroll
-    ;call init_player_position
-
-    call init_tile_animation        ; Initialize fire animation system
-    call init_hud                   ; Initialize HUD (lives & bullets) - ABAJO de pantalla
-    call init_palettes_by_default
-
-    call clean_OAM
-    call enable_vblank_interrupts
-    call enable_screen
-    call init_palettes_by_default
-    call init_enemigos_prueba  ; --> Descomentar (Debug)
-
-    call screen_on
-    
-
-    ; Window ya está activada en screen_on (LCDC bit 5)
-
-    ;call man_entity_alloc
-    ;call man_entity_alloc
-    ;call man_entity_alloc
-
-    ret
-=======
 ;init::
 ;    call screen_off
 ;
@@ -163,5 +123,4 @@ init::
 ;
 ;    ret
 
->>>>>>> origin/develop
 
