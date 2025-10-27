@@ -4,7 +4,7 @@ SECTION "Scene 3", ROM0
 
 scene_3::
 
-.starting_y: 			DB 		144 					; SCENE_PLAYER_STARTING_Y
+.starting_y: 			DB 		136					; SCENE_PLAYER_STARTING_Y
 .starting_x: 			DB 		16						; SCENE_PLAYER_STARTING_X
 .initial_scroll_y: 		DB	 	112 					; SCENE_STARTING_SCREEN_SCROLL_Y
 .initial_scroll_x:		DB 		0						; SCENE_STARTING_SCREEN_SCROLL_X
