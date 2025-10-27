@@ -20,6 +20,7 @@ SECTION "Interrupt handlers", ROM0
 ;;      -
 ;; OUTPUT:
 ;;      -
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 vblank_handler:
    push hl
@@ -33,10 +34,15 @@ vblank_handler:
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; LCD-Stat interrupt handler
-; Se dispara cuando LY == LYC (línea 8)
-; Desactiva la Window para que no tape el resto del juego
+;; LCD-Stat interrupt handler
+;; Se dispara cuando LY == LYC (línea 8)
+;; Desactiva la Window para que no tape el resto del juego
+;; INPUT:
+;;      -
+;; OUTPUT:
+;;      -
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 lcd_stat_handler:
    push af
 

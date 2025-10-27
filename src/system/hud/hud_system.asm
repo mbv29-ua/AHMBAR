@@ -1,4 +1,6 @@
 INCLUDE "constants.inc"
+INCLUDE "entities/entities.inc"
+INCLUDE "utils/joypad.inc"
 
 SECTION "HUD System", ROM0
 
@@ -14,11 +16,9 @@ DEF TILE_EMPTY       EQU $80    ; Tile vacío
 ; HUD positions in Window tilemap
 DEF HUD_ROW          EQU 0      ; Primera fila de la Window
 DEF HUD_LIVES_START_X    EQU 1  ; Posición X inicial de corazones
-DEF HUD_BULLETS_START_X  EQU 14 ; Posición X inicial de balas
+DEF HUD_BULLETS_START_X  EQU 12 ; Posición X inicial de balas (movido a la izquierda)
 
-; Player stats
-DEF MAX_LIVES        EQU 8      ; 8 medios corazones = 4 corazones completos
-; MAX_BULLETS ya definido en constants.inc como 5
+; MAX_LIVES y MAX_BULLETS definidos en constants.inc
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; init_hud
@@ -109,12 +109,14 @@ clear_window_tilemap::
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; render_hud
-;;; Renderiza el HUD completo (vidas y balas)
+;;; Renderiza el HUD completo (vidas, balas, nivel)
 ;;; Destroys: A, BC, DE, HL
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 render_hud::
+    call render_separator_line
     call render_lives
     call render_bullets
+    call render_level_number
     ret
 
 
@@ -185,6 +187,16 @@ render_lives::
 ;;; Destroys: A, BC, DE, HL
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 render_bullets::
+    ; DEBUG: Mostrar número de balas en decimal primero
+    ld hl, $9C00 + HUD_BULLETS_START_X - 2
+    ld a, [wPlayerBullets]
+    add 188  ; 188 = tile '0'
+    ld [hl+], a
+
+    ; Espacio
+    ld a, 198
+    ld [hl+], a
+
     ; Calcular dirección base en Window tilemap ($9C00 + HUD_BULLETS_START_X)
     ld hl, $9C00
     ld bc, HUD_BULLETS_START_X
@@ -237,14 +249,17 @@ lose_life::
     ; Decrementar vida
     dec [hl]
 
-    ; Actualizar HUD
-    call render_lives
+    ; Marcar que HUD necesita actualizarse
+    push hl
+    ld a, 1
+    ld [wHUDNeedsUpdate], a
+    pop hl
 
-    ; TODO: Si vidas == 0, llamar game_over
+    ; Si vidas == 0, llamar game_over
     ld a, [hl]
     cp 0
     ret nz
-    ; call game_over  ; Implementar después
+    call game_over
     ret
 
 
@@ -265,8 +280,9 @@ use_bullet::
     ; Decrementar balas
     dec [hl]
 
-    ; Actualizar HUD
-    call render_bullets
+    ; Marcar que HUD necesita actualizarse (no renderizar aquí por VRAM timing)
+    ld a, 1
+    ld [wHUDNeedsUpdate], a
 
     ; Retornar con zero flag cleared (hay balas)
     or a, 1
@@ -281,5 +297,132 @@ use_bullet::
 reload_bullets::
     ld a, MAX_BULLETS
     ld [wPlayerBullets], a
-    call render_bullets
+
+    ; Marcar que HUD necesita actualizarse
+    ld a, 1
+    ld [wHUDNeedsUpdate], a
+    ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; update_hud_if_needed
+;;; Actualiza el HUD si la flag wHUDNeedsUpdate está activada
+;;; DEBE llamarse durante VBlank
+;;; Destroys: A, BC, DE, HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+update_hud_if_needed::
+    ld a, [wHUDNeedsUpdate]
+    or a
+    ret z  ; Si flag = 0, no hacer nada
+
+    ; Limpiar flag
+    xor a
+    ld [wHUDNeedsUpdate], a
+
+    ; Actualizar HUD completo
+    call render_hud
+    ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; game_over
+;;; Llamada cuando el jugador se queda sin vidas
+;;; Transiciona a la pantalla de Game Over
+;;; NO RETORNA - salta a scene_game_over
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+game_over::
+    ; Hacer fade out
+    call fadeout
+
+    ; Saltar a escena de Game Over (no retorna)
+    jp scene_game_over
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; render_separator_line
+;;; Dibuja una línea horizontal de píxeles en la primera fila del HUD
+;;; para separar visualmente el juego del HUD
+;;; Destroys: A, BC, HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+render_separator_line::
+    ; Dibujar línea en la primera fila de Window tilemap
+    ; Usar tile $81 (o el que sea una línea horizontal en tus tiles)
+    ld hl, $9C00        ; Window tilemap start
+    ld b, 32            ; 32 tiles (ancho completo)
+    ld a, $81           ; Tile de línea horizontal (ajustar según tus tiles)
+.draw_line:
+    ld [hl+], a
+    dec b
+    jr nz, .draw_line
+    ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; render_level_number
+;;; Renderiza "LV X" donde X es el número de nivel actual
+;;; Centrado en el HUD
+;;; Destroys: A, BC, DE, HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+render_level_number::
+    ; Posición centrada: columna 14-16 (centro de 32 tiles)
+    ld hl, $9C00 + 14   ; Primera fila, columna 14
+
+    ; Escribir "L" (tile 139 = L)
+    ld a, 139
+    ld [hl+], a
+
+    ; Escribir "V" (tile 149 = V)
+    ld a, 149
+    ld [hl+], a
+
+    ; Espacio
+    ld a, 198
+    ld [hl+], a
+
+    ; Número del nivel actual (1, 2, 3...)
+    ld a, [wCurrentLevel]
+    add 188             ; 188 = tile '0', así 1+188=189='1'
+    ld [hl], a
+
+    ; DEBUG: Mostrar tile bajo el jugador (columnas 20-22)
+    ld hl, $9C00 + 20
+    ; Texto "T:"
+    ld a, 147  ; T
+    ld [hl+], a
+    ld a, 186  ; :
+    ld [hl+], a
+
+    ; Obtener tile bajo jugador y mostrar en hex
+    push hl
+    call get_tile_at_player_position
+    pop hl
+    ; A contiene el tile ID
+    ; Mostrar los dos dígitos hex
+    push af
+    srl a
+    srl a
+    srl a
+    srl a
+    ; A = nibble alto
+    cp 10
+    jr c, .digit_high
+    add 128 - 10  ; A-F
+    jr .write_high
+.digit_high:
+    add 188  ; 0-9
+.write_high:
+    ld [hl+], a
+
+    pop af
+    and $0F
+    ; A = nibble bajo
+    cp 10
+    jr c, .digit_low
+    add 128 - 10  ; A-F
+    jr .write_low
+.digit_low:
+    add 188  ; 0-9
+.write_low:
+    ld [hl], a
+
     ret

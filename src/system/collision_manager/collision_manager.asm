@@ -3,12 +3,25 @@ INCLUDE "entities/entities.inc"
 
 SECTION "Collision manager", ROM0
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Each tile is 8x8 pixels. We have to take into account
+;; the Game Boy visible screen area:
+;; - Horizontal: pixels 8-167 visible (0-7 off-screen left)
+;; - Vertical: pixels 16-159 visible (0-15 off-screen top)
+;; - A sprite at (8,16) appears at screen top-left corner.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine gets at the position (x,y) of the
+;; screen.
+;;
 ;; INPUT:
-;;      B: Y coordinate
-;;      C: X coordinate
+;;      B: Y coordinate of the screen
+;;      C: X coordinate of the screen
 ;; OUTPUT:
 ;;      A: Tile
-;: WARNING: Destroys ..., ...
+;: WARNING: Destroys ??
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 get_tile_at_position_y_x::
     push de
@@ -24,12 +37,19 @@ get_tile_at_position_y_x::
     ret
 
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine gets the tile at the memory addres HL.
 ;;
-;;
-;;
+;; INPUT:
+;;      HL: memory address of the tile
+;; OUTPUT:
+;;      A: Tile
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 get_tile_at_position_hl::
     ld a, [hl]
     ret
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Gets the Address in VRAM of the tile the entity is touching.
@@ -37,23 +57,13 @@ get_tile_at_position_hl::
 ;; region in the screen (they both overlap).
 ;; As entity is placed in pixel coordinates, this routine
 ;; has to convert pixel coordinates to tiles coordinates.
-;; Each tile is 8x8 pixels. It also takes into account the
-;; Game Boy visible screen area:
-;; - Horizontal: pixels 8-167 visible (0-7 off-screen left)
-;; - Vertical: pixels 16-159 visible (0-15 off-screen top)
-;; - A sprite at (8,16) appears at screen top-left corner.
-;;
-;; Receives the address of the sprite component of an
-;; entity in HL:
-;;
-;; Address: |HL| +1| +2| +3|
-;; Value:   [ y][ x][id][at]
 ;;
 ;; INPUT:
-;;      HL: Address of the Sprite Component
+;;      -
 ;; OUTPUT;
 ;;      HL: VRAM Address of the tile the sprite is touching
-;:
+;; WARNING: Destroys
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 get_address_of_tile_to_be_touched:
     ;; 1. Convert Y to TY, and X to TX
@@ -85,6 +95,7 @@ get_address_of_tile_to_be_touched:
 ;; OUTPUT:
 ;;      A: Associated VRAM Tilemap TY-coordinate value
 ;; WARNING: Destroys C
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 convert_y_to_ty:
     ld hl, rSCY
@@ -105,6 +116,7 @@ convert_y_to_ty:
 ;; OUTPUT:
 ;;      A: Associated VRAM Tilemap TX-coordinate value
 ;:WARNING: Destroys C
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 convert_x_to_tx:
     ld hl, rSCX
@@ -125,7 +137,7 @@ convert_x_to_tx:
 ;;      C: TX coordinate
 ;; OUTPUT:
 ;;      HL: Address where the (TX, TY) tile is stored
-;:
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 calculate_address_from_tx_and_ty:
     ld h, 0 ; HL = Tile Y
@@ -143,9 +155,16 @@ calculate_address_from_tx_and_ty:
     ret
 
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Calculates the leftmost x coordinate after the tile.
+;;
+;; INPUT:
+;;      A: TX coordinate
+;; OUTPUT:
+;;      A: rightmost coordinate after the tile
+;; WARNING: Destroys HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; TX
-;; A
 get_leftmost_x_coordinate_after_tile::
     inc a ; We get the first coordinate Tx+1
     ; Multiply Tx by 8
@@ -159,7 +178,17 @@ get_leftmost_x_coordinate_after_tile::
     add 8 ;; screen horizontal offset 
     ret
 
-;; TX
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Calculates the rightmost x coordinate before the tile.
+;;
+;; INPUT:
+;;      A: TX coordinate
+;; OUTPUT:
+;;      A: rightmost coordinate before the tile
+;; WARNING: Destroys HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 get_rightmost_x_coordinate_before_tile::
     ; Multiply Tx by 8
     add a
@@ -171,8 +200,17 @@ get_rightmost_x_coordinate_before_tile::
     add 8 ;; screen horizontal offset 
     ret
 
-;; A=TY
-;; A
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Calculates the lowermost y coordinate above the tile.
+;;
+;; INPUT:
+;;      A: TY coordinate
+;; OUTPUT:
+;;      A: lowermost coordinate above the tile
+;; WARNING: Destroys HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 get_lowermost_y_coordinate_above_tile::
     ; Multiply Ty by 8
     add a
@@ -184,7 +222,17 @@ get_lowermost_y_coordinate_above_tile::
     add 16 ;; screen vertical offset
     ret
 
-;; TY
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Calculates the uppermost y coordinate below the tile.
+;;
+;; INPUT:
+;;      A: TY coordinate
+;; OUTPUT:
+;;      A: uppermost coordinate below the tile
+;; WARNING: Destroys HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 get_uppermost_y_coordinate_below_tile::
     inc a ; We get the first coordinate Ty+1
     ; Multiply Ty by 8
@@ -200,9 +248,34 @@ get_uppermost_y_coordinate_below_tile::
 
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; get_tile_at_player_position
+;;; Calculates which tile the player is standing on
+;;;
+;;; Output:
+;;;   A = Tile ID at player position
+;;;   HL = Address in tilemap ($9800 + offset)
+;;; Destroys: BC
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+get_tile_at_player_position::
+    ld a, [Player.wPlayerY]
+    ld b, a
+    ld a, [Player.wPlayerX]
+    ld c, a
+    call get_tile_at_position_y_x
+    ret
 
 
+
+
+
+
+
+
+
+
+;;;;;;;;;;;;;;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; get_tile_at_position
@@ -264,7 +337,10 @@ get_tile_at_position_new::
 ;;;   HL = Address in tilemap ($9800 + offset)
 ;;; Destroys: BC
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-get_tile_at_player_position::
+
+;; ESTA FUNCION TIENE UN FALLO
+
+get_tile_at_player_position_error::
     ; Tile X = (Player.wPlayerX + SCX - 8) / 8
     ldh a, [rSCX]
     ld b, a
@@ -293,7 +369,8 @@ get_tile_at_player_position::
     sla a  ; * 4
     sla a  ; * 8
     sla a  ; * 16
-    sla a  ; * 32
+    sla a  ; * 32   <= Esta operacion es erronea, ya que x32 un valor 
+           ;           de 5 bits puede dar lugar a un valor de mas de 8 bits  
     add c  ; + Tile X
     ld c, a  ; c = offset bajo
 

@@ -10,6 +10,7 @@ SECTION "Arithmetic operations", ROM0
 ;; OUTPUT:
 ;;		BC: BC+DE	
 ;; WARNING: Destroys BC
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 add_bc_de::
 	ld a, c
@@ -29,6 +30,7 @@ add_bc_de::
 ;;		HL: 16-bit integer
 ;; OUTPUT:
 ;;		HL: 32*HL	
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 mult_hl_32::
 	add hl, hl      ; * 2
@@ -40,13 +42,14 @@ mult_hl_32::
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; This divides the content of the 8-bit 
+;; This  routine divides the content of the 8-bit 
 ;; register A by 8.
 ;;
 ;; INPUT:
 ;;		A: 8-bit integer
 ;; OUTPUT:
 ;;		A: A/8	
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 div_a_by_8::
     srl a
@@ -55,8 +58,35 @@ div_a_by_8::
 	ret
 
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine multiples the content of the 8-bit 
+;; register A by 8.
+;;
+;; INPUT:
+;;		A: 8-bit integer
+;; OUTPUT:
+;;		A: A/8	
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 mult_a_by_8::
 	add a      ; * 2
     add a      ; * 4
     add a      ; * 32
+	ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine computes -A by computing the 
+;; complement 1 of the number and adding 1 to the
+;; result.
+;;
+;; INPUT:
+;;		A: 8-bit integer
+;; OUTPUT:
+;;		A: -A	
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+oposite_of_a::
+	cpl
+	inc a
 	ret

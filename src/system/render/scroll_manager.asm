@@ -1,7 +1,6 @@
 include "constants.inc"
 
-SECTION "Scroll Manager", ROM0
-
+;;; Mirar lo de los offsets de la pantalla
 DEF SCROLL_OFFSET               EQU 48 ;; This can be changed and it sets the others
 
 DEF SCREEN_OFFSET_VERTICAL      EQU 16
@@ -13,7 +12,21 @@ DEF DOWN_SCROLL_OFFSET      EQU 144 + SCREEN_OFFSET_VERTICAL - SCROLL_OFFSET - T
 DEF RIGHT_SCROLL_OFFSET     EQU 160 - SCROLL_OFFSET - SCREEN_OFFSET_HORIZONTAL
 DEF LEFT_SCROLL_OFFSET      EQU SCROLL_OFFSET + SCREEN_OFFSET_HORIZONTAL + TILE_OFFSET
 
-;;; Mirar lo de los offsets de la pantalla
+
+
+SECTION "Scroll Manager", ROM0
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine scrolls according to the player
+;; position
+;;
+;; INPUT
+;;      -
+;; OUTPUT:
+;;      -
+;; WARNING: Destroys A and HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 scroll_manager::
 ; Scroll up
 .scroll_up
@@ -30,11 +43,14 @@ scroll_manager::
     ; Hacemos scroll up
     ldh a, [rSCY]
     dec a  ; Incrementar SCY muestra más del mapa superior
+    ;ld hl, PlayerSpeed.wY
+    ;add [hl]
     ldh [rSCY], a
 
     ; Retrasamos al jugador para compensar
-    ld hl, Player.wPlayerY
-    inc [hl]
+    ;ld hl, Player.wPlayerY
+    ;inc [hl]
+    call move_all_entities_positions_one_pixel_down
 .end_scroll_up
 
 ; Scroll down
@@ -52,11 +68,14 @@ scroll_manager::
     ; Hacemos scroll down
     ldh a, [rSCY]
     inc a  ; Incrementar SCY muestra más del mapa inferior
+    ;ld hl, PlayerSpeed.wY
+    ;add [hl]
     ldh [rSCY], a
 
     ; Retrasamos al jugador para compensar
-    ld hl, Player.wPlayerY
-    dec [hl]
+    ;ld hl, Player.wPlayerY
+    ;dec [hl]
+    call move_all_entities_positions_one_pixel_up
 .end_scroll_down
 
 ; Scroll right
@@ -77,8 +96,9 @@ scroll_manager::
     ldh [rSCX], a
 
     ; Retrasamos al jugador para compensar
-    ld hl, Player.wPlayerX
-    dec [hl]
+    ;ld hl, Player.wPlayerX
+    ;dec [hl]
+    call move_all_entities_positions_one_pixel_to_left
 .end_scroll_right
 
 
@@ -100,8 +120,9 @@ scroll_manager::
     ldh [rSCX], a
 
     ; Retrasamos al jugador para compensar
-    ld hl, Player.wPlayerX
-    inc [hl]
+    ;ld hl, Player.wPlayerX
+    ;inc [hl]
+    call move_all_entities_positions_one_pixel_to_right
 .end_scroll_left
 
 ret

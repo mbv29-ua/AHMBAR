@@ -12,35 +12,29 @@ SECTION "Physics system", ROM0
 ;;		-	
 ;; WARNING: Destroys A, BC and DE
 
-original_update_entity_position::
-	; Load y
-	ld d, CMP_SPRIT_H
-	ld a, [de]
-	; Add vy 
-	ld h, CMP_PHYS_H
-	ld l, e 
-	add [hl]
-	; y -> y+vy
-	ld [de], a
+;original_update_entity_position::
+;	; Load y
+;	ld d, CMP_SPRIT_H
+;	ld a, [de]
+;	; Add vy 
+;	ld h, CMP_PHYS_H
+;	ld l, e 
+;	add [hl]
+;	; y -> y+vy
+;	ld [de], a
 
-	inc e
-	; Load x
-	ld d, CMP_SPRIT_H
-	ld a, [de]
-    ; Add vx
-	ld h, CMP_PHYS_H
-	ld l, e 
-	inc l
-	add [hl]
-	; x -> x+vx
-	ld [de], a
-	ret
-
-
-
-
-
-
+;	inc e
+;	; Load x
+;	ld d, CMP_SPRIT_H
+;	ld a, [de]
+;    ; Add vx
+;	ld h, CMP_PHYS_H
+;	ld l, e 
+;	inc l
+;	add [hl]
+;	; x -> x+vx
+;	ld [de], a
+;	ret
 
 
 
@@ -202,19 +196,6 @@ original_update_entity_position::
 
 
 
-
-
-;;
-;; 
-;; Warning: destroys ... (lo que destruya man_entity_for_each) 
-update_all_entities_positions::
-	;ld hl, original_update_entity_position
-	ld hl, new_update_entity_position
-	call man_entity_for_each ;;; de <- direccion deatributos entidad ;;; Cambiar por man_entity_for_each_movable
-	ret
-
-
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; This routine applies gravity to the E-th entity.
 ;;
@@ -277,29 +258,6 @@ apply_gravity_to_affected_entities::
 	ret
 
 
-
-
-set_vertical_speed_to_zero::
-	ld h, CMP_PHYS_H
-	ld l, e
-
-	xor a	
-	ld [hl+], a      ; vy = 0
-	ld [hl], a
-	ret
-
-set_horizontal_speed_to_zero::
-	ld h, CMP_PHYS_H
-	ld l, e
-	inc l
-	inc l
-
-	xor a	
-	ld [hl], a      ; vx = 0
-	ret
-
-
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; This routine stops the gravity to all 
 ;; to the L-th entity.if it is grounded
@@ -341,7 +299,6 @@ vertical_speed_to_zero_if_grounded_to_entity::
 
 	pop hl
 	ret
-
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

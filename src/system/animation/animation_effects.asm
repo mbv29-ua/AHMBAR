@@ -6,7 +6,11 @@ SECTION "Animation transitions", ROM0
 
 fadeout_transition_palette_values::
 .start: DB %11100100, %10010000, %01000000, %00000000
-fadeout_transition_palette_end::
+.end:
+
+fade_to_black_transition_palette_values::
+.start: DB %11100100, %11100101, %11111001, %11111010, %11111110, %11111111
+.end:
 
 ;; I leave it here because it can be useful
 ;superfadeout_transition_palette_values::
@@ -55,7 +59,7 @@ apply_screen_colors_animation_effect::
 
 fadeout::
 	ld hl, fadeout_transition_palette_values
-	ld  d, (fadeout_transition_palette_end-fadeout_transition_palette_values.start-1)
+	ld  d, (fadeout_transition_palette_values.end-fadeout_transition_palette_values.start-1)+1
 	ld  b, FADEOUT_SPEED ; 1/10 sec per color transition
 	call apply_screen_colors_animation_effect
 	ret
@@ -67,3 +71,20 @@ fadeout::
 ;	ld  b, 5 ; 1/12 sec per color transition
 ;	call apply_screen_colors_animation_effect
 ;	ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Changes the palettes to create a fade to black effect
+;;
+;; INPUT:
+;;      -
+;; OUTPUT:
+;;      -
+;; WARNING: Destroys A, B, C, D and HL.
+
+fade_to_black::
+	ld hl, fade_to_black_transition_palette_values
+	ld  d, (fade_to_black_transition_palette_values.end-fade_to_black_transition_palette_values.start-1)+1
+	ld  b, FADEOUT_SPEED ; 1/10 sec per color transition
+	call apply_screen_colors_animation_effect
+	ret

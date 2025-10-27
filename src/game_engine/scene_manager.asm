@@ -6,6 +6,8 @@ SECTION "Scene address", WRAM0
 
 current_scene_info_address: DS 2
 
+wCurrentLevel: DS 2
+
 SECTION "Scene manager", ROM0
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -17,6 +19,7 @@ SECTION "Scene manager", ROM0
 ;; OUTPUT:
 ;;		-	
 ;; WARNING: Destroys A, BC, DE, HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 load_scene::
     call save_current_scene_info_address
@@ -32,12 +35,15 @@ load_scene::
     ; Load assets
     call load_cowboy_sprites
     call load_bullet_sprites
-
+    call load_frog_tiles
+    call load_fly_tiles
+    
     call load_tileset
     call load_level_map
     call set_initial_scroll
     call init_player
-    call init_enemigos_prueba
+    ; call init_enemigos_prueba
+    call init_enemies
     call init_palettes_by_default
 
     ; Load scene variables
@@ -47,10 +53,9 @@ load_scene::
     
     ; Turn on the screen
     call enable_vblank_interrupts
-    call enable_screen
     call screen_bg_on
     call screen_obj_on
-    call scree_hud_on
+    call screen_hud_on
     call screen_window_dialog
     call screen_on
 ret
@@ -65,6 +70,7 @@ ret
 ;; OUTPUT:
 ;;      -   
 ;; WARNING: Destroys A and DE
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 save_current_scene_info_address::
     ld de, current_scene_info_address
@@ -87,6 +93,7 @@ save_current_scene_info_address::
 ;; OUTPUT:
 ;;      HL: Current scene information   
 ;; WARNING: Destroys A
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 get_current_scene_info_address::
     ld hl, current_scene_info_address
@@ -104,7 +111,8 @@ get_current_scene_info_address::
 ;;		-
 ;; OUTPUT:
 ;;		-	
-;; WARNING: Destroys BC, DE
+;; WARNING: Destroys A, BC, DE and HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 load_tileset::
 	;; We compute the destiny -> VRAM0_START+SCENE_TILESET_OFFSET
@@ -126,7 +134,6 @@ load_tileset::
     ld b, [hl]
     inc hl
     ld c, [hl]
-
 
 	;  We obtain the memory address HL where the tileset is 
 	;; from [HL]
@@ -151,7 +158,8 @@ load_tileset::
 ;;		-
 ;; OUTPUT:
 ;;		-	
-;; WARNING: Destroys BC, DE
+;; WARNING: Destroys A, BC, DE and HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 load_level_map::
 	;  We obtain the memory address HL where the tilemap is from [HL]
@@ -178,7 +186,8 @@ load_level_map::
 ;;		-
 ;; OUTPUT:
 ;;		-	
-;; WARNING: Destroys A and DE
+;; WARNING: Destroys A, DE and HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 set_initial_scroll::
 	call get_current_scene_info_address ; in hl
@@ -204,8 +213,26 @@ set_initial_scroll::
 ;; OUTPUT:
 ;;		-	
 ;; WARNING: Destroys A, BC, DE and HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 init_player::
+    call man_entity_alloc ; Deja en l el indice - pero asumimos que siempre es 0
+    call set_player_initial_position
+    ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine sets the player in the initial 
+;; position according to the current scene information
+;;
+;; INPUT:
+;;      -
+;; OUTPUT:
+;;      -   
+;; WARNING: Destroys A, BC, DE and HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+set_player_initial_position::
     call get_current_scene_info_address ; in hl
     ld d, 0
     ld e, SCENE_PLAYER_STARTING_Y
@@ -216,14 +243,26 @@ init_player::
     add hl, de
     ld c, [hl]  ; X coordinate
 
-    call man_entity_alloc ; Deja en l el indice
     ld d, TILE_COWBOY ; tile
     ld e, 0           ; tile properties
+    ld l, 0
     call set_entity_sprite
 
+;; Revisar
     ld h, CMP_ATTR_H
-    ld l, ATT_ENTITY_FLAGS
-    set E_BIT_GRAVITY, [hl]
+    ld l, E_BIT_PLAYER
+    
+    ; 7: E_BIT_MOVABLE
+    ; 6: E_BIT_GRAVITY
+    ; 5: E_BIT_OUT_OF_BOUNDS
+    ; 4: E_BIT_COLLIDABLE
+    ; 3: E_BIT_DAMAGEABLE
+    ; 2: E_BIT_STICK_TO_EDGES
+    ; 1: TBA
+    ; 0: TBA
+
+    ld l, INTERACTION_FLAGS
+    ld [hl], %11111100
 
     ld l, PHY_FLAGS
     set PHY_FLAG_GROUNDED, [hl]
@@ -236,14 +275,15 @@ init_player::
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; This routine returns the next scene info using 
-;; the current scene information
+;; This routine returns the next scene information
+;; address using the current scene information
 ;;
 ;; INPUT:
 ;;      -
 ;; OUTPUT:
 ;;      HL: Address of next scene   
 ;; WARNING: Destroys A, BC and HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 get_next_scene_info::
     call get_current_scene_info_address ; in hl
@@ -264,8 +304,32 @@ get_next_scene_info::
 ;; OUTPUT:
 ;;      -   
 ;; WARNING: Destroys A, BC and HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 next_scene::
+    call fade_to_black
     call get_next_scene_info
     call load_scene
+    ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine spaws the enemies using the routine 
+;; specified at the current scene information
+;;
+;; INPUT:
+;;      -
+;; OUTPUT:
+;;      -   
+;; WARNING: Destroys  A, BC, DE and HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+init_enemies::
+    call get_current_scene_info_address ; in hl
+    ld bc, SCENE_ENEMY_SPAWNER
+    add hl, bc
+    ld a, [hl+]
+    ld l, [hl]
+    ld h, a
+    call helper_call_hl
     ret

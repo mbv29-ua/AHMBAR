@@ -182,13 +182,12 @@ SECTION "Solid Collision Detection", ROM0
 ;;;   E = Entity index
 ;;; Output:
 ;;;   Z flag: z=1 if solid, z=0 if not
-;;; Destroys: A, BC, HL
+;;; Destroys: A, BC and HL
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 new_check_entity_collision_left:: ;; (Y,X) and (Y+7,X)
-    ; Check left edge of entity sprite (8x8 tile)
-    ; NOTE: E points to X component when called from physics_system
 
+    ; Check left edge of entity sprite (8x8 tile)
     ; Get entity Y position
     ld hl, temporal_new_y_position
     ld b, [hl] ; B = Y position (left edge: pixel 0)
@@ -196,9 +195,6 @@ new_check_entity_collision_left:: ;; (Y,X) and (Y+7,X)
     ; Get entity X position
     ld hl, temporal_new_x_position
     ld a, [hl] ; A = X position
-
-;    cp 0
-;    jr c, .at_edge
     ld c, a
 
     call get_tile_at_position_y_x
@@ -219,11 +215,6 @@ new_check_entity_collision_left:: ;; (Y,X) and (Y+7,X)
     call get_tile_at_position_y_x
     call is_tile_solid
     ret                 ; Return result from second check
-
-;.at_edge:
-;    cp a                ; Z = 1 (solid collision at edge)
-;    ret
-
 
 
 
