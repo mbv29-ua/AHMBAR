@@ -320,6 +320,7 @@ get_enemy_definition_vy::
 ;;; Input: A = enemy index
 ;;; Destroys: HL
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 damage_enemy::
     ; Guardar índice del enemigo
     ld b, a  ; B = enemy index

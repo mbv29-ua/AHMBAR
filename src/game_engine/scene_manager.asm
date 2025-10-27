@@ -255,7 +255,7 @@ set_player_initial_position::
     
     ; 7: E_BIT_MOVABLE
     ; 6: E_BIT_GRAVITY
-    ; 5: E_BIT_OUT_OF_SCREEN
+    ; 5: E_BIT_DIES_OUT_OF_SCREEN
     ; 4: E_BIT_COLLIDABLE
     ; 3: E_BIT_DAMAGEABLE
     ; 2: E_BIT_STICK_TO_EDGES
@@ -263,7 +263,7 @@ set_player_initial_position::
     ; 0: TBA
 
     ld l, INTERACTION_FLAGS
-    ld [hl], %11111100
+    ld [hl], %11011100
 
     ld l, PHY_FLAGS
     set PHY_FLAG_GROUNDED, [hl]
