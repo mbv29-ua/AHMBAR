@@ -328,21 +328,6 @@ update_hud_if_needed::
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; game_over
-;;; Llamada cuando el jugador se queda sin vidas
-;;; Transiciona a la pantalla de Game Over
-;;; NO RETORNA - salta a scene_game_over
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-game_over::
-    ; Hacer fade out
-    ; call fadeout
-
-
-    ; Saltar a escena de Game Over (no retorna)
-    jp scene_game_over
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; render_separator_line
 ;;; Dibuja una línea horizontal de píxeles en la primera fila del HUD
 ;;; para separar visualmente el juego del HUD

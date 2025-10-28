@@ -82,14 +82,18 @@ init_bullet::
 
     ; Configurar flags: la bala NO debe existir fuera de bounds
     ; Esto evita que el sistema la haga "wrapear"
-
+    
     ld h, CMP_ATTR_H
+    ld a, ATT_ENTITY_FLAGS
+    add l
+    ld l, a
+    set E_BIT_BULLET, [hl]
+
     ld a, INTERACTION_FLAGS
     add l
     ld l, a
-    ld a, [hl]
-    set E_BIT_DIES_OUT_OF_SCREEN, a  ; Asegurar que NO puede salir de bounds
-    set E_BIT_COLLIDABLE, a          ; Collides
-    ld [hl], a
+    set E_BIT_DIES_OUT_OF_SCREEN, [hl]  ; Asegurar que NO puede salir de bounds
+    ; set E_BIT_COLLIDABLE, a          ; Collides <- We remove this, so it can overlap with a solid tile to be destroyed
+    set E_BIT_MOVABLE, [hl]
 
     ret

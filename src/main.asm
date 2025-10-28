@@ -6,7 +6,7 @@ SECTION "Entry Point", ROM0[$150]
 
 main::
     ; call scene_title_screen --> fet por Jaime (Borrarlo)
-    call scene_intro_screen
+    ; call scene_intro_screen
     call start_game
 
     ; call wait_vblank
@@ -33,7 +33,7 @@ main::
     ; IMPORTANTE: Destruir balas ANTES de actualizar posiciones
     ; call destroy_bullets_out_of_bounds ; Destroy bullets that are off-screen FIRST
     call destroy_entities_out_of_screen
-    call check_bullet_wall_collision  ; Destroy bullets hitting walls
+    call check_all_bullets_wall_collision  ; Destroy bullets hitting walls
     call check_bullet_enemy_collision ; Check bullet-enemy collisions
 
     call update_all_entities_positions
