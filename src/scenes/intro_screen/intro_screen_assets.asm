@@ -8,13 +8,7 @@ scene_intro_screen::
     
 
     .scroll:
-        ld h, CMP_SPRIT_H 
-        ld l, 0
-        ld de, SPR_X 
-
-        add hl, de 
-
-        ld a, [hl]
+        ld a, [rSCX]
         cp 168          ;; MAGICO HAY QUE PONER UNA CONSTANTE QUE SEA SOLO PARA ESTO
         jr nc,  .nextScreen
 
