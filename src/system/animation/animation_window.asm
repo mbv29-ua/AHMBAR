@@ -1,4 +1,5 @@
 include "system/animation/animation.inc"
+include "src/constants.inc"
 
 SECTION "Animation Window System", ROM0
 
@@ -16,6 +17,28 @@ ld c, 8   ;; FILAS
     
     ld a, e 
     add 18
+    ld e, a 
+
+    ld a, d 
+    adc 0
+    ld d, a 
+
+    dec c 
+    jr nz, .loopCols
+ret 
+
+animation_window_start::
+ld de, BG_MAP_START
+ 
+
+
+ld c, 18   ;; FILAS
+.loopCols:
+    ld b, 20 
+    call memcpy_256
+    
+    ld a, e 
+    add 12
     ld e, a 
 
     ld a, d 

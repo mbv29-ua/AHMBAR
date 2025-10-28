@@ -335,10 +335,11 @@ update_hud_if_needed::
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 game_over::
     ; Hacer fade out
-    call fadeout
+    ; call fadeout
+
 
     ; Saltar a escena de Game Over (no retorna)
-    ret
+    jp scene_game_over
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

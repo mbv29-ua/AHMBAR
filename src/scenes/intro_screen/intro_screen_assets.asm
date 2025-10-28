@@ -89,14 +89,8 @@ Load_start_Map::
     ld hl, mapa_start
     ld de, BG_MAP_START
     ld bc, mapa_start.end - mapa_start
-    call memcpy_65536
+    call animation_window_start
     ret
-
-
-
-
-
-
 
 init_personaje_animacion::
 	;; Example of initializing an enemy (valid for an entity)

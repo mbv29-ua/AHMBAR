@@ -1,7 +1,7 @@
 INCLUDE "utils/joypad.inc"
 INCLUDE "constants.inc"
 
-;SECTION "Game Over Scene", ROM0
+SECTION "Game Over Scene", ROM0
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; scene_game_over
@@ -26,44 +26,44 @@ INCLUDE "constants.inc"
 ;;; game_over_init
 ;;; Inicializa la pantalla de Game Over
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;game_over_init::
-;    call screen_off
-;
-;    ; Limpiar sprites OAM completamente
-;    call clean_OAM
-;    call clean_bg_map
-;
-;    ; Cargar tiles del juego SIN offset (desde tile 0)
-;    ld hl, tiles
-;    ld de, VRAM0_START
-;    ld bc, tiles_end - tiles
-;    call memcpy_65536
-;
-;    ; Cargar tilemap de Game Over
-;    ld hl, GameOver_Map
-;    ld de, BG_MAP_START
-;    ld bc, GameOver_Map_End - GameOver_Map
-;    call memcpy_65536
-;
-;    call init_palettes_by_default
-;
-;    ; Ajustar scroll: X=32 (derecha), Y=0
-;    xor a
-;    ldh [rSCY], a
-;    ld a, 32
-;    ldh [rSCX], a
-;
-;    ; Desactivar Window (HUD)
-;    ld a, [rLCDC]
-;    res 5, a
-;    ld [rLCDC], a
-;
-;    call screen_on
-;    ret
-;
-;
-;
-;
+game_over_init::
+    call screen_off
+
+    ; Limpiar sprites OAM completamente
+    call clean_OAM
+    call clean_bg_map
+
+    ; Cargar tiles del juego SIN offset (desde tile 0)
+    ld hl, tiles
+    ld de, VRAM0_START
+    ld bc, tiles_end - tiles
+    call memcpy_65536
+
+    ; Cargar tilemap de Game Over
+    ld hl, GameOver_Map
+    ld de, BG_MAP_START
+    ld bc, GameOver_Map_End - GameOver_Map
+    call memcpy_65536
+
+    call init_palettes_by_default
+
+    ; Ajustar scroll: X=32 (derecha), Y=0
+    xor a
+    ldh [rSCY], a
+    ld a, 32
+    ldh [rSCX], a
+
+    ; Desactivar Window (HUD)
+    ld a, [rLCDC]
+    res 5, a
+    ld [rLCDC], a
+
+    call screen_on
+    ret
+
+
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; draw_game_over_text
 ;;;; Dibuja "GAME OVER" con tiles de bricks y antorchas
