@@ -19,9 +19,22 @@ SECTION "Character Movement", ROMX
 
 update_character_velocities::
 
+    ;; Decrement the cooldown of jump
+    ld l, COUNT_JUMPING_COOLDOWN
+    ld h, CMP_CONT_H
+
+    ld a, [hl]
+    or a 
+    jr z, .continue
+
+    dec [hl]
+
+    .continue:
     ld a, [PRESSED_BUTTONS]
     ld h, CMP_PHYS_H
     ld l, 0
+
+    
 
 .handle_jump:
     bit BUTTON_A, a 
@@ -32,9 +45,41 @@ update_character_velocities::
     ld a, [de]
 
     bit PHY_FLAG_GROUNDED, a ;; SI NO ESTA EN EL SUELO NO SALTA
-    jr z, .movement
+    jr z, .checkRejump
     bit PHY_FLAG_JUMPING, a ;; SI YA ESTA SALTANDO NO SALTAR
+    jr nz, .checkRejump
+
+    jr .doJump
+
+    .checkRejump:
+    ld a, [wPowerup]
+    inc a 
+    dec a 
+    jr z, .movement
+
+    ;; SI JUMPING 1 Y POWERUP 0 NO SALTO
+
+    ;; SI JUMPING 1 Y POWERUP 1 SALTO 
+
+    ;; SI JUMPING 0 Y POWERUP 1 Y SUELO 1 SALTO
+
+    ;; SI JUMPING 0 Y POWERUP 0 Y SUELO 1 SALTO 
+
+    ld l, COUNT_JUMPING_COOLDOWN
+    ld h, CMP_CONT_H
+
+    ld a, [hl]
+    or a 
     jr nz, .movement
+
+    .doJump:
+    ld l, COUNT_JUMPING_COOLDOWN
+    ld h, CMP_CONT_H
+
+    ld [hl], 30
+
+    ld h, CMP_PHYS_H
+    ld l, 0
 
     ld [hl], -PLAYER_JUMP_SPEED
     inc l

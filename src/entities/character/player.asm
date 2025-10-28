@@ -1,6 +1,9 @@
 INCLUDE "entities/entities.inc"
 INCLUDE "constants.inc"
 
+
+SECTION "Player variables", WRAM0
+wPowerup:: ds 1
 SECTION "Character Sprites", ROM0
 
 
