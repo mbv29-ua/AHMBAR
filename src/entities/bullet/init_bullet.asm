@@ -96,4 +96,15 @@ init_bullet::
     ; set E_BIT_COLLIDABLE, a          ; Collides <- We remove this, so it can overlap with a solid tile to be destroyed
     set E_BIT_MOVABLE, [hl]
 
+    ; Restore L
+    sub INTERACTION_FLAGS
+    ld l, a
+
+    ld h, CMP_AABB_H
+    ld a, ENTITY_HEIGHT
+    add l
+    ld [hl], 8
+    inc l
+    ld [hl], 8
+
     ret

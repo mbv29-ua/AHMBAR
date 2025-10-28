@@ -25,11 +25,71 @@ check_collectible_collision::
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Checks if two entities are colliding. The entities are 
+;; specified by their indices L and E.
+;;
+;; Returns Carry Flag (C=0, NC) when NOT-Colliding,
+;; and (C=1, C) when overlapping.
+;;
+;; INPUT:
+;;       E: Entity index 2
+;;       L: Entity index 1
+;; OUTPUT:
+;;      Carry: { NC: No overlap }, { C: Overlap }
+;; WARNING: Destroys B, C, D and ...
+ 
+are_entities_colliding::
+    ld b, CMP_SPRIT_H
+    ld c, l
+    ld d, CMP_SPRIT_H
+    call are_boxes_colliding
+    ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Checks if two Axis Aligned Bounding Boxes (AABB) are
+;; colliding.
+;; 1. First, checks if they collide on the Y axis
+;; 2. Then checks the X axis, only if Y intervals overlap
+;;
+;; Receives in DE and HL the addresses of two AABBs:
+;;           -AABB 1-     -AABB 2-
+;; Address   |BC| +1|     |DE| +1|
+;; Values  
+;; SPR_BASE  [y1][x1] ... [y2][x2]
+;; AABB_BASE [h1][w1] ... [h2][w2]
+;;
+;; Returns Carry Flag (C=0, NC) when NOT colliding,
+;; and (C=1, C) when colliding.
+;;
+;; INPUT:
+;;      BC: Address of AABB 1
+;;      DE: Address of AABB 2
+;; OUTPUT:
+;;      Carry: { NC: Not colliding } { C: colliding }
+;;
+
+are_boxes_colliding::
+    push bc
+    push de
+    call are_intervals_overlapping
+    pop de
+    pop bc
+    ret nc
+
+    inc c
+    inc e
+
+    call are_intervals_overlapping
+    ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Checks if two integral intervals overlap in one dimension
 ;; It receives the addresses of 2 intervals in memory
 ;; in HL and DE:
 ;;
-;; Address   |BC|       |DE|
+;; Entity    |BC|       |DE|
 ;; Values  
 ;; SPR_BASE  [p1] ..... [p2]
 ;; AABB_BASE [w1] ..... [w2]
@@ -87,41 +147,5 @@ are_intervals_overlapping::
 ;    ret
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Checks if two Axis Aligned Bounding Boxes (AABB) are
-;; colliding.
-;; 1. First, checks if they collide on the Y axis
-;; 2. Then checks the X axis, only if Y intervals overlap
-;;
-;; Receives in DE and HL the addresses of two AABBs:
-;;           -AABB 1-     -AABB 2-
-;; Address   |BC| +1|     |DE| +1|
-;; Values  
-;; SPR_BASE  [y1][x1] ... [y2][x2]
-;; AABB_BASE [h1][w1] ... [h2][w2]
-;;
-;; Returns Carry Flag (C=0, NC) when NOT colliding,
-;; and (C=1, C) when colliding.
-;;
-;; INPUT:
-;;      BC: Address of AABB 1
-;;      DE: Address of AABB 2
-;; OUTPUT:
-;;      Carry: { NC: Not colliding } { C: colliding }
-;;
-
-are_boxes_colliding::
-    push bc
-    push de
-    call are_intervals_overlapping
-    pop de
-    pop bc
-    ret nc
-
-    inc c
-    inc e
-
-    call are_intervals_overlapping
-    ret
 
 

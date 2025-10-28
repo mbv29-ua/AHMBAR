@@ -10,145 +10,203 @@ SECTION "Bullet collisions", ROM0
 ;;;
 ;;; Destroys: A, BC, DE, HL
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;check_bullet_enemy_collision::
+;    ; Iterar por todas las balas (entidades con tile TILE_BULLET)
+;    ld e, 1  ; E = índice de entidad actual (empezar en 1)
+;
+;.loop_bullets:
+;    ; Verificar si la entidad está activa
+;    ld h, CMP_ATTR_H
+;    ld l, e
+;    ld a, [hl]  ; Leer ATT_ENTITY_FLAGS
+;    bit E_BIT_FREE, a
+;    jr z, .next_bullet  ; Bit = 0 significa FREE
+;
+;    ; Verificar si es una bala (tile TILE_BULLET)
+;    ld h, CMP_SPRIT_H
+;    ld l, e
+;    inc l
+;    inc l  ; Apuntar a SPR_TILE
+;    ld a, [hl]
+;    cp TILE_BULLET
+;    jr nz, .next_bullet  ; No es bala
+;
+;    ; Es una bala activa, obtener su posición
+;    ld h, CMP_SPRIT_H
+;    ld l, e
+;    ld b, [hl]  ; B = Bullet Y
+;    inc l
+;    ld c, [hl]  ; C = Bullet X
+;
+;    ; Buscar enemigos que colisionen con esta bala
+;    push bc
+;    push de  ; Guardar índice de bala
+;    call .check_bullet_against_enemies
+;    pop de
+;    pop bc
+;
+;    ; Si A != 0, hubo colisión, eliminar bala
+;    or a
+;    jr z, .next_bullet
+;
+;    ; Eliminar bala (marcar como FREE)
+;    ld h, CMP_ATTR_H
+;    ld l, e
+;    res E_BIT_FREE, [hl]
+;
+;    ; Mover sprite MUY fuera de pantalla
+;    ld h, CMP_SPRIT_H
+;    ld l, e
+;    ld a, 255
+;    ld [hl+], a  ; Y = 255
+;    ld [hl], a   ; X = 255
+;
+;.next_bullet:
+;    inc e
+;    ld a, e
+;    cp 32
+;    jr nz, .loop_bullets
+;    ret
+;
+;
+;; Subrutina: verificar si bala (BC=pos) golpea algún enemigo
+;; Input: B=bullet Y, C=bullet X, E=bullet index
+;; Output: A=1 si hubo colisión, A=0 si no
+;.check_bullet_against_enemies:
+;    ld d, 1  ; D = índice de enemigo
+;
+;.loop_enemies:
+;    ; Verificar si es el mismo índice que la bala
+;    ld a, d
+;    cp e
+;    jr z, .next_enemy
+;
+;    ; Verificar si está activa
+;    ld h, CMP_ATTR_H
+;    ld l, d
+;    ld a, [hl]
+;    bit E_BIT_FREE, a
+;    jr z, .next_enemy
+;
+;    ; Verificar si es enemigo
+;    bit E_BIT_ENEMY, a
+;    jr z, .next_enemy
+;
+;    ; Verificar si es damageable
+;    inc l  ; INTERACTION_FLAGS
+;    ld a, [hl]
+;    bit E_BIT_DAMAGEABLE, a
+;    jr z, .next_enemy
+;
+;    ; Obtener posición del enemigo
+;    ld h, CMP_SPRIT_H
+;    ld l, d
+;    ld a, [hl]  ; A = Enemy Y
+;    push af
+;    inc l
+;    ld a, [hl]  ; A = Enemy X
+;    ld h, a     ; H = Enemy X
+;    pop af
+;    ld l, a     ; L = Enemy Y
+;
+;    ; Verificar colisión Y: abs(Bullet Y - Enemy Y) < 12
+;    ld a, b
+;    sub l
+;    jr nc, .pos_y_bullet
+;    cpl
+;    inc a
+;.pos_y_bullet:
+;    cp 12
+;    jr nc, .next_enemy
+;
+;    ; Verificar colisión X: abs(Bullet X - Enemy X) < 12
+;    ld a, c
+;    sub h
+;    jr nc, .pos_x_bullet
+;    cpl
+;    inc a
+;.pos_x_bullet:
+;    cp 12
+;    jr nc, .next_enemy
+;
+;    ; HAY COLISIÓN! Hacer daño al enemigo
+;    push bc
+;    push de
+;    ld a, d  ; A = enemy index
+;    call damage_enemy
+;    pop de
+;    pop bc
+;
+;    ; Retornar 1 (hubo colisión)
+;    ld a, 1
+;    ret
+;
+;.next_enemy:
+;    inc d
+;    ld a, d
+;    cp 32
+;    jr nz, .loop_enemies
+;
+;    ; No hubo colisión
+;    xor a
+;    ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; check_bullet_wall_collision
+;;; Destroys bullets that collide with solid tiles
+;;;
+;; INPUT:
+;;      E: Bullet index
+;;
+;;; WARNING: Destroys A, BC, DE, HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 check_bullet_enemy_collision::
-    ; Iterar por todas las balas (entidades con tile TILE_BULLET)
-    ld e, 1  ; E = índice de entidad actual (empezar en 1)
+    ;push de
+    ;call get_entity_sprite ; B = Y coordinate, C = X coordinate
+    ;pop de
 
-.loop_bullets:
-    ; Verificar si la entidad está activa
     ld h, CMP_ATTR_H
-    ld l, e
-    ld a, [hl]  ; Leer ATT_ENTITY_FLAGS
-    bit E_BIT_FREE, a
-    jr z, .next_bullet  ; Bit = 0 significa FREE
+    ld l, -4
 
-    ; Verificar si es una bala (tile TILE_BULLET)
-    ld h, CMP_SPRIT_H
-    ld l, e
-    inc l
-    inc l  ; Apuntar a SPR_TILE
-    ld a, [hl]
-    cp TILE_BULLET
-    jr nz, .next_bullet  ; No es bala
+    .next_enemy:
+        ld a, l
+        add 4
+        ld l, a
 
-    ; Es una bala activa, obtener su posición
-    ld h, CMP_SPRIT_H
-    ld l, e
-    ld b, [hl]  ; B = Bullet Y
-    inc l
-    ld c, [hl]  ; C = Bullet X
+        push hl
+        call is_damageable_enemy
+        pop hl
+        jr nz, .next_enemy
 
-    ; Buscar enemigos que colisionen con esta bala
-    push bc
-    push de  ; Guardar índice de bala
-    call .check_bullet_against_enemies
-    pop de
-    pop bc
+        push de
+        push hl
+        call are_entities_colliding
+        pop de
+        pop hl
+        jr c, .collision 
 
-    ; Si A != 0, hubo colisión, eliminar bala
-    or a
-    jr z, .next_bullet
-
-    ; Eliminar bala (marcar como FREE)
-    ld h, CMP_ATTR_H
-    ld l, e
-    res E_BIT_FREE, [hl]
-
-    ; Mover sprite MUY fuera de pantalla
-    ld h, CMP_SPRIT_H
-    ld l, e
-    ld a, 255
-    ld [hl+], a  ; Y = 255
-    ld [hl], a   ; X = 255
-
-.next_bullet:
-    inc e
-    ld a, e
-    cp 32
-    jr nz, .loop_bullets
+        bit E_BIT_SENTINEL, [hl]
+        ret nz                      ; Exit if there are no more entities
+        jr .next_enemy
+    
+    .collision:
+        ;call damage_enemy
+        call man_entity_free
     ret
 
 
-; Subrutina: verificar si bala (BC=pos) golpea algún enemigo
-; Input: B=bullet Y, C=bullet X, E=bullet index
-; Output: A=1 si hubo colisión, A=0 si no
-.check_bullet_against_enemies:
-    ld d, 1  ; D = índice de enemigo
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; check_all_bullet_wall_collision
+;;; Destroys bullets that collide with solid tiles
+;;;
+;;; Destroys: A, BC, DE, HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-.loop_enemies:
-    ; Verificar si es el mismo índice que la bala
-    ld a, d
-    cp e
-    jr z, .next_enemy
-
-    ; Verificar si está activa
-    ld h, CMP_ATTR_H
-    ld l, d
-    ld a, [hl]
-    bit E_BIT_FREE, a
-    jr z, .next_enemy
-
-    ; Verificar si es enemigo
-    bit E_BIT_ENEMY, a
-    jr z, .next_enemy
-
-    ; Verificar si es damageable
-    inc l  ; INTERACTION_FLAGS
-    ld a, [hl]
-    bit E_BIT_DAMAGEABLE, a
-    jr z, .next_enemy
-
-    ; Obtener posición del enemigo
-    ld h, CMP_SPRIT_H
-    ld l, d
-    ld a, [hl]  ; A = Enemy Y
-    push af
-    inc l
-    ld a, [hl]  ; A = Enemy X
-    ld h, a     ; H = Enemy X
-    pop af
-    ld l, a     ; L = Enemy Y
-
-    ; Verificar colisión Y: abs(Bullet Y - Enemy Y) < 12
-    ld a, b
-    sub l
-    jr nc, .pos_y_bullet
-    cpl
-    inc a
-.pos_y_bullet:
-    cp 12
-    jr nc, .next_enemy
-
-    ; Verificar colisión X: abs(Bullet X - Enemy X) < 12
-    ld a, c
-    sub h
-    jr nc, .pos_x_bullet
-    cpl
-    inc a
-.pos_x_bullet:
-    cp 12
-    jr nc, .next_enemy
-
-    ; HAY COLISIÓN! Hacer daño al enemigo
-    push bc
-    push de
-    ld a, d  ; A = enemy index
-    call damage_enemy
-    pop de
-    pop bc
-
-    ; Retornar 1 (hubo colisión)
-    ld a, 1
-    ret
-
-.next_enemy:
-    inc d
-    ld a, d
-    cp 32
-    jr nz, .loop_enemies
-
-    ; No hubo colisión
-    xor a
+check_all_bullets_enemy_collision::
+    ld hl, check_bullet_enemy_collision
+    call man_entity_for_each_bullet
     ret
 
 

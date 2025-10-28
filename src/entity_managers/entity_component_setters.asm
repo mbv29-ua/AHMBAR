@@ -328,3 +328,27 @@ is_floating:
     ld l, a
     bit PHY_FLAG_GROUNDED, [hl]
     ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine checks if an entity is an enemy
+;; that can recieve damage.
+;;
+;; INPUT:
+;;      L: Entity index
+;; OUTPUT:
+;;      Z=1 if damageable enemy, Z=0 otherwise
+;; WARNING: Destroys A and HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+is_damageable_enemy:
+    ld h, CMP_ATTR_H
+    ld a, l
+    add ATT_ENTITY_FLAGS
+    ld l, a
+    bit E_BIT_ENEMY, [hl]
+    ret z
+
+    add (INTERACTION_FLAGS-ATT_ENTITY_FLAGS)
+    bit E_BIT_DAMAGEABLE, [hl]
+    ret
