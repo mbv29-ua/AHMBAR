@@ -2,6 +2,7 @@ INCLUDE "constants.inc"
 INCLUDE "entities/entities.inc"
 INCLUDE "utils/joypad.inc"
 INCLUDE "src/system/hud/hud_constants.inc"
+INCLUDE "scenes/scene_constants.inc"
 
 SECTION "HUD System", ROM0
 
@@ -17,7 +18,8 @@ DEF TILE_EMPTY       EQU $00    ; Tile vacío
 ; HUD positions in Window tilemap
 DEF HUD_ROW          EQU 0      ; Primera fila de la Window
 DEF HUD_LIVES_START_X    EQU 1  ; Posición X inicial de corazones
-DEF HUD_BULLETS_START_X  EQU 12 ; Posición X inicial de balas (movido a la izquierda)
+DEF HUD_BULLETS_START_X  EQU 13 ; Posición X inicial de balas
+DEF HUD_ACT_LEVEL_X      EQU 8  ; Posición X del indicador A#L#
 
 ; MAX_LIVES y MAX_BULLETS definidos en constants.inc
 
@@ -117,7 +119,7 @@ render_hud::
     ; call render_separator_line
     call render_lives
     call render_bullets
-    ; call render_level_number
+    call render_act_level
     ret
 
 
@@ -412,6 +414,59 @@ render_level_number::
 .digit_low:
     add 188  ; 0-9
 .write_low:
+    ld [hl], a
+
+    ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; render_act_level
+;;; Renderiza "A#L#" en el centro del HUD
+;;; Ejemplo: A1L3 para Acto 1, Nivel 3
+;;; Tiles: números $70-$79, A=$7A, L=$7B
+;;; Destroys: A, BC, DE, HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+render_act_level::
+    ; Obtener información de la escena actual
+    call get_current_scene_info_address  ; HL = dirección de escena actual
+    push hl
+
+    ; Cargar número de acto
+    ld de, SCENE_ACT_NUMBER
+    add hl, de
+    ld b, [hl]  ; B = número de acto
+
+    ; Cargar número de nivel
+    pop hl
+    push hl
+    ld de, SCENE_LEVEL_NUMBER
+    add hl, de
+    ld c, [hl]  ; C = número de nivel
+
+    pop hl
+
+    ; Posición centrada en el HUD usando HUD_ACT_LEVEL_X
+    ; Formato: A # L #
+    ld hl, $9C00
+    ld de, HUD_ACT_LEVEL_X
+    add hl, de
+
+    ; Escribir "A" (tile $7A)
+    ld a, $7A
+    ld [hl+], a
+
+    ; Escribir número de acto (B contiene el número)
+    ld a, b
+    add $70  ; Convertir número a tile ($70 = '0', $71 = '1', etc.)
+    ld [hl+], a
+
+    ; Escribir "L" (tile $7B)
+    ld a, $7B
+    ld [hl+], a
+
+    ; Escribir número de nivel (C contiene el número)
+    ld a, c
+    add $70  ; Convertir número a tile
     ld [hl], a
 
     ret

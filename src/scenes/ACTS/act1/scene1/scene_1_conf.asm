@@ -16,3 +16,5 @@ scene_1::
 .goal_x:				DB 		0						; SCENE_GOAL_POINT_Y
 .next_scene:			DW_BE 	scene_2					; SCENE_NEXT_SCENE
 .scene_enemy_spawner:	DW_BE 	scene_1_enemy_spawner	; SCENE_ENEMY_SPAWNER
+.act_number:			DB 		1						; SCENE_ACT_NUMBER
+.level_number:			DB 		1						; SCENE_LEVEL_NUMBER
