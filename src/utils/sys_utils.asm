@@ -294,3 +294,29 @@ load_numbers::
     call memcpy_256
 
     ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine loads the heart tiles for the HUD
+;;
+;; INPUT:
+;;      -
+;; OUTPUT:
+;;      -
+;; WARNING: Destroys BC, DE and HL.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+load_heart_tiles::
+    ; Cargar corazón completo en tile $D0
+    ld hl, fonts.heart_full
+    ld de, VRAM0_START + $D0 * TILE_SIZE
+    ld  b, TILE_SIZE
+    call memcpy_256
+
+    ; Cargar medio corazón en tile $D1
+    ld hl, fonts.heart_half
+    ld de, VRAM0_START + $D1 * TILE_SIZE
+    ld  b, TILE_SIZE
+    call memcpy_256
+
+    ret

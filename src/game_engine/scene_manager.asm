@@ -34,11 +34,12 @@ load_scene::
 
     ; Load assets
     call load_numbers
+    call load_heart_tiles
     call load_cowboy_sprites
     call load_bullet_sprites
     call load_frog_tiles
     call load_fly_tiles
-    
+
     call load_tileset
     call load_level_map
     call set_initial_scroll
