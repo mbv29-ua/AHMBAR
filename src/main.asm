@@ -11,9 +11,10 @@ main::
 
     ; call wait_vblank
 .main_loop:
-    
+
     ;; Intentar poner aqui todo lo que vaya en VBank
     ;call render_hud
+    call hUGE_dosound               ; Update hUGE music driver
 
     call update_fire_animation      ; Animate fire tiles during VBlank
     call update_hud_if_needed       ; Update HUD if flag is set (during VBlank)
@@ -50,5 +51,3 @@ main::
     halt
 
     jp .main_loop
-
-
