@@ -14,6 +14,7 @@ main::
     
     ;; Intentar poner aqui todo lo que vaya en VBank
     ;call render_hud
+    call sound_music
 
     call update_fire_animation      ; Animate fire tiles during VBlank
     call update_hud_if_needed       ; Update HUD if flag is set (during VBlank)
@@ -51,3 +52,4 @@ main::
     jp .main_loop
 
 
+sound_music::
