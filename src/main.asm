@@ -6,7 +6,7 @@ SECTION "Entry Point", ROM0[$150]
 
 main::
     ; call scene_title_screen --> fet por Jaime (Borrarlo)
-    ; call scene_intro_screen
+    call scene_intro_screen
     call start_game
 
     ; call wait_vblank
@@ -14,7 +14,11 @@ main::
 
     ;; Intentar poner aqui todo lo que vaya en VBank
     ;call render_hud
+<<<<<<< HEAD
     call hUGE_dosound               ; Update hUGE music driver
+=======
+    ;call sound_music
+>>>>>>> 4c371c2ffab6c7cb77f331b6cf81cbd2738a9670
 
     call update_fire_animation      ; Animate fire tiles during VBlank
     call update_hud_if_needed       ; Update HUD if flag is set (during VBlank)
@@ -49,4 +53,26 @@ main::
     call check_lives
     halt
 
+<<<<<<< HEAD
     jp .main_loop
+=======
+    jp .main_loop
+;
+;Notes:
+;dw $060b, $0642, $0672, $0689, $06b2, $06d6, $06f7, $0706
+;dw $06f7, $06d6, $06b2, $0689, $0672, $0642, $060b, $0000
+;
+;sound_music::
+;    xor a
+;    ld [WRAM_NOTE_INDEX], a
+;    copy [rNR10], $00
+;    copy [rNR11], $80
+;    copy [rNR12], $F0
+;    ld hl, Notes
+;    ld a, [hli]
+;    ld [rNR13], a
+;    ld a, [hl]
+;    or a, $80
+;    ld [rNR14], a
+;    copy [WRAM_FRAME_COUNTER], TIME_BETWEEN_NOTES
+>>>>>>> 4c371c2ffab6c7cb77f331b6cf81cbd2738a9670
