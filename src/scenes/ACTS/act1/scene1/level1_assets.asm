@@ -1,6 +1,6 @@
 INCLUDE "constants.inc"
 
-SECTION "Level 1 Tiles", ROM0
+SECTION "Level 1 Tiles", ROMX
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; This routine spawns the enemies of the scene 1.
