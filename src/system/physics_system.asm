@@ -123,4 +123,4 @@ apply_gravity_to_affected_entities::
 ;vertical_speed_to_zero_if_grounded::
 ;	ld hl, vertical_speed_to_zero_if_grounded_to_entity
 ;	call man_entity_for_each ;;; Cambiar por man_entity_for_each_ gravity
-	ret
+;	ret
