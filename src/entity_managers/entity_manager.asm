@@ -1,12 +1,7 @@
 INCLUDE "entities/entities.inc"
 
-SECTION "Entity Manager RAM variables", WRAM0
-
-has_been_freed:: DS 1
-
 
 SECTION "Entity Manager Code", ROM0
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Writes in all the memory positions assigned to
@@ -369,6 +364,24 @@ man_entity_for_each_enemy::
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; This routine processes a routine only for those
+;; entities identified as collidable entities.
+;;
+;; INPUT:
+;;		HL: Routine to apply to each collidable entity
+;; OUTPUT:
+;;		-	
+;; WARNING: Destroys A and DE
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+man_entity_for_each_collidable::
+	ld b, (1<<E_BIT_COLLIDABLE)
+	ld c, INTERACTION_FLAGS
+	call man_entity_for_each_type
+	ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine processes a routine only for those
 ;; entities identified as intelligent enemies.
 ;;
 ;; INPUT:
@@ -518,3 +531,22 @@ man_entity_for_each_not_living_out_of_screen::
 ;		add ATTR_SIZE
 ;		ld e, a 
 ;		jr .loop
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine processes a routine only for those
+;; entities identified as bullets.
+;;
+;; INPUT:
+;;		HL: Routine to apply to each enemy
+;; OUTPUT:
+;;		-	
+;; WARNING: Destroys A and DE
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+man_entity_for_each_bullet::
+	ld b, (1<<E_BIT_BULLET)
+	ld c, ATT_ENTITY_FLAGS
+	call man_entity_for_each_type
+	ret

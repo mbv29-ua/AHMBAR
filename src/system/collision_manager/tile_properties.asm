@@ -11,8 +11,8 @@ SECTION "Tile Properties Functions", ROM0
 ;;; Output:
 ;;;   Z flag: z=1 means it is solid, z=0 means it is not
 ;;;   A = Property flags (preserved for chaining)
-;;; Destroys: HL
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 is_tile_solid::
     and TILE_GROUP_MASK
     cp SOLID_TILE
@@ -28,13 +28,12 @@ is_tile_solid::
 ;;; Output:
 ;;;   Z flag: z=1 means it is deadly, z=0 means it is not
 ;;;   A = Property flags (preserved for chaining)
-;;; Destroys: HL
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 is_tile_deadly::
     and TILE_GROUP_MASK
     cp DEADLY_TILE
     ret
-
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -46,8 +45,8 @@ is_tile_deadly::
 ;;; Output:
 ;;;   Z flag: z=1 means it is door, z=0 means it is not
 ;;;   A = Property flags (preserved for chaining)
-;;; Destroys: HL
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 is_tile_door::
     and TILE_GROUP_MASK
     cp DOOR_TILE
@@ -63,8 +62,8 @@ is_tile_door::
 ;;; Output:
 ;;;   Z flag: z=1 means it is collectible, z=0 means it is not
 ;;;   A = Property flags (preserved for chaining)
-;;; Destroys: HL
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 is_tile_collectible::
     and TILE_GROUP_MASK
     cp COLLECTIBLE_TILE

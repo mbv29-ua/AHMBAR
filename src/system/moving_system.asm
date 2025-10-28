@@ -63,7 +63,7 @@ compute_expected_entity_position::
 ;; WARNING: Destroys A, B, C and D
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-new_update_entity_position::
+update_entity_position::
 	; Load y
 	ld hl, temporal_new_y_position
 	ld a, [hl]
@@ -95,7 +95,7 @@ new_update_entity_position::
 move_entity::
 	call compute_expected_entity_position
 	call manage_entity_solid_collision
-	call new_update_entity_position
+	call update_entity_position
 	ret
 
 
@@ -111,7 +111,7 @@ move_entity::
 
 update_all_entities_positions::
 	ld hl, move_entity
-	call man_entity_for_each ;;; de <- direccion deatributos entidad ;;; Cambiar por man_entity_for_each_movable
+	call man_entity_for_each_movable
 	ret
 
 
@@ -215,6 +215,9 @@ right_tile_snap::
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 manage_entity_solid_collision::
+	call is_collidable
+	ret z
+
 	.vertical_movement:
 		ld hl, temporal_new_y_position
 		ld d, CMP_SPRIT_H
@@ -258,7 +261,7 @@ manage_entity_solid_collision::
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 manage_down_collisions::
-	call new_check_entity_collision_down
+	call check_entity_collision_down
 	ret nz
 
 	call set_vertical_speed_to_zero
@@ -279,7 +282,7 @@ manage_down_collisions::
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 manage_up_collisions::
-	call new_check_entity_collision_up
+	call check_entity_collision_up
 	ret nz
 	call set_vertical_speed_to_zero
 	call up_tile_snap 
@@ -298,7 +301,7 @@ manage_up_collisions::
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 manage_left_collisions::
-	call new_check_entity_collision_left
+	call check_entity_collision_left
 	ret nz
 	;call set_horizontal_speed_to_zero
 	call left_tile_snap
@@ -317,7 +320,7 @@ manage_left_collisions::
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 manage_right_collisions::
-	call new_check_entity_collision_right
+	call check_entity_collision_right
 	ret nz
 	;call set_horizontal_speed_to_zero
 	call right_tile_snap
@@ -540,7 +543,6 @@ apply_enemy_intelligent_behavior::
 		ld [hl], a
 
 	ret
-
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

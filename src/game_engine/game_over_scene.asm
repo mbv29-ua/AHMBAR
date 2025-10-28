@@ -4,6 +4,21 @@ INCLUDE "constants.inc"
 SECTION "Game Over Scene", ROM0
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; game_over
+;;; Llamada cuando el jugador se queda sin vidas
+;;; Transiciona a la pantalla de Game Over
+;;; NO RETORNA - salta a scene_game_over
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+game_over::
+    ; Hacer fade out
+    ; call fadeout
+
+
+    ; Saltar a escena de Game Over (no retorna)
+    jp scene_game_over
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; scene_game_over
 ;;; Pantalla de Game Over
 ;;; Muestra estadísticas y permite reiniciar
@@ -28,6 +43,7 @@ scene_game_over::
 ;;; game_over_init
 ;;; Inicializa la pantalla de Game Over
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 game_over_init::
     call screen_off
 
