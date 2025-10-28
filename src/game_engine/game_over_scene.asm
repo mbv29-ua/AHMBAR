@@ -27,6 +27,8 @@ game_over::
 scene_game_over::
     ; ld hl, game_over_sound
     ;; Poner cuando seaposible despues de wait_until_start_pressed
+
+    ; Turn off volume 
     ld a, $00
     ld [$FF26], a
 
@@ -40,7 +42,7 @@ scene_game_over::
     call wait_until_start_pressed
 
     
-    ; Fade out antes de reiniciar
+      ; Fade out antes de reiniciar
     
 
     ; Reiniciar el juego
