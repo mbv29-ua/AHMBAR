@@ -11,10 +11,10 @@ main::
 
     ; call wait_vblank
 .main_loop:
-    
+
     ;; Intentar poner aqui todo lo que vaya en VBank
     ;call render_hud
-    call sound_music
+    call hUGE_dosound               ; Update hUGE music driver
 
     call update_fire_animation      ; Animate fire tiles during VBlank
     call update_hud_if_needed       ; Update HUD if flag is set (during VBlank)
@@ -50,21 +50,3 @@ main::
     halt
 
     jp .main_loop
-
-Notes:
-dw $060b, $0642, $0672, $0689, $06b2, $06d6, $06f7, $0706
-dw $06f7, $06d6, $06b2, $0689, $0672, $0642, $060b, $0000
-
-sound_music::
-    xor a
-    ld [WRAM_NOTE_INDEX], a
-    copy [rNR10], $00
-    copy [rNR11], $80
-    copy [rNR12], $F0
-    ld hl, Notes
-    ld a, [hli]
-    ld [rNR13], a
-    ld a, [hl]
-    or a, $80
-    ld [rNR14], a
-    copy [WRAM_FRAME_COUNTER], TIME_BETWEEN_NOTES

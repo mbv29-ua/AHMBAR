@@ -1,20 +1,29 @@
-include "hUGE.inc"
+INCLUDE "assets/sounds/music/hUGE.inc"
 
 SECTION "music_game Song Data", ROMX
 
 music_game::
 db 7
-dw order_cnt
-dw order1, order2, order3, order4
-dw duty_instruments, wave_instruments, noise_instruments
-dw routines
-dw waves
+dw _music_game_order_cnt
+dw _music_game_order1, _music_game_order2, _music_game_order3, _music_game_order4
+dw _music_game_duty_instruments, _music_game_wave_instruments, _music_game_noise_instruments
+dw _music_game_routines
+dw _music_game_waves
 
-order_cnt: db 8
-order1: dw P0,P0,P20,P20
-order2: dw P1,P1,P21,P21
-order3: dw P2,P2,P2,P2
-order4: dw P3,P3,P3,P3
+_music_game_order_cnt: db 8
+_music_game_order1: dw P0,P0,P20,P20
+_music_game_order2: dw P1,P1,P21,P21
+_music_game_order3: dw P2,P2,P2,P2
+_music_game_order4: dw P3,P3,P3,P3
+
+;; 1. note 
+;; 2. instrument
+;; 3. Effect
+
+
+;;;;;; 00010000 <- isalate 4th bit 
+;;;;;; << 3 <- move 3 bits left
+;;;;;; | combine macros inputs
 
 P0:
  dn C_3,1,$C0B
@@ -412,7 +421,7 @@ P21:
  dn E_5,0,$000
  dn ___,0,$000
 
-duty_instruments:
+_music_game_duty_instruments:
 itSquareinst1:
 db 8
 db 64
@@ -422,13 +431,13 @@ db 128
 
 
 
-wave_instruments:
+_music_game_wave_instruments:
 
 
-noise_instruments:
+_music_game_noise_instruments:
 
 
-routines:
+_music_game_routines:
 __hUGE_Routine_0:
 
 __end_hUGE_Routine_0:
@@ -509,5 +518,5 @@ __hUGE_Routine_15:
 __end_hUGE_Routine_15:
 ret
 
-waves:
+_music_game_waves:
 
