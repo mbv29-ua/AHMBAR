@@ -176,6 +176,26 @@ set_entity_attributes::
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Generic function to set entities attributes components
+;;DEF ATT_ENTITY_FLAGS      RB 1
+;; Input
+;;      B: ENTITY_HEIGHT 
+;;      C: ENTITY_WIDTH
+;;      D: TBA
+;;      E: TBA
+;;      L: Entity index
+;; OUTPUT:
+;;      -
+;; WARNING: Destroys H
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+set_entity_dimensions::
+    ld h, CMP_AABB_H
+    call set_entity_components
+    ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Generic function to set entities attributes components
 ;;
 ;; Input
 ;;      BC: Address of AI routine 1

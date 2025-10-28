@@ -22,6 +22,9 @@ DEF ENEMY_ENVIRONMENT_INTERACTION	RB 1
 
 DEF ENEMY_LIFE						RB 1 ; If applies
 
+DEF ENEMY_HEIGHT					RB 1
+DEF ENEMY_WIDTH						RB 1
+
 DEF ENEMY_AI_1 						RB 2 ; Address of the routine
 DEF ENEMY_AI_2 						RB 2 ; Address of the routine
 DEF ENEMY_AI_3 						RB 2 ; Address of the routine

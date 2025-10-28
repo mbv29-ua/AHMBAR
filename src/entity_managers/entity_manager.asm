@@ -44,9 +44,9 @@ man_entity_alloc::
 	res E_BIT_SENTINEL, [hl]
 
 	call man_find_first_free
-
-	set E_BIT_FREE, [hl]
-	set E_BIT_SENTINEL, [hl]
+	ld [hl], ((1<<E_BIT_SENTINEL)|(1<<E_BIT_FREE)) ; %11000000
+	; set E_BIT_FREE, [hl]
+	; set E_BIT_SENTINEL, [hl]
 	ret
 
 

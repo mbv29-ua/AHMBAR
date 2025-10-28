@@ -26,7 +26,9 @@ basic_fly::
 ; 3 E_BIT_DAMAGEABLE
 ; 2 E_BIT_STICK_TO_EDGES
 
-.enemy_life: DB 	3 					            ;; ENEMY_LIFE
+.enemy_life:   DB 	1					            ;; ENEMY_LIFE
+.enemy_height: DB   8                               ;; ENEMY_HEIGHT
+.enemy_width:  DB   8                               ;; ENEMY_WIDTH 
 .enemy_AI_1: DW_BE	AI_flying_enemy_up_and_down 	;; ENEMY_AI_1
 .enemy_AI_2: DW_BE 	No_AI				           ;; ENEMY_AI_2
 .enemy_AI_3: DW_BE  No_AI				           ;; ENEMY_AI_2

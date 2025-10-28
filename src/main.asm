@@ -6,7 +6,7 @@ SECTION "Entry Point", ROM0[$150]
 
 main::
     ; call scene_title_screen --> fet por Jaime (Borrarlo)
-    call scene_intro_screen
+    ; call scene_intro_screen
     call start_game
 
     ; call wait_vblank
@@ -45,6 +45,7 @@ main::
     call check_enemy_collision      ; Check collision with enemies
     call update_bullet_system
 
+    call kill_enemies_if_life_is_0
     call check_lives
     halt
 

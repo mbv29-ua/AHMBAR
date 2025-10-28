@@ -113,7 +113,7 @@ are_intervals_overlapping::
         push bc
         ld a, [bc]
         ld h, CMP_AABB_H
-        ld l, b
+        ld l, c
         add [hl]
         ld b, a ; b <- p1+w1
 

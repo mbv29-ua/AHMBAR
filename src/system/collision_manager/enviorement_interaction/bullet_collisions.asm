@@ -178,13 +178,13 @@ check_bullet_enemy_collision::
         push hl
         call is_damageable_enemy
         pop hl
-        jr nz, .next_enemy
+        jr z, .next_enemy
 
         push de
         push hl
         call are_entities_colliding
-        pop de
         pop hl
+        pop de
         jr c, .collision 
 
         bit E_BIT_SENTINEL, [hl]
@@ -192,7 +192,8 @@ check_bullet_enemy_collision::
         jr .next_enemy
     
     .collision:
-        ;call damage_enemy
+        call damage_enemy
+        ld l, e                 ; We need the bullet index in L
         call man_entity_free
     ret
 
