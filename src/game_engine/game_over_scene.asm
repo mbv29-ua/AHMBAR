@@ -25,6 +25,10 @@ game_over::
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 scene_game_over::
+    ld a, $00
+
+    ld [$FF26], a
+
     call fade_to_black
     call game_over_init
     call fade_to_original
@@ -57,9 +61,10 @@ game_over_init::
     ; Cargar tilemap de Game Over
     ld hl, GameOver_Map
     ld de, BG_MAP_START
-    ld bc, GameOver_Map.end - GameOver_Map
-    call animation_window_start
-    call memcpy_65536
+    ld b, 20
+    ld c, 18
+    call animation_window
+    ; call memcpy_65536
 
     ; RUTINA DE SYS_UTILS - Reiniciar el scroll
     ; Ajustar scroll: X=0 (derecha), Y=0
