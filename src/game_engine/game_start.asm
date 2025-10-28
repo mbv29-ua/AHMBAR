@@ -54,6 +54,10 @@ set_initial_memory_values::
     xor a
     ld [wHUDNeedsUpdate], a
     ld [wSpikeCooldown], a  ; Inicializar cooldown de picas a 0
+    ;ld [wPowerup], a
+    
+    ld a, 1 
+    ld [wPowerup], a
 
     ret
 

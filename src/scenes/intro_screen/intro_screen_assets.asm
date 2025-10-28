@@ -8,13 +8,7 @@ scene_intro_screen::
     
 
     .scroll:
-        ld h, CMP_SPRIT_H 
-        ld l, 0
-        ld de, SPR_X 
-
-        add hl, de 
-
-        ld a, [hl]
+        ld a, [rSCX]
         cp 168          ;; MAGICO HAY QUE PONER UNA CONSTANTE QUE SEA SOLO PARA ESTO
         jr nc,  .nextScreen
 
@@ -88,8 +82,9 @@ Load_letras_intro_Tiles::
 Load_start_Map::
     ld hl, mapa_start
     ld de, BG_MAP_START
-    ld bc, mapa_start.end - mapa_start
-    call animation_window_start
+    ld b, 20
+    ld c, 18
+    call animation_window
     ret
 
 init_personaje_animacion::
