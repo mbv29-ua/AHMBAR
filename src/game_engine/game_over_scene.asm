@@ -9,10 +9,10 @@ SECTION "Game Over Scene", ROM0
 ;;; Transiciona a la pantalla de Game Over
 ;;; NO RETORNA - salta a scene_game_over
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 game_over::
     ; Hacer fade out
     ; call fadeout
-
 
     ; Saltar a escena de Game Over (no retorna)
     jp scene_game_over
@@ -58,6 +58,7 @@ game_over_init::
     call screen_off
 
     ; Limpiar sprites OAM completamente
+    call man_entity_init
     call clean_OAM
     call clean_bg_map
 
@@ -72,18 +73,8 @@ game_over_init::
     call animation_window
     ; call memcpy_65536
 
-    ; RUTINA DE SYS_UTILS - Reiniciar el scroll
-    ; Ajustar scroll: X=0 (derecha), Y=0
-    xor a
-    ldh [rSCY], a
-    ld a, 0
-    ldh [rSCX], a
-
-    ; RUTINA DE SYS_UTILS
-    ; Desactivar Window (HUD)
-    ld a, [rLCDC]
-    res 5, a
-    ld [rLCDC], a
-
+    call reset_scroll
+    call disable_hud_screen
     call screen_on
+
     ret

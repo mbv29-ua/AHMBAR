@@ -175,8 +175,24 @@ set_entity_attributes::
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Generic function to set entities attributes components
-;;DEF ATT_ENTITY_FLAGS      RB 1
+;; Generic function to reset an entity 
+;; sprite
+;;
+;; INPUT
+;;      L: Entity index
+;; OUTPUT:
+;;      -
+;; WARNING: Destroys H
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;
+;reset_entity_attributes::
+;    ld h, CMP_ATTR_H
+;    call reset_entity_components ; Do not use this function since it clears the sentinel
+;    ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Generic function to set entities dimensions
 ;; Input
 ;;      B: ENTITY_HEIGHT 
 ;;      C: ENTITY_WIDTH
@@ -195,7 +211,7 @@ set_entity_dimensions::
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Generic function to set entities attributes components
+;; Generic function to set entities AI
 ;;
 ;; Input
 ;;      BC: Address of AI routine 1
