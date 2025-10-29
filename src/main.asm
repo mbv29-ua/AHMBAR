@@ -46,7 +46,7 @@ main::
     call scroll_manager
 
     ;call check_door_collision       ; Check door tiles ($C0-$C3) to trigger next level
-    call process_next_scene_trigger
+    call check_next_scene_trigger
     call check_deadly_collision     ; Check deadly tiles (spikes) to damage player
     call check_enemy_collision      ; Check collision with enemies
     call update_bullet_system
