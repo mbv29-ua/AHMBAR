@@ -19,3 +19,4 @@ scene_3::
 .act_number:			DB 		1						; SCENE_ACT_NUMBER
 .level_number:			DB 		3						; SCENE_LEVEL_NUMBER
 .background_animation:	DW_BE	update_fire_animation	; SCENE_ANIMATION_ROUTINE
+.next_level_trigger:	DW_BE	check_door_collision	; SCENE_NEXT_LEVEL_TRIGGER

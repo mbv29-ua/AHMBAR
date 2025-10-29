@@ -387,7 +387,7 @@ get_current_tilemap_address::
 ;; INPUT:
 ;;      -
 ;; OUTPUT:
-;;      DE: Address of current scene tilemap    
+;;      -   
 ;; WARNING: Destroys  A, BC and HL
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -395,6 +395,30 @@ process_scene_background_animation::
     call get_current_scene_info_address ; in hl
     ld d, 0
     ld e, SCENE_ANIMATION_ROUTINE
+    add hl, de
+    ld a, [hl+]
+    ld l, [hl]
+    ld h, a
+    call helper_call_hl
+    ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine calls the finish level check
+;; routine specified in the configuration file
+;; of the current scene.
+;;
+;; INPUT:
+;;      -
+;; OUTPUT:
+;;      - 
+;; WARNING: Destroys  A, BC and HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+check_next_scene_trigger::
+    call get_current_scene_info_address ; in hl
+    ld d, 0
+    ld e, SCENE_NEXT_LEVEL_TRIGGER
     add hl, de
     ld a, [hl+]
     ld l, [hl]
