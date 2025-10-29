@@ -175,7 +175,43 @@ set_entity_attributes::
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Generic function to set entities attributes components
+;; Generic function to reset an entity 
+;; sprite
+;;
+;; INPUT
+;;      L: Entity index
+;; OUTPUT:
+;;      -
+;; WARNING: Destroys H
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;
+;reset_entity_attributes::
+;    ld h, CMP_ATTR_H
+;    call reset_entity_components ; Do not use this function since it clears the sentinel
+;    ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Generic function to set entities dimensions
+;; Input
+;;      B: ENTITY_HEIGHT 
+;;      C: ENTITY_WIDTH
+;;      D: TBA
+;;      E: TBA
+;;      L: Entity index
+;; OUTPUT:
+;;      -
+;; WARNING: Destroys H
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+set_entity_dimensions::
+    ld h, CMP_AABB_H
+    call set_entity_components
+    ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Generic function to set entities AI
 ;;
 ;; Input
 ;;      BC: Address of AI routine 1
@@ -330,4 +366,28 @@ is_floating:
     add PHY_FLAGS
     ld l, a
     bit PHY_FLAG_GROUNDED, [hl]
+    ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine checks if an entity is an enemy
+;; that can recieve damage.
+;;
+;; INPUT:
+;;      L: Entity index
+;; OUTPUT:
+;;      Z=1 if damageable enemy, Z=0 otherwise
+;; WARNING: Destroys A and HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+is_damageable_enemy:
+    ld h, CMP_ATTR_H
+    ld a, l
+    add ATT_ENTITY_FLAGS
+    ld l, a
+    bit E_BIT_ENEMY, [hl]
+    ret z
+
+    add (INTERACTION_FLAGS-ATT_ENTITY_FLAGS)
+    bit E_BIT_DAMAGEABLE, [hl]
     ret

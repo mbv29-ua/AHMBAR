@@ -25,66 +25,25 @@ check_collectible_collision::
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Checks if two integral intervals overlap in one dimension
-;; It receives the addresses of 2 intervals in memory
-;; in HL and DE:
-;;
-;; Address   |BC|       |DE|
-;; Values  
-;; SPR_BASE  [p1] ..... [p2]
-;; AABB_BASE [w1] ..... [w2]
+;; Checks if two entities are colliding. The entities are 
+;; specified by their indices L and E.
 ;;
 ;; Returns Carry Flag (C=0, NC) when NOT-Colliding,
 ;; and (C=1, C) when overlapping.
 ;;
 ;; INPUT:
-;;      BC: Address of Interval 1 (p1, w1)
-;;      DE: Address of Interval 2 (p2, w2)
+;;       E: Entity index 2
+;;       L: Entity index 1
 ;; OUTPUT:
 ;;      Carry: { NC: No overlap }, { C: Overlap }
-;;
+;; WARNING: Destroys B, C, D and ...
  
-are_intervals_overlapping::
-    ;call compare_contents_bc_and_de
-    ;jr nc, .case2 ; [bc] > [de]
-
-    ; Check situation ... bc ... de ...
-    .case1:
-        push bc
-        ld a, [bc]
-        ld h, CMP_AABB_H
-        ld l, b
-        add [hl]
-        ld b, a ; b <- p1+w1
-
-        ld a, [de] ; a <- p2
-
-        cp b ; p2-(p1+w1)
-        pop bc
-        ret nc
-
-    ; Check situation ... de ... bc ...
-    .case2:
-        ld a, [de]
-        ld h, CMP_AABB_H
-        ld l, e
-        add [hl] 
-        ld d, a ; d <- p2+w2
-        
-        ld a, [bc] ; a <- p1
-
-        cp d ; p1-(p2+w2)
+are_entities_colliding::
+    ld b, CMP_SPRIT_H
+    ld c, l
+    ld d, CMP_SPRIT_H
+    call are_boxes_colliding
     ret
-
-;; Carry flag 1 if [hl] < [de]
-;compare_contents_hl_and_de:
-;    push hl
-;    ld a, [hl]
-;    ld h, d
-;    ld l, e
-;    cp [hl]
-;    pop hl
-;    ret
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -123,5 +82,70 @@ are_boxes_colliding::
 
     call are_intervals_overlapping
     ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Checks if two integral intervals overlap in one dimension
+;; It receives the addresses of 2 intervals in memory
+;; in HL and DE:
+;;
+;; Entity    |BC|       |DE|
+;; Values  
+;; SPR_BASE  [p1] ..... [p2]
+;; AABB_BASE [w1] ..... [w2]
+;;
+;; Returns Carry Flag (C=0, NC) when NOT-Colliding,
+;; and (C=1, C) when overlapping.
+;;
+;; INPUT:
+;;      BC: Address of Interval 1 (p1, w1)
+;;      DE: Address of Interval 2 (p2, w2)
+;; OUTPUT:
+;;      Carry: { NC: No overlap }, { C: Overlap }
+;;
+ 
+are_intervals_overlapping::
+    ;call compare_contents_bc_and_de
+    ;jr nc, .case2 ; [bc] > [de]
+
+    ; Check situation ... bc ... de ...
+    .case1:
+        push bc
+        ld a, [bc]
+        ld h, CMP_AABB_H
+        ld l, c
+        add [hl]
+        ld b, a ; b <- p1+w1
+
+        ld a, [de] ; a <- p2
+
+        cp b ; p2-(p1+w1)
+        pop bc
+        ret nc
+
+    ; Check situation ... de ... bc ...
+    .case2:
+        ld a, [de]
+        ld h, CMP_AABB_H
+        ld l, e
+        add [hl] 
+        ld d, a ; d <- p2+w2
+        
+        ld a, [bc] ; a <- p1
+
+        cp d ; p1-(p2+w2)
+    ret
+
+;; Carry flag 1 if [hl] < [de]
+;compare_contents_hl_and_de:
+;    push hl
+;    ld a, [hl]
+;    ld h, d
+;    ld l, e
+;    cp [hl]
+;    pop hl
+;    ret
+
+
 
 

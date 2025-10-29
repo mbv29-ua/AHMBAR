@@ -6,14 +6,15 @@ SECTION "Entry Point", ROM0[$150]
 
 main::
     ; call scene_title_screen --> fet por Jaime (Borrarlo)
-    call scene_intro_screen
+    ; call scene_intro_screen
     call start_game
 
     ; call wait_vblank
 .main_loop:
-    
+
     ;; Intentar poner aqui todo lo que vaya en VBank
     ;call render_hud
+    call hUGE_dosound               ; Update hUGE music driver
 
     call update_fire_animation      ; Animate fire tiles during VBlank
     call update_hud_if_needed       ; Update HUD if flag is set (during VBlank)
@@ -34,7 +35,7 @@ main::
     ; call destroy_bullets_out_of_bounds ; Destroy bullets that are off-screen FIRST
     call destroy_entities_out_of_screen
     call check_all_bullets_wall_collision  ; Destroy bullets hitting walls
-    call check_bullet_enemy_collision ; Check bullet-enemy collisions
+    call check_all_bullets_enemy_collision ; Check bullet-enemy collisions
 
     call update_all_entities_positions
     call clamp_player_position
@@ -45,9 +46,8 @@ main::
     call check_enemy_collision      ; Check collision with enemies
     call update_bullet_system
 
+    call kill_enemies_if_life_is_0
     call check_lives
     halt
 
     jp .main_loop
-
-

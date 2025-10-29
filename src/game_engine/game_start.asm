@@ -16,9 +16,24 @@ SECTION "Game start", ROMX
 
 start_game::
 	call set_initial_memory_values
+
+	; Initialize hUGE music driver with music_game
+    ld a, $80
+    ld [$FF26], a
+
+    ld a, $77
+    ld [$FF24], a
+
+    ld a, $FF
+    ld [$FF25], a
+
+
+	ld hl, music_game
+	call hUGE_init
+
 	; ld hl, scene_1
     ld hl, scene_1
-	call load_scene 
+	call load_scene
 	ret
 
 

@@ -40,13 +40,13 @@ man_entity_init::
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 man_entity_alloc::
-	call man_find_sentinel
-	res E_BIT_SENTINEL, [hl]
+	;call man_find_sentinel
+	;res E_BIT_SENTINEL, [hl]
 
 	call man_find_first_free
-
-	set E_BIT_FREE, [hl]
-	set E_BIT_SENTINEL, [hl]
+	ld [hl], (1<<E_BIT_FREE) ; %01000000
+	; set E_BIT_FREE, [hl]
+	; set E_BIT_SENTINEL, [hl]
 	ret
 
 
@@ -65,15 +65,15 @@ man_find_first_free::
 	ld hl, ATTR_BASE - ATTR_SIZE
 	ld de, ATTR_SIZE
 	.loop
-	add hl, de 
-	ld a, [hl]
-	cp ENTITY_CMP_SENTINEL
-	ret z
+		add hl, de 
+		ld a, [hl]
+		cp ENTITY_CMP_SENTINEL
+		ret z
 
-	bit E_BIT_FREE, a 
-	ret z 
+		bit E_BIT_FREE, a 
+		ret z 
 
-	jr .loop
+		jr .loop
 	ret
 
 
@@ -117,6 +117,8 @@ man_find_sentinel::
 
 man_entity_free::
 	call reset_entity_sprite
+	; call reset_entity_attributes
+
 	ld h, CMP_ATTR_H
 	res E_BIT_FREE, [hl] 
 	ret
@@ -209,6 +211,7 @@ man_entity_for_each::
 ;;
 ;;    Recorre todas las entidades y llama a la rutina si el bit indicado por B está activo.
 ;; -------------------------------------------------------------------
+
 man_entity_for_each_type::
 	
 	ld de, ATTR_BASE

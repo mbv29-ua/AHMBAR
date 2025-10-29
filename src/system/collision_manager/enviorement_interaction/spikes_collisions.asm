@@ -25,6 +25,7 @@ check_deadly_collision::
     call spike_damage
     ret
 
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; spike_damage
 ;;; Handles spike collision: loses 4 lives (2 hearts)
@@ -77,6 +78,7 @@ spike_damage::
 ;;;
 ;;; Destroys: A, HL
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 update_spike_cooldown::
     ld hl, wSpikeCooldown
     ld a, [hl]
