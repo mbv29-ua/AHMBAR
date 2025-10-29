@@ -173,13 +173,11 @@ man_entity_free::
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 man_entity_for_each::
-
 	ld de, ATTR_BASE
-	cp ENTITY_CMP_SENTINEL
-	ret z 
-
 	.loop
 		ld	a, [de]
+		bit E_BIT_SENTINEL, a 
+		ret nz
 		bit E_BIT_FREE, a
 		jr z, .next
 
@@ -192,9 +190,6 @@ man_entity_for_each::
 		pop af
 
 		.next:
-			bit E_BIT_SENTINEL, a 
-			ret nz
-
 			ld a, e 
 			add ATTR_SIZE
 			ld e, a 
@@ -213,13 +208,12 @@ man_entity_for_each::
 ;; -------------------------------------------------------------------
 
 man_entity_for_each_type::
-	
-	ld de, ATTR_BASE
-	cp ENTITY_CMP_SENTINEL
-	ret z 
 
+	ld de, ATTR_BASE
 	.loop
 		ld	a, [de]
+		bit E_BIT_SENTINEL, a 
+		ret nz
 		bit E_BIT_FREE, a
 		jr z, .next
 
@@ -231,7 +225,7 @@ man_entity_for_each_type::
 
 		;; We check the bit
 		ld	a, [de]
-		and b 		; We keep the common 1s		
+		and b 		; We keep the common 1s
 		pop de
 		jr z, .next
 
@@ -244,10 +238,6 @@ man_entity_for_each_type::
 		pop bc
 
 		.next:
-			ld a, [de]
-			bit E_BIT_SENTINEL, a 
-			ret nz
-
 			ld a, e 
 			add ATTR_SIZE
 			ld e, a 
@@ -553,3 +543,23 @@ man_entity_for_each_bullet::
 	ld c, ATT_ENTITY_FLAGS
 	call man_entity_for_each_type
 	ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine processes a routine only for those
+;; dying entities.
+;;
+;; INPUT:
+;;		HL: Routine to apply to each enemy
+;; OUTPUT:
+;;		-	
+;; WARNING: Destroys A and DE
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+man_entity_for_each_dying::
+	ld b, (1<<E_BIT_DYING)
+	ld c, ATT_ENTITY_FLAGS
+	call man_entity_for_each_type
+	ret
+
+
