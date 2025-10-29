@@ -18,3 +18,4 @@ act_2_scene_1::
 .scene_enemy_spawner:	DW_BE 	act_2_scene_1_enemy_spawner	; SCENE_ENEMY_SPAWNER
 .act_number:			DB 		2						; SCENE_ACT_NUMBER
 .level_number:			DB 		1						; SCENE_LEVEL_NUMBER
+.background_animation:	DW_BE	no_animation			; SCENE_ANIMATION_ROUTINE

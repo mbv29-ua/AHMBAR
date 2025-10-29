@@ -370,3 +370,26 @@ get_current_tilemap_address::
     inc l
     ld e, [hl]
     ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine calls the animation routine of
+;; the scene specified in the configuration file.
+;;
+;; INPUT:
+;;      -
+;; OUTPUT:
+;;      DE: Address of current scene tilemap    
+;; WARNING: Destroys  A, BC and HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+process_scene_background_animation::
+    call get_current_scene_info_address ; in hl
+    ld d, 0
+    ld e, SCENE_ANIMATION_ROUTINE
+    add hl, de
+    ld a, [hl+]
+    ld l, [hl]
+    ld h, a
+    call helper_call_hl
+    ret

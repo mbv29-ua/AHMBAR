@@ -13,8 +13,9 @@ main::
 .main_loop:
 
     ;; Routines accessing the VRAM must be placed here (still VBlank)
-    ;call render_hud
-    call update_fire_animation      ; Animate fire tiles during VBlank
+    ; call render_hud
+    ; call update_fire_animation      ; Animate fire tiles during VBlank
+    call process_scene_background_animation
     call update_hud_if_needed       ; Update HUD if flag is set (during VBlank)
 
     ;; Routines not accessing the VRAM should be placed here

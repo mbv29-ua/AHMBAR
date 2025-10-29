@@ -14,12 +14,22 @@ wFireAnimCounter: DS 1    ; Counter for animation timing
 
 SECTION "Tile Animation Code", ROM0
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; this routine does not process any animation.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+no_animation::
+    ret
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; init_tile_animation
 ;;;; Initializes the tile animation system
 ;;;;
 ;;;; Destroys: A
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 init_tile_animation::
     xor a
     ld [wFireAnimFrame], a
@@ -35,6 +45,7 @@ init_tile_animation::
 ;;;;
 ;;;; Destroys: A, BC, DE, HL
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 update_fire_animation::
     ; Increment animation counter
     ld a, [wFireAnimCounter]
