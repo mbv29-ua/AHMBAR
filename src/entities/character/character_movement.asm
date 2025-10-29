@@ -18,80 +18,98 @@ SECTION "Character Movement", ROMX
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 update_character_velocities::
-
-    ;; Decrement the cooldown of jump
+    ;; ------------------------------
+    ;; Decrementar cooldown del salto
+    ;; ------------------------------
     ld l, COUNT_JUMPING_COOLDOWN
     ld h, CMP_CONT_H
-
     ld a, [hl]
-    or a 
+    or a
     jr z, .continue
-
     dec [hl]
 
-    .continue:
+.continue:
+    ;; ------------------------------
+    ;; Reiniciar contador si está en el suelo
+    ;; ------------------------------
+    ld d, CMP_ATTR_H
+    ld e, PHY_FLAGS
+    ld a, [de]
+    bit PHY_FLAG_GROUNDED, a
+    jr z, .skipReset          ; si no está en el suelo, saltar
+    ld hl, wCounterJump
+    ld [hl], 0                ; <-- reseteamos el contador
+.skipReset:
     ld a, [PRESSED_BUTTONS]
     ld h, CMP_PHYS_H
     ld l, 0
 
-    
-
 .handle_jump:
-    bit BUTTON_A, a 
+    bit BUTTON_A, a
     jr z, .movement
-    ;; ------ Comprobamos flags ------
+
+    ;; ------------------------------
+    ;; Comprobamos flags de físicas
+    ;; ------------------------------
     ld d, CMP_ATTR_H
     ld e, PHY_FLAGS
     ld a, [de]
+    bit PHY_FLAG_GROUNDED, a
+    jr nz, .doJump        ; Si está en el suelo => salto permitido
 
-    bit PHY_FLAG_GROUNDED, a ;; SI NO ESTA EN EL SUELO NO SALTA
-    jr z, .checkRejump
-    bit PHY_FLAG_JUMPING, a ;; SI YA ESTA SALTANDO NO SALTAR
-    jr nz, .checkRejump
+    ;; ------------------------------
+    ;; No está en el suelo => solo si tiene powerup
+    ;; ------------------------------
+    ld a, [wPowerupDoubleJump]
+    or a
+    jr z, .movement       ; sin powerup => no hay salto doble
 
-    jr .doJump
+    ld a, [wCounterJump]
+    cp 2
+    jr nc, .movement      ; ya ha hecho 2 saltos => no más
 
-    .checkRejump:
-    ld a, [wPowerup]
-    inc a 
-    dec a 
-    jr z, .movement
-
-    ;; SI JUMPING 1 Y POWERUP 0 NO SALTO
-
-    ;; SI JUMPING 1 Y POWERUP 1 SALTO 
-
-    ;; SI JUMPING 0 Y POWERUP 1 Y SUELO 1 SALTO
-
-    ;; SI JUMPING 0 Y POWERUP 0 Y SUELO 1 SALTO 
-
+    ;; cooldown
     ld l, COUNT_JUMPING_COOLDOWN
     ld h, CMP_CONT_H
-
     ld a, [hl]
-    or a 
+    or a
     jr nz, .movement
 
-    .doJump:
+.doJump:
+    ;; ------------------------------
+    ;; Reiniciamos cooldown
+    ;; ------------------------------
     ld l, COUNT_JUMPING_COOLDOWN
     ld h, CMP_CONT_H
-
     ld [hl], 30
 
+    ;; ------------------------------
+    ;; Aplicamos velocidad de salto
+    ;; ------------------------------
     ld h, CMP_PHYS_H
     ld l, 0
-
     ld [hl], -PLAYER_JUMP_SPEED
     inc l
     ld [hl], 0
 
-    ;; actualizamos flags si salto
-    res PHY_FLAG_GROUNDED, a ; ya no está en el suelo
-    set PHY_FLAG_JUMPING, a  ; ahora está saltando
-    ld [de], a              ; GUARDAR flags modificados en memoria!
+    ;; ------------------------------
+    ;; Incrementamos contador de salto
+    ;; ------------------------------
+    ld a, [wCounterJump]
+    inc a
+    ld [wCounterJump], a
+
+    ;; ------------------------------
+    ;; Actualizamos flags 
+    ;; ------------------------------
+    ld d, CMP_ATTR_H
+    ld e, PHY_FLAGS
+    ld a, [de]
+    res PHY_FLAG_GROUNDED, a
+    ;set PHY_FLAG_JUMPING, a
+    ld [de], a
 
     jr .next
-
 .movement:
     ; No modificar velocidad Y - la gravedad ya la controla el physics_system
     ; Solo manejamos movimiento horizontal

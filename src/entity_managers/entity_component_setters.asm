@@ -289,6 +289,9 @@ set_grounded::
     ld l, a
     set PHY_FLAG_GROUNDED, [hl]
     res PHY_FLAG_JUMPING, [hl]
+    ;set PHY_FLAG_REJUMP, [hl] ;;SEGURAMENTE QUITE ESTE BIT
+    ;ld hl, wCounterJump
+    ;ld [hl], 0
     ret
 
 
