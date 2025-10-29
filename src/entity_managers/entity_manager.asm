@@ -42,11 +42,14 @@ man_entity_init::
 man_entity_alloc::
 	;call man_find_sentinel
 	;res E_BIT_SENTINEL, [hl]
-
 	call man_find_first_free
 	ld [hl], (1<<E_BIT_FREE) ; %01000000
 	; set E_BIT_FREE, [hl]
 	; set E_BIT_SENTINEL, [hl]
+
+	push hl
+	call set_last_not_free
+	pop hl
 	ret
 
 
@@ -75,6 +78,29 @@ man_find_first_free::
 
 		jr .loop
 	ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine marks the entities above the last
+;; active one with the sentinel bit.
+;;
+;; INPUT:
+;;      -
+;; OUTPUT:
+;;      -
+;; WARNING: Destroys A, DE and H.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+set_last_not_free::
+	ld hl, ATTR_BASE + ATTR_SIZE * (NUM_ENTITIES-1) ; HL starts in the last entity
+	ld de, -ATTR_SIZE
+	.loop
+		bit E_BIT_FREE, [hl]
+		ret nz
+
+		set E_BIT_SENTINEL, [hl]
+		add hl, de
+		jr .loop
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -121,6 +147,7 @@ man_entity_free::
 
 	ld h, CMP_ATTR_H
 	res E_BIT_FREE, [hl] 
+	call set_last_not_free
 	ret
 
 ;; Necesito direccion que quiero borrar

@@ -3,6 +3,11 @@ INCLUDE "entities/enemies/enemies.inc"
 
 DEF DEATH_CLOCK_START_VALUE EQU 15 ; 0.25 seconds
 
+SECTION "Entity quantities", WRAM0
+
+wNumberOfEnemies:: DS 1
+
+
 SECTION "Enemies", ROM0
 
 
@@ -196,4 +201,30 @@ set_death_clock::
 	add COUNT_DEATH_CLOCK
 	ld l, a
 	ld [hl], DEATH_CLOCK_START_VALUE
+	ret
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine counts the number of enemies in
+;; the scene.
+;;
+;; INPUT:
+;;		HL: Routine to apply to each enemy
+;; OUTPUT:
+;;		-	
+;; WARNING: Destroys A and DE
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+man_entity_count_number_of_enemies::
+	xor a
+	ld [wNumberOfEnemies], a
+	ld hl, inc_number_of_enemies_counter
+	call man_entity_for_each_enemy
+	ret
+
+
+inc_number_of_enemies_counter::
+	ld hl, wNumberOfEnemies
+	inc [hl]
 	ret

@@ -69,8 +69,6 @@ manage_death_animation::
 		ld a, [bc]
 		ld [hl], a
 	ret
-	
-
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

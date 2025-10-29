@@ -21,7 +21,9 @@ main::
 
     ;; Routines not accessing the VRAM should be placed here
     call hUGE_dosound               ; Update hUGE music driver
+
     call generate_random_number
+    call man_entity_count_number_of_enemies
 
     call update_spike_cooldown      ; Decrement spike damage cooldown
     call read_pad
