@@ -49,6 +49,10 @@ start_game::
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 set_initial_memory_values::
+    ; Load pseudo-random number generator seed:
+    ld hl, wRandomNumber
+    ld [hl], 1 ; seed - must be different from 0 
+
     ; Resetear vidas y balas
     ld a, MAX_LIVES
     ld [wPlayerLives], a

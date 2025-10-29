@@ -6,18 +6,21 @@ SECTION "Entry Point", ROM0[$150]
 
 main::
     ; call scene_title_screen --> fet por Jaime (Borrarlo)
-    ; call scene_intro_screen
+    call scene_intro_screen
     call start_game
 
     ; call wait_vblank
 .main_loop:
 
-    ;; Intentar poner aqui todo lo que vaya en VBank
+    ;; Routines accessing the VRAM must be placed here (still VBlank)
     ;call render_hud
-    call hUGE_dosound               ; Update hUGE music driver
-
     call update_fire_animation      ; Animate fire tiles during VBlank
     call update_hud_if_needed       ; Update HUD if flag is set (during VBlank)
+
+    ;; Routines not accessing the VRAM should be placed here
+    call hUGE_dosound               ; Update hUGE music driver
+    call generate_random_number
+
     call update_spike_cooldown      ; Decrement spike damage cooldown
     call read_pad
 
