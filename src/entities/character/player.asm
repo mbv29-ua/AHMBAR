@@ -44,9 +44,9 @@ enemy_damage::
 
     ; Perder 1 vida
     ld hl, wPlayerLives
-    ld a, [hl]
-    or a
-    ret z  ; Si ya está en 0, no hacer nada
+    ;ld a, [hl]
+    ;or a
+    ;ret z  ; Si ya está en 0, no hacer nada
 
     dec [hl]
 

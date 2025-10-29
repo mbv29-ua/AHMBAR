@@ -1,9 +1,6 @@
 INCLUDE "entities/entities.inc"
 INCLUDE "constants.inc"
 
-DEF PLAYER_HEIGHT EQU 8
-DEF PLAYER_WIDTH  EQU 8
-
 SECTION "Moving system variables", WRAM0
 
 temporal_new_y_position: DS 1

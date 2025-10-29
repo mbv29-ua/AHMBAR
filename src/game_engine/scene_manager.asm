@@ -273,6 +273,14 @@ set_player_initial_position::
     ld hl, wPlayerDirection
     set 0, [hl]
 
+    ;; Player bounding box: Escribir con constantes
+    ld b, PLAYER_HEIGHT
+    ld c, PLAYER_WIDTH
+    ld d, 0
+    ld e, 0
+    ld l, 0
+    call set_entity_dimensions
+
     ret
 
 
