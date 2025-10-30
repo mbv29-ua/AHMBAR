@@ -95,10 +95,10 @@ DB "Automatic", ENDLINE
 DB "Reasoning Team", ENDTEXT
 
 intro_text::
-DB "Hace mucho tiempo,", ENDLINE
-DB "el Ahmbar cambio", ENDLINE
-DB "el destino del ", ENDLINE
-DB "mundo.", ENDTEXT
+DB "Long ago,", ENDLINE
+DB "Ahmbar changed", ENDLINE
+DB "the fate of the ", ENDLINE
+DB "world.", ENDTEXT
 
 ; Menu principal (centrado, mas abajo)
 menu_title::
