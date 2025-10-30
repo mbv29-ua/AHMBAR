@@ -148,7 +148,7 @@ ds 4
 
 end_zero:
 
-SECTION "Sound Driver", ROMX
+SECTION "Sound Driver", ROM0
 
 IF DEF(GBDK)
 _hUGE_init::
