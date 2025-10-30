@@ -18,35 +18,14 @@ SECTION "Character Movement", ROMX
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 update_character_velocities::
-    ;; ------------------------------
-    ;; Decrementar cooldown del salto
-    ;; ------------------------------
-    ld l, COUNT_JUMPING_COOLDOWN
-    ld h, CMP_CONT_H
-    ld a, [hl]
-    or a
-    jr z, .continue
-    dec [hl]
+    
 
 .continue:
 
-    
+    call decrement_Jump_cooldown
 
-    ;; ------------------------------
-    ;; Reiniciar contador si está en el suelo
-    ;; ------------------------------
-    ld d, CMP_ATTR_H
-    ld e, PHY_FLAGS
-    ld a, [de]
+    call reset_counter_jumps_if_grounded
 
-    
-
-
-    bit PHY_FLAG_GROUNDED, a
-    jr z, .skipReset          ; si no está en el suelo, saltar
-    ld hl, wCounterJump
-    ld [hl], 0                ; <-- reseteamos el contador
-.skipReset:
     ld a, [JUST_PRESSED_BUTTONS]
     ld h, CMP_PHYS_H
     ld l, 0
@@ -222,3 +201,45 @@ clamp_player_position::
 .end:
     ret
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine decrements the counter that 
+;; registers the cooldown between jumps. Set to
+;; 30.
+;;
+;; INPUT
+;;      -
+;; OUTPUT:
+;;      -
+;; WARNING: Destroys A and HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+decrement_Jump_cooldown::
+    ld l, COUNT_JUMPING_COOLDOWN
+    ld h, CMP_CONT_H
+    ld a, [hl]
+    or a
+    ret z
+    dec [hl]
+    ret
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine resets the counter of jumps just 
+;; in case that the player is grounded.
+;;
+;; INPUT
+;;      -
+;; OUTPUT: wCounterJump 0 or >0
+;;      -
+;; WARNING: Destroys A and HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+reset_counter_jumps_if_grounded::
+    ld d, CMP_ATTR_H
+    ld e, PHY_FLAGS
+    ld a, [de]
+
+    bit PHY_FLAG_GROUNDED, a
+    ret z          ; si no está en el suelo, saltar
+    ld hl, wCounterJump
+    ld [hl], 0    ; <-- reseteamos el contador
+    ret           
+
+    
