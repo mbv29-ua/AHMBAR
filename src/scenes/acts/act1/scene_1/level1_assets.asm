@@ -13,8 +13,6 @@ SECTION "Level 1 Tiles", ROMX
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 scene_1_enemy_spawner::
-	call load_darkfrog_tiles
-
 	ld  b, $78
 	ld  c, $40
 	ld hl, jumping_frog

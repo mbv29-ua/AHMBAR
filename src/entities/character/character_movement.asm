@@ -161,6 +161,7 @@ update_character_velocities::
         ld h, CMP_CONT_H
         ld l, COUNT_MOVING_COOLDOWN
         dec [hl]
+           
 .end:
     ret
 
