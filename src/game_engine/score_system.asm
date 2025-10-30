@@ -12,24 +12,13 @@ SECTION "Score Routines", ROM0
 
 ; Initializes the HUD score to 00 and displays it on screen
 init_hud_score_display::
-    ; Initialize score_value to 0
-    xor a
-    ld [score_value], a
-    ld [score_value+1], a
-
-    ; Initialize score_digits to 0s
-    ld hl, score_digits
-    ld a, 0
-    ld [hli], a ; score_digits[0] = 0
-    ld [hl], a  ; score_digits[1] = 0
-
     ; Display "00" at HUD location (tile 0,5 and 0,6 in Window tilemap)
     ld hl, $9C00 + 5 ; Start of HUD score display
     ld de, score_digits
     ld c, 2 ; Loop 2 times for 2 digits
 .display_loop:
     ld a, [de]      ; Get digit value (0-9)
-    add a, TILE_COWBOY ; Convert to tile ID (TILE_COWBOY for testing)
+    add a, TILE_DIGIT_0 ; Convert to tile ID (70-79)
     ld [hli], a     ; Write tile ID to VRAM
     inc de          ; Next digit in score_digits
     dec c
@@ -104,8 +93,14 @@ bin_to_bcd_2_digits::
     ld hl, score_digits
     ld [hl], b ; Store tens digit
 
-    ; A now contains the units digit
     inc hl
     ld [hl], a ; Store units digit
 
+    ret
+
+; Resets the score_value to 0
+reset_score_to_zero::
+    xor a
+    ld [score_value], a
+    ld [score_value+1], a
     ret
