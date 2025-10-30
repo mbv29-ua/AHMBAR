@@ -113,3 +113,20 @@ abs_value_a::
 	
 	call oposite_of_a
 	ret
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine multiplies the content of the 16-bit
+;; registers BC by 2.
+;;
+;; INPUT:
+;;		BC: 16-bit integer
+;;		DE: 16-bit integer
+;; OUTPUT:
+;;		BC: BC+DE	
+;; WARNING: Destroys BC
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+multiply_bc_by_2::
+	sla c
+	rl b
+	ret

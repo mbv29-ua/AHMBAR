@@ -31,8 +31,9 @@ start_game::
 	ld hl, music_game
 	call hUGE_init
 
-	; ld hl, scene_1
-    ld hl, scene_1
+	ld hl, scene_1
+    ; ld hl, act_2_scene_3
+    ; ld hl, act_2_final_scene
 	call load_scene
 	ret
 
@@ -49,6 +50,10 @@ start_game::
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 set_initial_memory_values::
+    ; Load pseudo-random number generator seed:
+    ld hl, wRandomNumber
+    ld [hl], 1 ; seed - must be different from 0 
+
     ; Resetear vidas y balas
     ld a, MAX_LIVES
     ld [wPlayerLives], a
@@ -63,11 +68,18 @@ set_initial_memory_values::
     ; Limpiar flags
     xor a
     ld [wHUDNeedsUpdate], a
+    ld [wShootingCooldown], a ; Inicializar cooldown de disparo a 0
     ld [wSpikeCooldown], a  ; Inicializar cooldown de picas a 0
+    
+    ;; valores para hacer pruebas con los saltos
+    
     ;ld [wPowerupDoubleJump], a
     
+    ld [wPowerupInfiniteJump], a 
+
     ld a, 1 
     ld [wPowerupDoubleJump], a
+    ;ld [wPowerupInfiniteJump], a
 
     ret
 

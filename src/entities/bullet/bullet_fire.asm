@@ -1,7 +1,7 @@
 INCLUDE "utils/joypad.inc"
 INCLUDE "constants.inc"
 
-DEF COOLDOWN_STARTING_VALUE EQU 60
+DEF COOLDOWN_STARTING_VALUE EQU 20
 
 SECTION "Bullet System", ROM0
 
@@ -27,7 +27,7 @@ update_bullet_system::
     ret
 
     .cooldown
-    ld hl, coolDown
+    ld hl, wShootingCooldown
     dec [hl]
     ret
 
@@ -60,9 +60,9 @@ is_magazine_empty::
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 init_cool_down::
-    ; Activar cooldown de 60 frames (~1 segundo)
+    ; Activar cooldown de 20 frames (~0.33 segundo)
     ld a, COOLDOWN_STARTING_VALUE
-    ld [coolDown], a
+    ld [wShootingCooldown], a
     ret
 
 
@@ -77,7 +77,7 @@ init_cool_down::
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 is_there_cooldown::
-    ld a, [coolDown]
+    ld a, [wShootingCooldown]
     or a
     ret
 

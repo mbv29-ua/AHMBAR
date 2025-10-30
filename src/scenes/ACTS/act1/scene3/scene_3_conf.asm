@@ -4,7 +4,7 @@ SECTION "Scene 3", ROM0
 
 scene_3::
 
-.starting_y: 			DB 		136					; SCENE_PLAYER_STARTING_Y
+.starting_y: 			DB 		136						; SCENE_PLAYER_STARTING_Y
 .starting_x: 			DB 		16						; SCENE_PLAYER_STARTING_X
 .initial_scroll_y: 		DB	 	112 					; SCENE_STARTING_SCREEN_SCROLL_Y
 .initial_scroll_x:		DB 		0						; SCENE_STARTING_SCREEN_SCROLL_X
@@ -14,7 +14,9 @@ scene_3::
 .tilemap:				DW_BE 	Level3_Map				; SCENE_TILEMAP ; Se almacen como HIGH/LOW
 .goal_y: 				DB 		0						; SCENE_GOAL_POINT_X
 .goal_x:				DB 		0						; SCENE_GOAL_POINT_Y
-.next_scene:			DW_BE 	act_2_scene_1					; SCENE_NEXT_SCENE
+.next_scene:			DW_BE 	act_2_scene_1			; SCENE_NEXT_SCENE
 .scene_enemy_spawner:	DW_BE 	scene_3_enemy_spawner	; SCENE_ENEMY_SPAWNER
 .act_number:			DB 		1						; SCENE_ACT_NUMBER
 .level_number:			DB 		3						; SCENE_LEVEL_NUMBER
+.background_animation:	DW_BE	update_fire_animation	; SCENE_ANIMATION_ROUTINE
+.next_level_trigger:	DW_BE	check_door_collision	; SCENE_NEXT_LEVEL_TRIGGER

@@ -4,6 +4,7 @@ INCLUDE "constants.inc"
 
 SECTION "Player variables", WRAM0
 wPowerupDoubleJump:: ds 1
+wPowerupInfiniteJump:: ds 1
 wCounterJump:: ds 1
 SECTION "Character Sprites", ROM0
 
@@ -44,9 +45,9 @@ enemy_damage::
 
     ; Perder 1 vida
     ld hl, wPlayerLives
-    ld a, [hl]
-    or a
-    ret z  ; Si ya está en 0, no hacer nada
+    ;ld a, [hl]
+    ;or a
+    ;ret z  ; Si ya está en 0, no hacer nada
 
     dec [hl]
 

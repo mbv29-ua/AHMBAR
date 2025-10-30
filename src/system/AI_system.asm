@@ -52,7 +52,7 @@ process_entity_AI::
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; This routine applies gravity to all the 
+;; This routine applies AI behavior to all the 
 ;; affected entities
 ;;
 ;; INPUT:
@@ -64,5 +64,5 @@ process_entity_AI::
 
 process_all_enemies_AIs::
 	ld hl, process_entity_AI
-	call man_entity_for_each_enemy ;;; Cambiar por man_entity_for_each_ gravity
+	call man_entity_for_each_enemy
 	ret

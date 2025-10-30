@@ -39,6 +39,7 @@ load_scene::
     call load_bullet_sprites
     call load_frog_tiles
     call load_fly_tiles
+    call load_desintegration_tiles
 
     call load_tileset
     call load_level_map
@@ -250,6 +251,12 @@ set_player_initial_position::
     ld l, 0
     call set_entity_sprite
 
+    ld b, 0
+    ld c, 0
+    ld d, 0
+    ld e, 0
+    call set_entity_physics
+
 ;; Revisar
     ld h, CMP_ATTR_H
     ld l, E_BIT_PLAYER
@@ -272,6 +279,14 @@ set_player_initial_position::
 
     ld hl, wPlayerDirection
     set 0, [hl]
+
+    ;; Player bounding box: Escribir con constantes
+    ld b, PLAYER_HEIGHT
+    ld c, PLAYER_WIDTH
+    ld d, 0
+    ld e, 0
+    ld l, 0
+    call set_entity_dimensions
 
     ret
 
@@ -369,4 +384,51 @@ get_current_tilemap_address::
     ld d, [hl]
     inc l
     ld e, [hl]
+    ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine calls the animation routine of
+;; the scene specified in the configuration file.
+;;
+;; INPUT:
+;;      -
+;; OUTPUT:
+;;      -   
+;; WARNING: Destroys  A, BC and HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+process_scene_background_animation::
+    call get_current_scene_info_address ; in hl
+    ld d, 0
+    ld e, SCENE_ANIMATION_ROUTINE
+    add hl, de
+    ld a, [hl+]
+    ld l, [hl]
+    ld h, a
+    call helper_call_hl
+    ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine calls the finish level check
+;; routine specified in the configuration file
+;; of the current scene.
+;;
+;; INPUT:
+;;      -
+;; OUTPUT:
+;;      - 
+;; WARNING: Destroys  A, BC and HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+check_next_scene_trigger::
+    call get_current_scene_info_address ; in hl
+    ld d, 0
+    ld e, SCENE_NEXT_LEVEL_TRIGGER
+    add hl, de
+    ld a, [hl+]
+    ld l, [hl]
+    ld h, a
+    call helper_call_hl
     ret

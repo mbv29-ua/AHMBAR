@@ -1,6 +1,13 @@
 INCLUDE "entities/entities.inc"
 INCLUDE "entities/enemies/enemies.inc"
 
+DEF DEATH_CLOCK_START_VALUE EQU 15 ; 0.25 seconds
+
+SECTION "Entity quantities", WRAM0
+
+wNumberOfEnemies:: DS 1
+
+
 SECTION "Enemies", ROM0
 
 
@@ -98,16 +105,21 @@ damage_enemy::
 ;; Destroys: HL
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-kill_enemy_if_life_is_0::
+check_if_life_is_0_and_set_death_counter::
 	ld h, CMP_ATTR_H
 	ld a, e
 	add ENTITY_HEALTH
 	ld l, a
 	ld a, [hl]
 	or a 		; We check if a is 0
+	ret nz
+
+	; If it is health is 0, we check if the entity was already dying
+	ld h, CMP_ATTR_H
 	ld l, e
-	call z, man_entity_free
-    ret
+	bit E_BIT_DYING, [hl]	
+	call z, set_death_clock
+	ret
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -118,9 +130,101 @@ kill_enemy_if_life_is_0::
 ;; Destroys: HL
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-kill_enemies_if_life_is_0::
-	ld hl, kill_enemy_if_life_is_0
+clean_dead_enemy::
+	ld h, CMP_ATTR_H
+	ld l, e
+	bit E_BIT_DYING, [hl]	
+	ret z
+
+	ld h, CMP_CONT_H
+	ld a, e
+	add COUNT_DEATH_CLOCK
+	ld l, a
+	ld a, [hl]
+	or a
+	jr z, .clean
+		dec [hl]
+		ret
+
+	.clean:
+		ld l, e
+		call man_entity_free ; Receives L as the entity index
+	ret 
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; kill_enemy
+;; If enemy health is 0, enemy is destroyed
+;;
+;; Input: E = enemy index
+;; Destroys: HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;kill_enemies_if_life_is_0::
+;	ld hl, kill_enemy_if_life_is_0
+;	call man_entity_for_each_enemy
+;    ret
+
+ 
+ ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; kill_enemy
+;; If enemy health is 0, enemy is destroyed
+;;
+;; Input: E = enemy index
+;; Destroys: HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+destroy_dead_enemies::
+	ld hl, check_if_life_is_0_and_set_death_counter
+	call man_entity_for_each_enemy
+
+	ld hl, clean_dead_enemy
 	call man_entity_for_each_enemy
     ret
 
- 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Set death clock to an enemy counter and mark it
+;; as a dying enemy.
+;;
+;; Input: E = enemy index
+;; Destroys: HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+set_death_clock::
+	ld h, CMP_ATTR_H
+	ld l, e
+	set E_BIT_DYING, [hl]
+
+	ld h, CMP_CONT_H
+	ld a, e
+	add COUNT_DEATH_CLOCK
+	ld l, a
+	ld [hl], DEATH_CLOCK_START_VALUE
+	ret
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine counts the number of enemies in
+;; the scene.
+;;
+;; INPUT:
+;;		HL: Routine to apply to each enemy
+;; OUTPUT:
+;;		-	
+;; WARNING: Destroys A and DE
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+man_entity_count_number_of_enemies::
+	xor a
+	ld [wNumberOfEnemies], a
+	ld hl, inc_number_of_enemies_counter
+	call man_entity_for_each_enemy
+	ret
+
+
+inc_number_of_enemies_counter::
+	ld hl, wNumberOfEnemies
+	inc [hl]
+	ret
