@@ -41,6 +41,7 @@ main::
     ; IMPORTANTE: Destruir balas ANTES de actualizar posiciones
     ; call destroy_bullets_out_of_bounds ; Destroy bullets that are off-screen FIRST
     call destroy_entities_out_of_screen
+    call check_ambar_collisions
     call check_all_bullets_wall_collision  ; Destroy bullets hitting walls
     call check_all_bullets_enemy_collision ; Check bullet-enemy collisions
 

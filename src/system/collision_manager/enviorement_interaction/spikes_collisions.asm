@@ -28,7 +28,7 @@ check_deadly_collision::
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; spike_damage
-;;; Handles spike collision: loses 4 lives (2 hearts)
+;;; Handles spike collision: loses 2 lives (1 hearts)
 ;;; and respawns player at previous safe position
 ;;;
 ;;; Destroys: A, HL
@@ -48,7 +48,7 @@ spike_damage::
     jr c, .less_than_4_lives
 
     ; Tiene 4 o más vidas: restar 4
-    sub 4
+    sub 2
     ld [hl], a
     jr .after_damage
 

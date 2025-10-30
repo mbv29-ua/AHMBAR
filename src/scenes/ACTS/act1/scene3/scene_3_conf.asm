@@ -16,6 +16,7 @@ scene_3::
 .goal_x:				DB 		0						; SCENE_GOAL_POINT_Y
 .next_scene:			DW_BE 	act_2_scene_1			; SCENE_NEXT_SCENE
 .scene_enemy_spawner:	DW_BE 	scene_3_enemy_spawner	; SCENE_ENEMY_SPAWNER
+.scene_collectible_spawner: DW_BE	0	; SCENE_COLLECTIBLE_SPAWNER
 .act_number:			DB 		1						; SCENE_ACT_NUMBER
 .level_number:			DB 		3						; SCENE_LEVEL_NUMBER
 .background_animation:	DW_BE	update_fire_animation	; SCENE_ANIMATION_ROUTINE

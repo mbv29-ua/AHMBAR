@@ -39,10 +39,12 @@ check_collectible_collision::
 ;; WARNING: Destroys B, C, D and ...
  
 are_entities_colliding::
+    push de
     ld b, CMP_SPRIT_H
     ld c, l
     ld d, CMP_SPRIT_H
     call are_boxes_colliding
+    pop de
     ret
 
 
