@@ -2,3 +2,8 @@
 /*.sav
 /*.gb
 /*.sn1
+/*.sym
+/*.dis
+/*.asm.old
+
+/.vscode

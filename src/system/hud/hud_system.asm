@@ -10,13 +10,13 @@ SECTION "HUD System", ROM0
 ;;; HUD Constants
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Tile indices
-DEF TILE_HEART_FULL  EQU $D0    ; Corazón completo
-DEF TILE_HEART_HALF  EQU $D1    ; Medio corazón
+DEF TILE_HEART_FULL  EQU $60    ; Corazón completo
+DEF TILE_HEART_HALF  EQU $61    ; Medio corazón
 DEF TILE_EMPTY       EQU $00    ; Tile vacío
 ; TILE_BULLET ya definido en constants.inc como $09
 
 ; HUD positions in Window tilemap
-DEF HUD_ROW          EQU 0      ; Primera fila de la Window
+DEF HUD_ROW              EQU 0      ; Primera fila de la Window
 DEF HUD_LIVES_START_X    EQU 1  ; Posición X inicial de corazones
 DEF HUD_BULLETS_START_X  EQU 13 ; Posición X inicial de balas
 DEF HUD_ACT_LEVEL_X      EQU 8  ; Posición X del indicador A#L#

@@ -307,18 +307,26 @@ load_numbers::
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 load_heart_tiles::
-    ; Cargar corazón completo en tile $D0
+    ; Cargar corazón completo en tile $60
     ld hl, fonts.heart_full
-    ld de, VRAM0_START + $D0 * TILE_SIZE
+    ld de, VRAM0_START + $60 * TILE_SIZE
     ld  b, TILE_SIZE
     call memcpy_256
 
-    ; Cargar medio corazón en tile $D1
+    ; Cargar medio corazón en tile $61
     ld hl, fonts.heart_half
-    ld de, VRAM0_START + $D1 * TILE_SIZE
+    ld de, VRAM0_START + $61 * TILE_SIZE
     ld  b, TILE_SIZE
     call memcpy_256
 
+    ret
+
+load_ambar_tile::
+    ; Cargar corazón completo en tile $D0
+    ld hl, ambar.start
+    ld de, VRAM0_START + $62 * TILE_SIZE
+    ld  b, TILE_SIZE
+    call memcpy_256
     ret
 
 

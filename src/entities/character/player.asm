@@ -55,3 +55,23 @@ enemy_damage::
     ld a, 1
     ld [wHUDNeedsUpdate], a
     ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine loads the player tiles in the 
+;; VRAM.
+;;
+;; INPUT
+;;      -
+;; OUTPUT:
+;;      -
+;; WARNING: Destroys A, BC, DE and HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+load_player_tiles::
+    ; Cargar sprite de la bola negra (jugador)
+    ld hl, player_beta_tiles
+    ld de, VRAM0_START + PLAYER_WALKING_TILE_1 * TILE_SIZE
+    ld  b, player_beta_tiles.end - player_beta_tiles.start
+    call memcpy_256
+    ret

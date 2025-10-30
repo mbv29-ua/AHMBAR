@@ -589,4 +589,19 @@ man_entity_for_each_dying::
 	call man_entity_for_each_type
 	ret
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine processes a routine only for those
+;; entities identified as enemies.
+;;
+;; INPUT:
+;;		HL: Routine to apply to each enemy
+;; OUTPUT:
+;;		-	
+;; WARNING: Destroys A and DE
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+man_entity_for_each_ambar::
+	ld b, (1<<AMBAR_COLLECT)
+	ld c, PHY_FLAGS
+	call man_entity_for_each_type
+	ret

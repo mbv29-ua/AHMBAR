@@ -35,6 +35,8 @@ load_scene::
     ; Load assets
     call load_numbers
     call load_heart_tiles
+    call load_ambar_tile
+    call load_player_tiles
     call load_cowboy_sprites
     call load_bullet_sprites
     call load_frog_tiles
@@ -47,6 +49,7 @@ load_scene::
     call init_player
     ; call init_enemigos_prueba
     call init_enemies
+    call init_collectibles
     call init_palettes_by_default
 
     ; Load scene variables
@@ -187,7 +190,7 @@ load_level_map::
 ;;
 ;; INPUT:
 ;;		-
-;; OUTPUT:
+;; OUTPUT: 
 ;;		-	
 ;; WARNING: Destroys A, DE and HL
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -204,6 +207,59 @@ set_initial_scroll::
     add hl, de
     ld a, [hl]
     ldh [rSCX], a
+    ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine corrects the position of the
+;; entities when there is a change of the scroll.
+;;
+;; INPUT:
+;;      E: Entity index
+;; OUTPUT:
+;;      -
+;; WARNING: Destroys A.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+correct_entity_position_when_scroll_resets::
+    ld l, e
+    call get_entity_sprite
+    push de
+    push hl
+
+    ;; Compensate current scroll Y
+    ld a, b
+    ld hl, rSCY
+    add [hl]
+    ld b, a
+
+    ;; Compensate current scroll X
+    ld a, c
+    ld hl, rSCX
+    add [hl]
+    ld c, a
+
+    call get_current_scene_info_address ; in hl
+
+    ;; Compensate initial scroll Y
+    ld a, b
+    ld d, 0
+    ld e, SCENE_STARTING_SCREEN_SCROLL_Y
+    add hl, de
+    sub [hl]
+    ld b, a
+
+    ;; Compensate initial scroll X
+    ld a, c
+    ld e, (SCENE_STARTING_SCREEN_SCROLL_X-SCENE_STARTING_SCREEN_SCROLL_Y)
+    add hl, de
+    sub [hl]
+    ld c, a
+
+    ;; We set the corrected values
+    pop hl
+    pop de
+    call set_entity_sprite
     ret
 
 
@@ -246,7 +302,7 @@ set_player_initial_position::
     add hl, de
     ld c, [hl]  ; X coordinate
 
-    ld d, TILE_COWBOY ; tile
+    ld d, PLAYER_WALKING_TILE_2 ; tile
     ld e, 0           ; tile properties
     ld l, 0
     call set_entity_sprite
@@ -301,8 +357,10 @@ set_player_initial_position::
 
 restore_player_position::
     call wait_vblank
-    call set_player_initial_position
+    ld hl, correct_entity_position_when_scroll_resets
+    call man_entity_for_each
     call set_initial_scroll
+    call set_player_initial_position
     ret
 
 
@@ -366,6 +424,21 @@ init_enemies::
     call helper_call_hl
     ret
 
+init_collectibles::
+    call get_current_scene_info_address ; in hl
+    ld bc, SCENE_COLLECTIBLE_SPAWNER
+    add hl, bc
+    ld a, [hl+]
+    ld l, [hl]
+    ld h, a
+
+    ; Check for null pointer
+    ld a, h
+    or l
+    ret z ; if hl is 0, return
+
+    call helper_call_hl
+    ret
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; This routine returns the address of the tilemap

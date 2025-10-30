@@ -6,7 +6,7 @@ SECTION "Entry Point", ROM0[$150]
 
 main::
     ; call scene_title_screen --> fet por Jaime (Borrarlo)
-    ; call scene_intro_screen
+    call scene_intro_screen
     call start_game
 
     ; call wait_vblank
@@ -15,6 +15,7 @@ main::
     ;; Routines accessing the VRAM must be placed here (still VBlank)
     ; call render_hud
     ; call update_fire_animation      ; Animate fire tiles during VBlank
+    call update_player_sprite
     call process_scene_background_animation
     call update_hud_if_needed       ; Update HUD if flag is set (during VBlank)
     call manage_death_animations
@@ -41,6 +42,7 @@ main::
     ; IMPORTANTE: Destruir balas ANTES de actualizar posiciones
     ; call destroy_bullets_out_of_bounds ; Destroy bullets that are off-screen FIRST
     call destroy_entities_out_of_screen
+    call check_ambar_collisions
     call check_all_bullets_wall_collision  ; Destroy bullets hitting walls
     call check_all_bullets_enemy_collision ; Check bullet-enemy collisions
 
