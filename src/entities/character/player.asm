@@ -4,6 +4,7 @@ INCLUDE "constants.inc"
 
 SECTION "Player variables", WRAM0
 wPowerupDoubleJump:: ds 1
+wPowerupInfiniteJump:: ds 1
 wCounterJump:: ds 1
 SECTION "Character Sprites", ROM0
 

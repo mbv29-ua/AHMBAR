@@ -70,10 +70,16 @@ set_initial_memory_values::
     ld [wHUDNeedsUpdate], a
     ld [wShootingCooldown], a ; Inicializar cooldown de disparo a 0
     ld [wSpikeCooldown], a  ; Inicializar cooldown de picas a 0
+    
+    ;; valores para hacer pruebas con los saltos
+    
     ;ld [wPowerupDoubleJump], a
     
+    ld [wPowerupInfiniteJump], a 
+
     ld a, 1 
     ld [wPowerupDoubleJump], a
+    ;ld [wPowerupInfiniteJump], a
 
     ret
 

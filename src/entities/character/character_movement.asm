@@ -29,12 +29,19 @@ update_character_velocities::
     dec [hl]
 
 .continue:
+
+    
+
     ;; ------------------------------
     ;; Reiniciar contador si está en el suelo
     ;; ------------------------------
     ld d, CMP_ATTR_H
     ld e, PHY_FLAGS
     ld a, [de]
+
+    
+
+
     bit PHY_FLAG_GROUNDED, a
     jr z, .skipReset          ; si no está en el suelo, saltar
     ld hl, wCounterJump
@@ -57,6 +64,13 @@ update_character_velocities::
     bit PHY_FLAG_GROUNDED, a
     jr nz, .doJump        ; Si está en el suelo => salto permitido
 
+
+    ;; Primero comprobamos si tiene salto infinito
+    ld a, [wPowerupInfiniteJump]
+    or a
+    jr nz, .cooldown
+
+
     ;; ------------------------------
     ;; No está en el suelo => solo si tiene powerup
     ;; ------------------------------
@@ -68,6 +82,8 @@ update_character_velocities::
     cp 2
     jr nc, .movement      ; ya ha hecho 2 saltos => no más
 
+
+    .cooldown
     ;; cooldown
     ld l, COUNT_JUMPING_COOLDOWN
     ld h, CMP_CONT_H
