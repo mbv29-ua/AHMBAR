@@ -223,7 +223,6 @@ get_leftmost_x_coordinate_after_tile::
     ; Add scroll x
     ld hl, rSCX
     sub [hl]
-    dec a
     add 8 ;; screen horizontal offset 
     ret
 

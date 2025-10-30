@@ -146,3 +146,48 @@ AI_flying_enemy_up_and_down::
 		dec [hl] ; decrements cooldown 
 	ret
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; With this AI, an enemy throws rocks randomly
+;; every quarter of second.
+;;
+;; INPUT:
+;;      E: Entity index
+;; OUTPUT:
+;;      -   
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+AI_throwing_rocks::
+	ld h, CMP_CONT_H
+	ld a, e
+	add COUNT_SPAWN_ENEMIES
+	ld l, a 
+
+	ld a, [hl]
+	or [hl] ; We check if the spawning counter is at zero
+	jr nz, .update_cooldown 
+
+	; Spawn a rock
+	ld a, [wRandomNumber]
+	cp 160
+	ret nc ; If there is no carry, we do not throw the rock
+
+	push de
+	ld b, 16
+	ld c, a
+	ld hl, falling_rock
+	call enemy_spawn
+	pop de
+	
+	; Starts cooldown
+	ld h, CMP_CONT_H
+	ld a, e
+	add COUNT_SPAWN_ENEMIES
+	ld l, a 
+
+	ld [hl], 20
+	ret
+
+	.update_cooldown:
+		dec [hl] ; decrements cooldown 
+	ret

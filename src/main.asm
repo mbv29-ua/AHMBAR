@@ -6,7 +6,7 @@ SECTION "Entry Point", ROM0[$150]
 
 main::
     ; call scene_title_screen --> fet por Jaime (Borrarlo)
-    call scene_intro_screen
+    ; call scene_intro_screen
     call start_game
 
     ; call wait_vblank
@@ -17,10 +17,13 @@ main::
     ; call update_fire_animation      ; Animate fire tiles during VBlank
     call process_scene_background_animation
     call update_hud_if_needed       ; Update HUD if flag is set (during VBlank)
+    call manage_death_animations
 
     ;; Routines not accessing the VRAM should be placed here
     call hUGE_dosound               ; Update hUGE music driver
+
     call generate_random_number
+    call man_entity_count_number_of_enemies
 
     call update_spike_cooldown      ; Decrement spike damage cooldown
     call read_pad
@@ -46,12 +49,13 @@ main::
     call scroll_manager
 
     ;call check_door_collision       ; Check door tiles ($C0-$C3) to trigger next level
-    call process_next_scene_trigger
+    call check_next_scene_trigger
     call check_deadly_collision     ; Check deadly tiles (spikes) to damage player
     call check_enemy_collision      ; Check collision with enemies
     call update_bullet_system
 
-    call kill_enemies_if_life_is_0
+    call destroy_dead_enemies
+    ; call kill_enemies_if_life_is_0
     call check_lives
     halt
 

@@ -39,6 +39,7 @@ load_scene::
     call load_bullet_sprites
     call load_frog_tiles
     call load_fly_tiles
+    call load_desintegration_tiles
 
     call load_tileset
     call load_level_map
@@ -249,6 +250,12 @@ set_player_initial_position::
     ld e, 0           ; tile properties
     ld l, 0
     call set_entity_sprite
+
+    ld b, 0
+    ld c, 0
+    ld d, 0
+    ld e, 0
+    call set_entity_physics
 
 ;; Revisar
     ld h, CMP_ATTR_H
