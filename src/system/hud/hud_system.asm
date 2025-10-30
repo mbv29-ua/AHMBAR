@@ -18,8 +18,8 @@ DEF TILE_EMPTY       EQU $00    ; Tile vacío
 ; HUD positions in Window tilemap
 DEF HUD_ROW              EQU 0      ; Primera fila de la Window
 DEF HUD_LIVES_START_X    EQU 0  ; Posición X inicial de corazones
-DEF HUD_BULLETS_START_X  EQU 13 ; Posición X inicial de balas
-DEF HUD_ACT_LEVEL_X      EQU 8  ; Posición X del indicador A#L#
+DEF HUD_BULLETS_START_X  EQU 15 ; Posición X inicial de balas
+DEF HUD_ACT_LEVEL_X      EQU 10 ; Posición X del indicador A#L#
 
 ; MAX_LIVES y MAX_BULLETS definidos en constants.inc
 
@@ -117,11 +117,38 @@ clear_window_tilemap::
 ;;; Destroys: A, BC, DE, HL
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 render_hud::
-    ; call render_separator_line
-    call render_lives
-    call render_bullets
-    call render_act_level
-    call render_hud_score ; Render the 2-digit score in HUD
+    call render_lives           ; Hearts (4 tiles, X=0)
+
+    ; Blank space (1 tile, X=4)
+    ld a, TILE_EMPTY
+    ld hl, $9C00 + 4
+    ld [hl], a
+
+    ; Ambar tile ($62) (1 tile, X=5)
+    ld a, $62
+    ld hl, $9C00 + 5
+    ld [hl], a
+
+    call render_hud_score       ; Score (2 tiles, X=6) - will be updated in score_system.asm
+
+    ; Another Ambar symbol ($62) (1 tile, X=8)
+    ld a, $62
+    ld hl, $9C00 + 8
+    ld [hl], a
+
+    ; Blank space (1 tile, X=9)
+    ld a, TILE_EMPTY
+    ld hl, $9C00 + 9
+    ld [hl], a
+
+    call render_act_level       ; Level indicator (4 tiles, X=10)
+
+    ; Blank space (1 tile, X=14)
+    ld a, TILE_EMPTY
+    ld hl, $9C00 + 14
+    ld [hl], a
+
+    call render_bullets         ; Bullets (5 tiles, X=15)
     ret
 
 
@@ -196,17 +223,6 @@ render_lives::
 ;; - update_bullet_hud
 
 render_bullets::
-
-    ;call wait_vblank
-    ; DEBUG: Mostrar número de balas en decimal primero
-    ld hl, $9C00 + HUD_BULLETS_START_X - 2
-    ld a, [wPlayerBullets]
-    add 188  ; 188 = tile '0'
-    ld [hl+], a
-
-    ; Espacio
-    ld a, 198
-    ld [hl+], a
 
     ; Calcular dirección base en Window tilemap ($9C00 + HUD_BULLETS_START_X)
     ld hl, $9C00
@@ -326,6 +342,8 @@ update_hud_if_needed::
     xor a
     ld [wHUDNeedsUpdate], a
 
+    call wait_vblank
+
     ; Actualizar HUD completo
     call render_hud
     ret
@@ -339,10 +357,10 @@ update_hud_if_needed::
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 render_separator_line::
     ; Dibujar línea en la primera fila de Window tilemap
-    ; Usar tile $81 (o el que sea una línea horizontal en tus tiles)
+    ; Usar tile
     ld hl, $9C00        ; Window tilemap start
     ld b, 32            ; 32 tiles (ancho completo)
-    ld a, $81           ; Tile de línea horizontal (ajustar según tus tiles)
+    ld a, $81           ; Tile de línea horizontal (ajustar según tiles)
 .draw_line:
     ld [hl+], a
     dec b

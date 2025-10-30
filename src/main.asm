@@ -56,6 +56,8 @@ main::
     call check_next_scene_trigger
     call check_deadly_collision     ; Check deadly tiles (spikes) to damage player
     call check_enemy_collision      ; Check collision with enemies
+    call check_bullet_player_collisions
+
     call update_bullet_system
 
     call destroy_dead_enemies

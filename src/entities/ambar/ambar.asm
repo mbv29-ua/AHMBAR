@@ -1,7 +1,7 @@
 INCLUDE "entities/entities.inc"
 INCLUDE "constants.inc"
 
-DEF DEATH_CLOCK_START_VALUE EQU 1
+
 
 SECTION "Ambar entity", ROM0
 

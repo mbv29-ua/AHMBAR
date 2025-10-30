@@ -12,8 +12,8 @@ SECTION "Score Routines", ROM0
 
 ; Initializes the HUD score to 00 and displays it on screen
 init_hud_score_display::
-    ; Display "00" at HUD location (tile 0,5 and 0,6 in Window tilemap)
-    ld hl, $9C00 + 5 ; Start of HUD score display
+    ; Display "00" at HUD location (tile 0,6 and 0,7 in Window tilemap)
+    ld hl, $9C00 + 6 ; Start of HUD score display
     ld de, score_digits
     ld c, 2 ; Loop 2 times for 2 digits
 .display_loop:
@@ -31,7 +31,7 @@ render_hud_score::
     call bin_to_bcd_2_digits
 
     ; Update display at HUD location
-    ld hl, $9C00 + 5 ; Start of HUD score display
+    ld hl, $9C00 + 6 ; Start of HUD score display
     ld de, score_digits
     ld c, 2 ; Loop 2 times for 2 digits
 .update_display_loop:
