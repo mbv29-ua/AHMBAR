@@ -65,7 +65,8 @@ increment_score_and_display::
 .no_cap_low:
 
     ; Render the updated score to the HUD
-    call render_hud_score
+    ; call render_hud_score
+    call hud_needs_update
     ret
 
 ; Binary to 2-digit BCD conversion routine (0-99)
