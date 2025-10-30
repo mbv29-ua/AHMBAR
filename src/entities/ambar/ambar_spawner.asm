@@ -51,13 +51,10 @@ spawner_set_ambar_flags::
 
     ; Set entity flags
     ld h, CMP_ATTR_H
-    ld l, a
     add ATT_ENTITY_FLAGS
     ld l, a
     
-    ld b, 0
-    set E_BIT_COLLECTABLE, b
-    ld [hl], b
+    set E_BIT_COLLECTABLE, [hl]
 
     ; Set interaction flags
     inc l ; Move to INTERACTION_FLAGS
@@ -66,6 +63,16 @@ spawner_set_ambar_flags::
     ; They are collidable with the player.
     set E_BIT_COLLIDABLE, b
     ld [hl], b
+
+    ; PHYS_FLAGS
+    ; Set entity flags
+    pop af
+    push af
+    ld h, CMP_ATTR_H
+    add PHY_FLAGS
+    ld l, a
+    
+    set AMBAR_COLLECT, [hl]
     
     pop af
     ret
