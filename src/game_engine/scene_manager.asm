@@ -361,6 +361,7 @@ restore_player_position::
     call wait_vblank
     ld hl, correct_entity_position_when_scroll_resets
     call man_entity_for_each
+    call update_hud_if_needed
     call set_initial_scroll
     call set_player_initial_position
     ret

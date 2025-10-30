@@ -1,7 +1,7 @@
 INCLUDE "constants.inc"
 INCLUDE "system/hud/hud_constants.inc"
 
-SECTION "Game start", ROMX
+SECTION "Game start", ROM0
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -31,8 +31,8 @@ start_game::
 	ld hl, music_game
 	call hUGE_init
 
-	; ld hl, scene_1
-    ld hl, act_2_scene_1
+	ld hl, scene_1
+    ; ld hl, act_2_scene_1
     ; ld hl, act_2_final_scene
 	call load_scene
 	ret
