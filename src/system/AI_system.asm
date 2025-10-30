@@ -1,6 +1,5 @@
 INCLUDE "entities/entities.inc"
 
-
 SECTION "AI System", ROM0
 
 

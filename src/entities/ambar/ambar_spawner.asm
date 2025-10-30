@@ -2,24 +2,6 @@ INCLUDE "entities/entities.inc"
 
 SECTION "Ambar Spawner", ROM0
 
-init_ambars_level1::
-    ; Spawn ambars at specific locations for level 1
-    ; Position in tiles (Y, X) -> in pixels (Y*8, X*8)
-    
-    ld b, 5 * 8
-    ld c, 5 * 8
-    call ambar_spawn
-
-    ld b, 10 * 8
-    ld c, 10 * 8
-    call ambar_spawn
-
-    ld b, 15 * 8
-    ld c, 15 * 8
-    call ambar_spawn
-
-    ret
-
 ambar_spawn::
     ; We need to save HL information
     push hl

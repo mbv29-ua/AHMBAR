@@ -9,6 +9,7 @@ SECTION "Ambar entity", ROM0
 
 ;; funcion cuando el juegador toque la entidad, incrementar countar, hago animacion, elimini identidad
 collect_ambar::
+    ; call increment_score_and_display
     ;; counter inc --> todo
     ld h, CMP_ATTR_H
 	ld l, e

@@ -17,7 +17,7 @@ DEF TILE_EMPTY       EQU $00    ; Tile vacío
 
 ; HUD positions in Window tilemap
 DEF HUD_ROW              EQU 0      ; Primera fila de la Window
-DEF HUD_LIVES_START_X    EQU 1  ; Posición X inicial de corazones
+DEF HUD_LIVES_START_X    EQU 0  ; Posición X inicial de corazones
 DEF HUD_BULLETS_START_X  EQU 13 ; Posición X inicial de balas
 DEF HUD_ACT_LEVEL_X      EQU 8  ; Posición X del indicador A#L#
 
@@ -55,6 +55,7 @@ init_hud::
 
     ; Renderizar HUD inicial
     call render_hud
+    call init_hud_score_display ; Initialize and display 00 in HUD
 
     ret
 
@@ -120,6 +121,7 @@ render_hud::
     call render_lives
     call render_bullets
     call render_act_level
+    call render_hud_score ; Render the 2-digit score in HUD
     ret
 
 
