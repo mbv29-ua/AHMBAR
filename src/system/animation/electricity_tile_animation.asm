@@ -21,7 +21,7 @@ SECTION "Electricity tile animation", ROM0
 ;; WARNING: Destroys  A, BC, DE and HL
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-update_electricity_animation::
+electricity_animation::
     ld hl, wElectricityAnimation
     inc [hl]
     bit 2, [hl]

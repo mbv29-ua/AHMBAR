@@ -14,9 +14,9 @@ act_2_scene_3::
 .tilemap:				DW_BE 	act_2_scene_3_miguel	; SCENE_TILEMAP ; Se almacen como HIGH/LOW
 .goal_y: 				DB 		0						; SCENE_GOAL_POINT_X
 .goal_x:				DB 		0						; SCENE_GOAL_POINT_Y
-.next_scene:			DW_BE 	scene_1					; SCENE_NEXT_SCENE
+.next_scene:			DW_BE 	act_2_final_scene		; SCENE_NEXT_SCENE
 .scene_enemy_spawner:	DW_BE 	act_2_scene_3_enemy_spawner	; SCENE_ENEMY_SPAWNER
 .act_number:			DB 		2						; SCENE_ACT_NUMBER
 .level_number:			DB 		3						; SCENE_LEVEL_NUMBER
-.background_animation:	DW_BE	update_electricity_animation	; SCENE_ANIMATION_ROUTINE
+.background_animation:	DW_BE	electricity_animation	; SCENE_ANIMATION_ROUTINE
 .next_level_trigger:	DW_BE	check_door_collision	; SCENE_NEXT_LEVEL_TRIGGER
