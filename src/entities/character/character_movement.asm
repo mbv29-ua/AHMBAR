@@ -132,6 +132,16 @@ update_character_velocities::
         push af
         ld a, 0
         ld [wPlayerDirection], a
+
+        ;; Change tile direction 
+        ld h, CMP_SPRIT_H
+        ld l, SPR_ATTR
+        set E_BIT_FLIP_X, [hl]
+
+        ;; Update walking counter (needed for animation)
+        ld h, CMP_CONT_H
+        ld l, COUNT_MOVING_COOLDOWN
+        dec [hl]
         pop af
 
     .move_right:
@@ -142,6 +152,15 @@ update_character_velocities::
         ld a, 1
         ld [wPlayerDirection], a
 
+        ;; Change tile direction 
+        ld h, CMP_SPRIT_H
+        ld l, SPR_ATTR
+        res E_BIT_FLIP_X, [hl]
+
+        ;; Update walking counter (needed for animation)
+        ld h, CMP_CONT_H
+        ld l, COUNT_MOVING_COOLDOWN
+        dec [hl]
 .end:
     ret
 

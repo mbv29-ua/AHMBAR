@@ -36,6 +36,7 @@ load_scene::
     call load_numbers
     call load_heart_tiles
     call load_ambar_tile
+    call load_player_tiles
     call load_cowboy_sprites
     call load_bullet_sprites
     call load_frog_tiles
@@ -210,6 +211,59 @@ set_initial_scroll::
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine corrects the position of the
+;; entities when there is a change of the scroll.
+;;
+;; INPUT:
+;;      E: Entity index
+;; OUTPUT:
+;;      -
+;; WARNING: Destroys A.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+correct_entity_position_when_scroll_resets::
+    ld l, e
+    call get_entity_sprite
+    push de
+    push hl
+
+    ;; Compensate current scroll Y
+    ld a, b
+    ld hl, rSCY
+    add [hl]
+    ld b, a
+
+    ;; Compensate current scroll X
+    ld a, c
+    ld hl, rSCX
+    add [hl]
+    ld c, a
+
+    call get_current_scene_info_address ; in hl
+
+    ;; Compensate initial scroll Y
+    ld a, b
+    ld d, 0
+    ld e, SCENE_STARTING_SCREEN_SCROLL_Y
+    add hl, de
+    sub [hl]
+    ld b, a
+
+    ;; Compensate initial scroll X
+    ld a, c
+    ld e, (SCENE_STARTING_SCREEN_SCROLL_X-SCENE_STARTING_SCREEN_SCROLL_Y)
+    add hl, de
+    sub [hl]
+    ld c, a
+
+    ;; We set the corrected values
+    pop hl
+    pop de
+    call set_entity_sprite
+    ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; This routine initializes the player using 
 ;; the current scene information
 ;;
@@ -248,7 +302,7 @@ set_player_initial_position::
     add hl, de
     ld c, [hl]  ; X coordinate
 
-    ld d, TILE_COWBOY ; tile
+    ld d, PLAYER_WALKING_TILE_2 ; tile
     ld e, 0           ; tile properties
     ld l, 0
     call set_entity_sprite
@@ -303,8 +357,10 @@ set_player_initial_position::
 
 restore_player_position::
     call wait_vblank
-    call set_player_initial_position
+    ld hl, correct_entity_position_when_scroll_resets
+    call man_entity_for_each
     call set_initial_scroll
+    call set_player_initial_position
     ret
 
 
