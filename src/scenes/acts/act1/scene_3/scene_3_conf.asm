@@ -14,7 +14,7 @@ scene_3::
 .tilemap:				DW_BE 	Level3_Map				; SCENE_TILEMAP ; Se almacen como HIGH/LOW
 .goal_y: 				DB 		0						; SCENE_GOAL_POINT_X
 .goal_x:				DB 		0						; SCENE_GOAL_POINT_Y
-.next_scene:			DW_BE 	act_2_scene_1			; SCENE_NEXT_SCENE
+.next_scene:			DW_BE 	scene_4			; SCENE_NEXT_SCENE
 .scene_enemy_spawner:	DW_BE 	scene_3_enemy_spawner	; SCENE_ENEMY_SPAWNER
 .scene_collectible_spawner: DW_BE	0	; SCENE_COLLECTIBLE_SPAWNER
 .act_number:			DB 		1						; SCENE_ACT_NUMBER
