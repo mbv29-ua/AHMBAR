@@ -16,8 +16,6 @@ INCLUDE "system/ambar_macros.inc"
 ;; WARNING: Destroys A, BC, DE and HL
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 scene_1_enemy_spawner::
-	call load_darkfrog_tiles
-
 	ld  b, $78
 	ld  c, $40
 	ld hl, jumping_frog

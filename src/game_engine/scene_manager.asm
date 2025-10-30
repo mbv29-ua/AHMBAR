@@ -41,6 +41,7 @@ load_scene::
     call load_bullet_sprites
     call load_frog_tiles
     call load_fly_tiles
+    call load_darkfrog_tiles
     call load_desintegration_tiles
 
     call load_tileset
@@ -334,7 +335,7 @@ set_player_initial_position::
     res PHY_FLAG_JUMPING, [hl]
 
     ld hl, wPlayerDirection
-    set 0, [hl]
+    ld [hl], 1
 
     ;; Player bounding box: Escribir con constantes
     ld b, PLAYER_HEIGHT
