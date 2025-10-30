@@ -1,7 +1,7 @@
 SECTION "Player Variables", WRAM0
 
 wPlayerDirection::  DS 1  ; 0 = izquierda, 1 = derecha
-coolDown::          DS 1
+wShootingCooldown::          DS 1
 
 ; HUD Variables
 wPlayerLives::      DS 1  ; Vidas del jugador (0-4)

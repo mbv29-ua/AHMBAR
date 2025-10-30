@@ -81,7 +81,7 @@ update_character_velocities::
     ;; ------------------------------
     ld l, COUNT_JUMPING_COOLDOWN
     ld h, CMP_CONT_H
-    ld [hl], 30
+    ld [hl], 10
 
     ;; ------------------------------
     ;; Aplicamos velocidad de salto

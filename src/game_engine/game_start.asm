@@ -31,8 +31,8 @@ start_game::
 	ld hl, music_game
 	call hUGE_init
 
-	; ld hl, scene_1
-    ld hl, act_2_scene_3
+	ld hl, scene_1
+    ;ld hl, act_2_scene_3
 	call load_scene
 	ret
 
@@ -67,6 +67,7 @@ set_initial_memory_values::
     ; Limpiar flags
     xor a
     ld [wHUDNeedsUpdate], a
+    ld [wShootingCooldown], a ; Inicializar cooldown de disparo a 0
     ld [wSpikeCooldown], a  ; Inicializar cooldown de picas a 0
     ;ld [wPowerupDoubleJump], a
     

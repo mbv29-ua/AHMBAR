@@ -10,6 +10,17 @@ wElectricityAnimation:: DS 1
 SECTION "Electricity tile animation", ROM0
 
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine updates the electricity tiles
+;; animation.
+;;
+;; INPUT:
+;;      -
+;; OUTPUT:
+;;      -
+;; WARNING: Destroys  A, BC, DE and HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 update_electricity_animation::
     ld hl, wElectricityAnimation
     inc [hl]
