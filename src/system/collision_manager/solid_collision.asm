@@ -101,7 +101,8 @@ check_entity_collision_right:: ;; (Y,X+7) and (Y+7,X+7)
 ;;; Destroys: A, BC and HL
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-check_entity_collision_down:: ;; (Y+7,X) and (Y+7,X+7)
+check_entity_collision_down:: ;; old: (Y+7,X) and (Y+7,X+7)
+                              ;; now: (Y+7,X+1) and (Y+7,X+6)
     ; Check bottom edge of entity sprite (8x8 tile)
 
     ; Get entity Y position
@@ -113,6 +114,7 @@ check_entity_collision_down:: ;; (Y+7,X) and (Y+7,X+7)
     ; Get entity X position
     ld hl, temporal_new_x_position
     ld c, [hl]          ; C = entity X
+    inc c               ; C = X+1 position to check
 
     call get_tile_at_position_y_x
     call is_tile_solid
@@ -129,8 +131,8 @@ check_entity_collision_down:: ;; (Y+7,X) and (Y+7,X+7)
     ; Get entity X position
     ld hl, temporal_new_x_position
     ld a, [hl]          ; C = entity X
-    add 7               ; X + 7 (right part of sprite)
-    ld c, a             ; C = X+7 position to check
+    add 6               ; X + 7 (right part of sprite)
+    ld c, a             ; C = X+6 position to check
 
     call get_tile_at_position_y_x
     call is_tile_solid
@@ -149,8 +151,8 @@ check_entity_collision_down:: ;; (Y+7,X) and (Y+7,X+7)
 ;;; Destroys: A, BC and HL
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-check_entity_collision_up:: ;; (Y,X) and (Y,X+7)
-
+check_entity_collision_up::  ;; old: (Y,X) and (Y,X+7)
+                             ;; now: (Y,X+1) and (Y,X+6)
     ; Get entity Y position
     ld hl, temporal_new_y_position
     ld b, [hl]          ; B = Y position
@@ -158,6 +160,7 @@ check_entity_collision_up:: ;; (Y,X) and (Y,X+7)
     ; Get entity X position
     ld hl, temporal_new_x_position
     ld c, [hl]          ; C = entity X
+    inc c               ; C = X+1 position to check
 
     call get_tile_at_position_y_x
     call is_tile_solid
@@ -170,8 +173,8 @@ check_entity_collision_up:: ;; (Y,X) and (Y,X+7)
     ; Get entity X position
     ld hl, temporal_new_x_position
     ld a, [hl]          ; C = entity X
-    add 7               ; X + 7 (right part of sprite)
-    ld c, a             ; C = X+7 position to check
+    add 6               ; X + 6 (right part of sprite)
+    ld c, a             ; C = X+6 position to check
 
     call get_tile_at_position_y_x
     call is_tile_solid

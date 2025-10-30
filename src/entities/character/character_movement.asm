@@ -40,7 +40,7 @@ update_character_velocities::
     ld hl, wCounterJump
     ld [hl], 0                ; <-- reseteamos el contador
 .skipReset:
-    ld a, [PRESSED_BUTTONS]
+    ld a, [JUST_PRESSED_BUTTONS]
     ld h, CMP_PHYS_H
     ld l, 0
 
