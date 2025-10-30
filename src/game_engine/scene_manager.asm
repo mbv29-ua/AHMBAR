@@ -35,6 +35,7 @@ load_scene::
     ; Load assets
     call load_numbers
     call load_heart_tiles
+    call load_ambar_tile
     call load_cowboy_sprites
     call load_bullet_sprites
     call load_frog_tiles
@@ -47,6 +48,7 @@ load_scene::
     call init_player
     ; call init_enemigos_prueba
     call init_enemies
+    call init_collectibles
     call init_palettes_by_default
 
     ; Load scene variables
@@ -187,7 +189,7 @@ load_level_map::
 ;;
 ;; INPUT:
 ;;		-
-;; OUTPUT:
+;; OUTPUT: 
 ;;		-	
 ;; WARNING: Destroys A, DE and HL
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -366,6 +368,21 @@ init_enemies::
     call helper_call_hl
     ret
 
+init_collectibles::
+    call get_current_scene_info_address ; in hl
+    ld bc, SCENE_COLLECTIBLE_SPAWNER
+    add hl, bc
+    ld a, [hl+]
+    ld l, [hl]
+    ld h, a
+
+    ; Check for null pointer
+    ld a, h
+    or l
+    ret z ; if hl is 0, return
+
+    call helper_call_hl
+    ret
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; This routine returns the address of the tilemap
