@@ -15,6 +15,7 @@ main::
     ;; Routines accessing the VRAM must be placed here (still VBlank)
     ; call render_hud
     ; call update_fire_animation      ; Animate fire tiles during VBlank
+    call update_player_sprite
     call process_scene_background_animation
     call update_hud_if_needed       ; Update HUD if flag is set (during VBlank)
     call manage_death_animations

@@ -36,6 +36,7 @@ load_scene::
     call load_numbers
     call load_heart_tiles
     call load_ambar_tile
+    call load_player_tiles
     call load_cowboy_sprites
     call load_bullet_sprites
     call load_frog_tiles
@@ -301,7 +302,7 @@ set_player_initial_position::
     add hl, de
     ld c, [hl]  ; X coordinate
 
-    ld d, TILE_COWBOY ; tile
+    ld d, PLAYER_WALKING_TILE_2 ; tile
     ld e, 0           ; tile properties
     ld l, 0
     call set_entity_sprite
