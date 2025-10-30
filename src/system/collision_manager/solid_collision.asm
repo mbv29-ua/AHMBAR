@@ -117,6 +117,8 @@ check_entity_collision_down:: ;; (Y+7,X) and (Y+7,X+7)
     call get_tile_at_position_y_x
     call is_tile_solid
     ret z               ; Return Z=1 if solid collision found
+    call is_tile_platform
+    ret z               ; Return Z=1 if solid collision found
 
     ; Left OK, now check RIGHT side (X+7)
     ld hl, temporal_new_y_position
@@ -132,6 +134,8 @@ check_entity_collision_down:: ;; (Y+7,X) and (Y+7,X+7)
 
     call get_tile_at_position_y_x
     call is_tile_solid
+    ret z               ; Return Z=1 if solid collision found
+    call is_tile_platform
     ret                 ; Return result from second check
 
 

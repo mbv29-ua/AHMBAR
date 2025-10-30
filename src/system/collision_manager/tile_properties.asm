@@ -16,6 +16,8 @@ SECTION "Tile Properties Functions", ROM0
 is_tile_solid::
     and TILE_GROUP_MASK
     cp SOLID_TILE
+    ret z
+    cp SOLID_TILE_2
     ret
 
 
@@ -69,3 +71,20 @@ is_tile_collectible::
     cp COLLECTIBLE_TILE
     ret
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; is_tile_platform
+;;; Checks if a tile blocks movement only in down
+;;; direction
+;;;
+;;; Input:
+;;;   A = Tile ID
+;;; Output:
+;;;   Z flag: z=1 means it is platform, z=0 means it is not
+;;;   A = Property flags (preserved for chaining)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+is_tile_platform::
+    and TILE_GROUP_MASK
+    cp PLATFORM_TILE
+    ret
