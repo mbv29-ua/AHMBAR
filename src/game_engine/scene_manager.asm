@@ -57,6 +57,7 @@ load_scene::
     ;call init_counterload_scene
     call init_tile_animation        ; Initialize fire animation system
     call init_hud                   ; Initialize HUD (lives & bullets)
+    call init_hud_score_display ; Initialize and display the score
     
     ; Turn on the screen
     call enable_vblank_interrupts

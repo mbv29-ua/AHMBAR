@@ -341,11 +341,12 @@ update_hud_if_needed::
     ; Limpiar flag
     xor a
     ld [wHUDNeedsUpdate], a
-
-    call wait_vblank
-
     ; Actualizar HUD completo
+
+    di
+    call wait_vblank
     call render_hud
+    ei
     ret
 
 
@@ -489,4 +490,11 @@ render_act_level::
     add $70  ; Convertir número a tile
     ld [hl], a
 
+    ret
+
+
+
+hud_needs_update::
+    ld a, 1
+    ld [wHUDNeedsUpdate], a
     ret

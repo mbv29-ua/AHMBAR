@@ -8,7 +8,7 @@ main::
     ; call scene_title_screen --> fet por Jaime (Borrarlo)
     call scene_intro_screen
     call start_game
-    ; call reset_score_to_zero ; Reset score to 0 at game start
+    call reset_score_to_zero ; Reset score to 0 at game start
     ; call init_hud_score_display ; Initialize and display the score
 
     ; call wait_vblank
