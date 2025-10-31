@@ -1,9 +1,8 @@
 INCLUDE "constants.inc"
-INCLUDE "entities/entities.inc"
 
-SECTION "Act 2 Scene 2", ROM0
+SECTION "Act 3 Scene 3", ROM0
 
-act_2_scene_2_intro_dialog::
+act_3_scene_3_intro_dialog::
 	di
     call set_black_palette
     ld hl, act_2_scene_2_dialog
@@ -12,14 +11,9 @@ act_2_scene_2_intro_dialog::
     call wait_until_A_pressed
     ret
 
-act_2_scene_2_enemy_spawner::
+act_3_scene_3_enemy_spawner::
 	ld  b, $78
 	ld  c, $40
-	ld hl, jumping_frog
-	call enemy_spawn
-
-	ld  b, $90
-	ld  c, $60
 	ld hl, jumping_frog
 	call enemy_spawn
 
@@ -32,12 +26,4 @@ act_2_scene_2_enemy_spawner::
 	ld  c, $14
 	ld hl, basic_fly
 	call enemy_spawn
-	ret
-
-INCLUDE "system/ambar_macros.inc"
-
-init_ambars_level2::
-	SPAWN_AMBAR_AT_TILE 14, 15
-    SPAWN_AMBAR_AT_TILE 7, 11
-    SPAWN_AMBAR_AT_TILE 25, 12
 	ret
