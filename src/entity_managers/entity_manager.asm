@@ -150,44 +150,6 @@ man_entity_free::
 	call set_last_not_free
 	ret
 
-;; Necesito direccion que quiero borrar
-;; Buscar sentinel quitar el bit de sentinel y ponerselo al anterior del sentinel es decir, restar 4 para pasar a la entidad anterior
-
-;	ld d, CMP_SPRIT_H
-;	ld e, l  
-;	push de
-;	call man_find_sentinel ;; hl = address con sentinel
-;	ld h, CMP_ATTR_H
-;	res E_BIT_SENTINEL, [hl] 
-;
-;	ld h, CMP_SPRIT_H
-	;
-;	ld c,  8
-;
-;	pop de
-;	.loop:
-;	push hl 
-;	push de
-;	ld b, 4
-;
-;	call memcpy_256
-;	pop de 
-;	pop hl 
-;
-;	inc h 
-;	inc d 
-;	dec c 
-;	jr nz, .loop 
-;
-;	call reset_entity_sprite
-;
-;	ld h, CMP_ATTR_H
-;	ld a, l 
-;	sub 4 
-;	ld l, a 
-;	set E_BIT_SENTINEL, [hl]
-;
-;	ret
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; This routine processed the routine specified
@@ -271,7 +233,6 @@ man_entity_for_each_type::
 			jr .loop
 
 
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; This routine processes a routine only for those
 ;; entities identified as movable entities.
@@ -288,51 +249,6 @@ man_entity_for_each_movable::
 	ld c, INTERACTION_FLAGS
 	call man_entity_for_each_type
 	ret
-
-;	ld de, ATTR_BASE
-;	ld a, [de]
-;	cp ENTITY_CMP_SENTINEL
-;	ret z 
-;
-;	.loop
-;
-;	bit E_BIT_SENTINEL, a 
-;	jr nz, .process_and_exit
-;
-;	bit E_BIT_MOVABLE, a
-;	jr z, .continue
-;
-;	push af
-;	push de
-;	push hl
-;	call helper_call_hl
-;	.return
-;	pop hl
-;	pop de
-;	pop af
-;
-;
-;	.continue
-;	ld a, e 
-;	add ATTR_SIZE
-;	ld e, a 
-	;
-;	jr .loop
-;
-;	.process_and_exit:
-;	bit E_BIT_MOVABLE, a
-;	jr z, .exit
-;	push af
-;	push de
-;	push hl
-;	call helper_call_hl
-;	pop hl
-;	pop de
-;	pop af	
-;
-;	.exit
-;		ret
-
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -351,35 +267,6 @@ man_entity_for_each_enemy::
 	ld c, ATT_ENTITY_FLAGS
 	call man_entity_for_each_type
 	ret
-
-;man_entity_for_each_enemy::
-	;
-;	ld de, ATTR_BASE
-;	ld a, [de]
-;	cp ENTITY_CMP_SENTINEL
-;	ret z 
-;
-;	.loop		
-;		ld a, [de]
-;		bit E_BIT_ENEMY, a
-;		jr z, .next
-;
-;		push af
-;		push de
-;		push hl
-;		call helper_call_hl
-;		pop hl
-;		pop de
-;		pop af	
-;
-;		.next:
-;		bit E_BIT_SENTINEL, a 
-;		ret nz
-;
-;		ld a, e 
-;		add ATTR_SIZE
-;		ld e, a 
-;		jr .loop
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -417,35 +304,6 @@ man_entity_for_each_intelligent_enemy::
 	call man_entity_for_each_type
 	ret
 
-;	ld de, ATTR_BASE
-;	ld a, [de]
-;	cp ENTITY_CMP_SENTINEL
-;	ret z 
-;
-;	.loop		
-;		ld a, [de]
-;		bit E_BIT_INTELLIGENT_ENEMY, a
-;		jr z, .next
-;
-;		push af
-;		push bc
-;		push de
-;		push hl
-;		call helper_call_hl
-;		pop hl
-;		pop de
-;		pop bc
-;		pop af	
-;
-;		.next:
-;		bit E_BIT_SENTINEL, a 
-;		ret nz
-;
-;		ld a, e 
-;		add ATTR_SIZE
-;		ld e, a 
-;		jr .loop
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; This routine processes a routine only for those
@@ -464,39 +322,6 @@ man_entity_for_each_gravity::
 	call man_entity_for_each_type
 	ret
 
-;	ld de, ATTR_BASE
-;	ld a, [de]
-;	cp ENTITY_CMP_SENTINEL
-;	ret z 
-;
-;	.loop:
-;		ld b, 0
-;		ld c, INTERACTION_FLAGS
-;		call add_bc_de
-;
-;		ld a, [bc]				; BC is the address of the INTERACTION_FLAGS
-;		bit E_BIT_GRAVITY, a
-;		jr z, .next
-;
-;		push af
-;		push de
-;		push hl
-;		call helper_call_hl
-;		pop hl
-;		pop de
-;		pop af	
-;
-;		.next:
-;		ld a, [de]				; DE is the address of the ATT_ENTITY_FLAGS
-;		bit E_BIT_SENTINEL, a 
-;		ret nz
-;
-;		ld a, e 
-;		add ATTR_SIZE
-;		ld e, a 
-;		jr .loop
-
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; This routine processes a routine only for those
@@ -514,44 +339,6 @@ man_entity_for_each_not_living_out_of_screen::
 	ld c, INTERACTION_FLAGS
 	call man_entity_for_each_type
 	ret
-
-;	ld de, ATTR_BASE
-;	ld a, [de]
-;	cp ENTITY_CMP_SENTINEL
-;	ret z 
-;
-;	.loop:
-;		ld b, 0
-;		ld c, INTERACTION_FLAGS
-;		call add_bc_de
-;
-;		ld a, [bc]				; BC is the address of the INTERACTION_FLAGS
-;		bit E_BIT_DIES_OUT_OF_SCREEN, a
-;		jr nz, .next
-;
-;		push af
-;		push de
-;		push hl
-;		call helper_call_hl
-;		pop hl
-;		pop de
-;		pop af	
-;
-;		.next:
-;		ld a, [de]				; DE is the address of the ATT_ENTITY_FLAGS
-;		bit E_BIT_SENTINEL, a 
-;		ret nz
-;
-;		;; Estas tres lineas deberia hacerlas el free
-;		ld a, [has_been_freed]
-;		or a ; We check if it is zero
-;		jr z, .loop ; if it has been freed, then we do not increase the index
-;
-;		ld a, e 
-;		add ATTR_SIZE
-;		ld e, a 
-;		jr .loop
-
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -588,6 +375,7 @@ man_entity_for_each_dying::
 	ld c, ATT_ENTITY_FLAGS
 	call man_entity_for_each_type
 	ret
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; This routine processes a routine only for those

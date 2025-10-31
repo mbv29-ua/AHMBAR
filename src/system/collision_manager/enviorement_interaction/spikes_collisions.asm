@@ -59,12 +59,10 @@ spike_damage::
 
 .after_damage:
     ; Marcar que HUD necesita actualizarse
-    ld a, 1
-    ld [wHUDNeedsUpdate], a
+    call hud_needs_update
 
     ; Respawn en posición anterior (restaurar posición guardada)
     call fade_to_black
-
     call restore_player_position
     call fade_to_original
     

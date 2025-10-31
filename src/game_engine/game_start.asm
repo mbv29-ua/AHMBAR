@@ -31,9 +31,9 @@ start_game::
 	ld hl, music_game
 	call hUGE_init
 
-	ld hl, scene_1
-    ; ld hl, act_2_scene_1
-    ; ld hl, act_2_final_scene
+	; ld hl, scene_1
+    ld hl, act_2_scene_1
+    ;ld hl, act_2_final_scene
 	call load_scene
 	ret
 
@@ -60,6 +60,8 @@ set_initial_memory_values::
 
     ld a, MAX_BULLETS
     ld [wPlayerBullets], a
+
+    call reset_score_to_zero ; Reset score to 0 at game start
 
     ; Resetear nivel a 1
     ld a, 1

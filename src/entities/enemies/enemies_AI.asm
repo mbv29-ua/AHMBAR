@@ -177,6 +177,8 @@ AI_throwing_rocks::
 	ld c, a
 	ld hl, falling_rock
 	call enemy_spawn
+	ld hl, wNumberOfEnemies
+	dec [hl] ; In this way, rocks do not count in the enemy counter
 	pop de
 	
 	; Starts cooldown

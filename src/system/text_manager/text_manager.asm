@@ -19,6 +19,7 @@ SECTION "Dialogs manager", ROM0
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 clean_line::
+	call wait_vblank
    ld  b, TEXTLINE_SIZE
    call memreset_256
    ret
@@ -136,6 +137,7 @@ write_short_dialog:
 write_extended_dialog:
 	.loop:
 		ld de, THIRD_DIALOG_LINE
+		di
 		call write_line ; Outputs ENDLINE or ENDTEXT in A
 		cp ENDTEXT
 		ret z

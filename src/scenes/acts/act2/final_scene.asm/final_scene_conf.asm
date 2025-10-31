@@ -14,10 +14,11 @@ act_2_final_scene::
 .tilemap:				DW_BE 	act_2_final_scene_tilemap	; SCENE_TILEMAP ; Se almacen como HIGH/LOW
 .goal_y: 				DB 		0						; SCENE_GOAL_POINT_X
 .goal_x:				DB 		0						; SCENE_GOAL_POINT_Y
-.next_scene:			DW_BE 	scene_1			; SCENE_NEXT_SCENE
+.next_scene:			DW_BE 	scene_1					; SCENE_NEXT_SCENE
 .scene_enemy_spawner:	DW_BE 	act_2_final_scene_enemy_spawner	; SCENE_ENEMY_SPAWNER
-.scene_collectible_spawner: DW_BE	0	; SCENE_COLLECTIBLE_SPAWNER
+.scene_collectible_spawner: DW_BE	0					; SCENE_COLLECTIBLE_SPAWNER
 .act_number:			DB 		2						; SCENE_ACT_NUMBER
 .level_number:			DB 		1						; SCENE_LEVEL_NUMBER
 .background_animation:	DW_BE	electricity_animation	; SCENE_ANIMATION_ROUTINE
 .next_level_trigger:	DW_BE	no_enemies_in_scene		; SCENE_NEXT_LEVEL_TRIGGER
+.intro_scene:			DW_BE	act_2_final_scene_intro_dialog ; SCENE_INTRO_DIALOG

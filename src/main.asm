@@ -6,12 +6,11 @@ SECTION "Entry Point", ROM0[$150]
 
 main::
     ; call scene_title_screen --> fet por Jaime (Borrarlo)
-    call scene_intro_screen
+    ; call scene_intro_screen
     call start_game
-    call reset_score_to_zero ; Reset score to 0 at game start
     ; call init_hud_score_display ; Initialize and display the score
 
-    ; call wait_vblank
+call wait_vblank ; Main starts working in the VRAM
 .main_loop:
 
     ;; Routines accessing the VRAM must be placed here (still VBlank)
@@ -26,7 +25,7 @@ main::
     call hUGE_dosound               ; Update hUGE music driver
 
     call generate_random_number
-    call man_entity_count_number_of_enemies
+    ;; call man_entity_count_number_of_enemies <- not efficient
 
     call update_spike_cooldown      ; Decrement spike damage cooldown
     call read_pad
@@ -47,13 +46,9 @@ main::
     call check_ambar_collisions
     call check_all_bullets_wall_collision  ; Destroy bullets hitting walls
     call check_all_bullets_enemy_collision ; Check bullet-enemy collisions
-
     call update_all_entities_positions
     call clamp_player_position
     call scroll_manager
-
-    ;call check_door_collision       ; Check door tiles ($C0-$C3) to trigger next level
-    call check_next_scene_trigger
     call check_deadly_collision     ; Check deadly tiles (spikes) to damage player
     call check_enemy_collision      ; Check collision with enemies
     call check_bullet_player_collisions
@@ -61,8 +56,8 @@ main::
     call update_bullet_system
 
     call destroy_dead_enemies
-    ; call kill_enemies_if_life_is_0
     call check_lives
+    call check_next_scene_trigger
     halt
 
     jp .main_loop

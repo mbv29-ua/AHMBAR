@@ -130,3 +130,46 @@ DB " Miguel Beltra", ENDLINE
 DB "Jaime Hernandez", ENDLINE
 DB "", ENDLINE
 DB "   Press A", ENDTEXT
+
+
+
+
+
+;;; ACT 2 Dialogs ;;;
+
+act_2_scene_1_dialog::
+	DB "Oh, Toshokan, my", 		ENDLINE
+	DB "city. Once", 			ENDLINE
+	DB "prosperous and", 		ENDLINE
+	DB "rich, now only", 		ENDLINE
+	DB "ruins remain of", 		ENDLINE
+	DB "what it once was.",		ENDTEXT
+
+act_2_scene_2_dialog::
+	DB "The old station.", 		ENDLINE
+	DB "There is too much", 	ENDLINE
+	DB "noise. I would", 		ENDLINE
+	DB "better go clean", 		ENDLINE
+	DB "it up.",				ENDTEXT
+
+act_2_scene_3_dialog::
+	DB "I know a shortcut.",	ENDLINE
+	DB "They call it the",		ENDLINE
+	DB "Leap of Death. I",		ENDLINE
+	DB "hope it doesn not",		ENDLINE
+	DB "live up to its",		ENDLINE
+	DB "name today.",			ENDTEXT
+
+act_2_scene_4_dialog::
+	DB "The electrical",		ENDLINE
+	DB "installations",			ENDLINE
+	DB "this place should",		ENDLINE
+	DB "have been inspected",	ENDLINE
+	DB "a long time ago.",		ENDLINE
+	DB "It is a death trap.",	ENDTEXT
+
+act_2_final_scene_dialog::
+	DB "What the hell is",		ENDLINE
+	DB "that monster!",			ENDLINE
+	DB "Ahmbar corrupts",		ENDLINE
+	DB "all living forms.",		ENDTEXT

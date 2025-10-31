@@ -23,7 +23,8 @@ SECTION "Scene manager", ROM0
 
 load_scene::
     call save_current_scene_info_address
-    
+    call play_intro_scene_dialog
+
     ; Turn off the screen
     call screen_off
 
@@ -37,7 +38,7 @@ load_scene::
     call load_heart_tiles
     call load_ambar_tile
     call load_player_tiles
-    call load_cowboy_sprites
+    ; call load_cowboy_sprites
     call load_bullet_sprites
     call load_frog_tiles
     call load_fly_tiles
@@ -49,12 +50,15 @@ load_scene::
     call set_initial_scroll
     call init_player
     ; call init_enemigos_prueba
+
+    ld hl, wNumberOfEnemies
+    ld [hl], 0
     call init_enemies
     call init_collectibles
     call init_palettes_by_default
 
     ; Load scene variables
-    ;call init_counterload_scene
+    ; call init_counterload_scene
     call init_tile_animation        ; Initialize fire animation system
     call init_hud                   ; Initialize HUD (lives & bullets)
     call init_hud_score_display ; Initialize and display the score
@@ -508,3 +512,38 @@ check_next_scene_trigger::
     ld h, a
     call helper_call_hl
     ret
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine loads the intro dialog of the
+;; scene specified at the current scene information
+;;
+;; INPUT:
+;;      -
+;; OUTPUT:
+;;      -   
+;; WARNING: Destroys  A, BC, DE and HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+play_intro_scene_dialog::
+
+    call screen_off
+    call clean_OAM
+    call clean_bg_map
+    call load_fonts
+    call screen_hud_off
+    call reset_scroll
+    call screen_on
+
+    call get_current_scene_info_address ; in hl
+    ld bc, SCENE_INTRO_DIALOG
+    add hl, bc
+    ld a, [hl+]
+    ld l, [hl]
+    ld h, a
+
+    call helper_call_hl
+    ret
+
+    

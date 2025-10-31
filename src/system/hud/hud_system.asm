@@ -244,7 +244,7 @@ render_bullets::
     jr z, .empty_bullet
 
     ; Mostrar bala activa
-    ld a, TILE_BULLET
+    ld a, TILE_BULLET_HUD
     ld [hl+], a
     dec b               ; Restar 1 bala
     jr .next_bullet
@@ -278,10 +278,9 @@ lose_life::
     dec [hl]
 
     ; Marcar que HUD necesita actualizarse
-    push hl
-    ld a, 1
-    ld [wHUDNeedsUpdate], a
-    pop hl
+    ;push hl
+    call hud_needs_update
+    ;pop hl
 
     ret
 
@@ -304,8 +303,7 @@ use_bullet::
     dec [hl]
 
     ; Marcar que HUD necesita actualizarse (no renderizar aquí por VRAM timing)
-    ld a, 1
-    ld [wHUDNeedsUpdate], a
+    call hud_needs_update
 
     ; Retornar con zero flag cleared (hay balas)
     or a, 1
@@ -322,8 +320,7 @@ reload_bullets::
     ld [wPlayerBullets], a
 
     ; Marcar que HUD necesita actualizarse
-    ld a, 1
-    ld [wHUDNeedsUpdate], a
+    call hud_needs_update
     ret
 
 

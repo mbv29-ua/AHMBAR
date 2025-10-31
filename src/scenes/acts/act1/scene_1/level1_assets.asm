@@ -2,7 +2,7 @@ INCLUDE "constants.inc"
 INCLUDE "entities/entities.inc"
 
 
-SECTION "Level 1 Tiles", ROMX
+SECTION "Level 1 Tiles", ROM0
 
 INCLUDE "system/ambar_macros.inc"
 

@@ -2,6 +2,15 @@ INCLUDE "constants.inc"
 
 SECTION "Act 2 Scene 4", ROM0
 
+act_2_scene_4_intro_dialog::
+	di
+    call set_black_palette
+    ld hl, act_2_scene_4_dialog
+    call write_super_extended_dialog
+    ei
+    call wait_until_A_pressed
+    ret
+
 act_2_scene_4_enemy_spawner::
 	ld  b, $78
 	ld  c, $40

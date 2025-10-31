@@ -1,8 +1,18 @@
 INCLUDE "constants.inc"
 INCLUDE "entities/entities.inc"
+INCLUDE "system/hud/hud_constants.inc"
 
 
 SECTION "Act 2 Final Scene", ROM0
+
+act_2_final_scene_intro_dialog::
+    di
+    call set_black_palette
+    ld hl, act_2_final_scene_dialog
+    call write_super_extended_dialog
+    ei
+    call wait_until_A_pressed
+    ret
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; This routine spawns the enemies of the final
@@ -46,7 +56,7 @@ bullet_spawn::
 spawner_set_bullet_sprite::
     push bc
     
-    ld d, $9 ; bullet tile index
+    ld d, TILE_BULLET_BOX ; bullet tile index
     ld e, 0   ; Sprite attributes
 
     ld l, a ; entity index
@@ -125,39 +135,39 @@ check_bullet_player_collisions::
     ld hl, check_player_bullet_collision
     call man_entity_for_each_bullet_player
 
-    ld hl, clean_collected_bullet
-    call man_entity_for_each_bullet_player
+    ;ld hl, clean_collected_bullet
+    ;call man_entity_for_each_bullet_player
     ret
 
 collect_bullet::
     
     call man_entity_free
-    call clean_collected_bullet
+    ;call clean_collected_bullet
 
-	ld a, [wPlayerBullets]
-	add a, 5
-	ld [wPlayerBullets], a
+	ld hl, wPlayerBullets
+	ld [hl], MAX_BULLETS
+    call hud_needs_update
 
     ret
 
-clean_collected_bullet::
-    ld h, CMP_ATTR_H
-	ld l, e
-	bit E_BIT_DYING, [hl]	
-	ret z
-
-	ld h, CMP_CONT_H
-	ld a, e
-	add COUNT_DEATH_CLOCK
-	ld l, a
-	ld a, [hl]
-
-    ld l, e
-	call man_entity_free
-	
-    call desintegration_animation
-
-	ret
+;clean_collected_bullet::
+;   ld h, CMP_ATTR_H
+;	ld l, e
+;	bit E_BIT_DYING, [hl]	
+;	ret z
+;
+;	ld h, CMP_CONT_H
+;	ld a, e
+;	add COUNT_DEATH_CLOCK
+;	ld l, a
+;	ld a, [hl]
+;
+;    ld l, e
+;	call man_entity_free
+;	
+;   call desintegration_animation
+;
+;	ret
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Set death clock to an enemy counter and mark it
@@ -166,14 +176,14 @@ clean_collected_bullet::
 ;; Input: E = enemy index
 ;; Destroys: HL
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-set_bullet_clock::
-	ld h, CMP_ATTR_H
-	ld l, e
-	set E_BIT_DYING, [hl]
-
-	ld h, CMP_CONT_H
-	ld a, e
-	add COUNT_DEATH_CLOCK
-	ld l, a
-	ld [hl], DEATH_CLOCK_START_VALUE
-	ret
+;set_bullet_clock::
+;	ld h, CMP_ATTR_H
+;	ld l, e
+;	set E_BIT_DYING, [hl]
+;
+;	ld h, CMP_CONT_H
+;	ld a, e
+;	add COUNT_DEATH_CLOCK
+;	ld l, a
+;	ld [hl], DEATH_CLOCK_START_VALUE
+;	ret
