@@ -7,7 +7,7 @@ SECTION "Entry Point", ROM0[$150]
 main::
     ; call scene_title_screen --> fet por Jaime (Borrarlo)
     
-    call scene_intro_screen
+    ;call scene_intro_screen
     call start_game
     ; call init_hud_score_display ; Initialize and display the score
 
