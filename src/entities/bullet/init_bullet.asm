@@ -39,6 +39,7 @@ load_bullet_sprites::
 init_bullet::
     call man_entity_alloc ; Returns l=entity index
 
+    ld e, 0   ; tile properties
     ;; Change by some flag
     ld a, [wPlayerDirection]
     cp 1
@@ -47,6 +48,7 @@ init_bullet::
     jr z, .right
     .left
         sub 8
+        set E_BIT_FLIP_X, e
         jr .skip
     .right
         add 8
@@ -60,7 +62,6 @@ init_bullet::
     ld b, a
 
 	ld d, TILE_BULLET_SMALL ; tile
-	ld e, 0   ; tile properties
 	call set_entity_sprite
 
     ld a, [wPlayerDirection]
