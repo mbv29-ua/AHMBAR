@@ -37,7 +37,7 @@ load_scene::
     call load_heart_tiles
     call load_ambar_tile
     call load_player_tiles
-    call load_cowboy_sprites
+    ; call load_cowboy_sprites
     call load_bullet_sprites
     call load_frog_tiles
     call load_fly_tiles
@@ -54,9 +54,10 @@ load_scene::
     call init_palettes_by_default
 
     ; Load scene variables
-    ;call init_counterload_scene
+    ; call init_counterload_scene
     call init_tile_animation        ; Initialize fire animation system
     call init_hud                   ; Initialize HUD (lives & bullets)
+    call init_hud_score_display ; Initialize and display the score
     
     ; Turn on the screen
     call enable_vblank_interrupts
@@ -360,6 +361,7 @@ restore_player_position::
     call wait_vblank
     ld hl, correct_entity_position_when_scroll_resets
     call man_entity_for_each
+    call update_hud_if_needed
     call set_initial_scroll
     call set_player_initial_position
     ret

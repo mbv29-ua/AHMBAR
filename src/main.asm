@@ -8,6 +8,7 @@ main::
     ; call scene_title_screen --> fet por Jaime (Borrarlo)
     ; call scene_intro_screen
     call start_game
+    ; call init_hud_score_display ; Initialize and display the score
 
     ; call wait_vblank
 .main_loop:
@@ -54,6 +55,8 @@ main::
     call check_next_scene_trigger
     call check_deadly_collision     ; Check deadly tiles (spikes) to damage player
     call check_enemy_collision      ; Check collision with enemies
+    call check_bullet_player_collisions
+
     call update_bullet_system
 
     call destroy_dead_enemies

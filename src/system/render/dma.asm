@@ -5,7 +5,7 @@ INCLUDE "entities/entities.inc"
 ;;;;     OAM DMA     ;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;
 
-SECTION "OAM DMA", ROMX
+SECTION "OAM DMA", ROM0
 
 ;; Realiza una transferencia DMA y espera 160 ciclos a que se complete
 DMA_routine:

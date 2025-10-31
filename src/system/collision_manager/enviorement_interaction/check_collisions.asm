@@ -138,16 +138,4 @@ are_intervals_overlapping::
         cp d ; p1-(p2+w2)
     ret
 
-;; Carry flag 1 if [hl] < [de]
-;compare_contents_hl_and_de:
-;    push hl
-;    ld a, [hl]
-;    ld h, d
-;    ld l, e
-;    cp [hl]
-;    pop hl
-;    ret
-
-
-
 

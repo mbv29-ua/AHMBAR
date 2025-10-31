@@ -148,7 +148,7 @@ ds 4
 
 end_zero:
 
-SECTION "Sound Driver", ROMX
+SECTION "Sound Driver", ROM0
 
 IF DEF(GBDK)
 _hUGE_init::
@@ -158,7 +158,6 @@ ENDC
 
 ;;; Sets up hUGEDriver to play a song.
 ;;; !!! BE SURE THAT `hUGE_dosound` WILL NOT BE CALLED WHILE THIS RUNS !!!
-;;; Param: HL = Pointer to the "song descriptor" you wish to load (typically exported by hUGETracker).
 ;;; Destroys: AF C DE HL
 hUGE_init::
     ld a, [hl+] ; tempo
@@ -255,7 +254,7 @@ _hUGE_mute_channel::
 ENDC
 
 ;;; Sets a channel's muting status.
-;;; Muted channels are left entirely alone by the driver, so that you can repurpose them,
+;;; Muted channels are left entirely alone by the driver.
 ;;; for example for sound effects, CH3 sample playback, etc.
 ;;; If muting the channel, the note being played will be cut.
 ;;; Param: B = Which channel to enable; 0 for CH1, 1 for CH2, etc.
