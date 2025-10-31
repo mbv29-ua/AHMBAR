@@ -18,9 +18,9 @@ SECTION "Bullet", ROM0
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 load_bullet_sprites::
-    ld hl, Tile_Bullet
-    ld de, VRAM0_START + (TILE_BULLET * TILE_SIZE)
-    ld  b, Tile_Bullet_End - Tile_Bullet
+    ld hl, bullet_tiles
+    ld de, VRAM0_START + (TILE_BULLET_HUD * TILE_SIZE)
+    ld  b, bullet_tiles.end - bullet_tiles
     call memcpy_256
     ret
 
@@ -59,7 +59,7 @@ init_bullet::
     ld a, [Player.wPlayerY]
     ld b, a
 
-	ld d, TILE_BULLET ; tile
+	ld d, TILE_BULLET_SMALL ; tile
 	ld e, 0   ; tile properties
 	call set_entity_sprite
 

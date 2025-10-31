@@ -124,6 +124,9 @@ clean_dead_enemy::
 	.clean:
 		ld l, e
 		call man_entity_free ; Receives L as the entity index
+
+		ld hl, wNumberOfEnemies
+		dec [hl]
 	ret 
 
 
@@ -177,20 +180,20 @@ set_death_clock::
 ;; WARNING: Destroys A and DE
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-man_entity_count_number_of_enemies::
-	xor a
-	ld [wNumberOfEnemies], a
-	ld hl, inc_number_of_enemies_counter
-	call man_entity_for_each_enemy
-	ret
-
-
-inc_number_of_enemies_counter::
-	ld hl, wNumberOfEnemies
-	inc [hl]
-	ret
-
-dec_number_of_enemies_counter::
-	ld hl, wNumberOfEnemies
-	inc [hl]
-	ret
+;man_entity_count_number_of_enemies::
+;	xor a
+;	ld [wNumberOfEnemies], a
+;	ld hl, inc_number_of_enemies_counter
+;	call man_entity_for_each_enemy
+;	ret
+;
+;
+;inc_number_of_enemies_counter::
+;	ld hl, wNumberOfEnemies
+;	inc [hl]
+;	ret
+;
+;dec_number_of_enemies_counter::
+;	ld hl, wNumberOfEnemies
+;	inc [hl]
+;	ret

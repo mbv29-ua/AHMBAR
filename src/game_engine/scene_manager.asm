@@ -49,6 +49,9 @@ load_scene::
     call set_initial_scroll
     call init_player
     ; call init_enemigos_prueba
+
+    ld hl, wNumberOfEnemies
+    ld [hl], 0
     call init_enemies
     call init_collectibles
     call init_palettes_by_default
