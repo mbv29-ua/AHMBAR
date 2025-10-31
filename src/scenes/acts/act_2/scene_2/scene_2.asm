@@ -1,4 +1,5 @@
 INCLUDE "constants.inc"
+INCLUDE "entities/entities.inc"
 
 SECTION "Act 2 Scene 2", ROM0
 
@@ -32,4 +33,12 @@ act_2_scene_2_enemy_spawner::
 	ld hl, basic_fly
 
 	call enemy_spawn
+	ret
+
+INCLUDE "system/ambar_macros.inc"
+
+init_ambars_level2::
+	SPAWN_AMBAR_AT_TILE 14, 15
+    SPAWN_AMBAR_AT_TILE 7, 11
+    SPAWN_AMBAR_AT_TILE 25, 12
 	ret

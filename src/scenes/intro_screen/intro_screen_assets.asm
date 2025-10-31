@@ -48,7 +48,7 @@ intro_animation_scene::
         
 
         .nextScreen:
-        call menu_start_init
+        ; call menu_start_init
         ld hl, rSCX
         ld [hl], 0
         call wait_until_start_pressed
@@ -57,32 +57,30 @@ intro_animation_scene::
         ret
 
 scene_intro_screen::
+    
     call wait_vblank
     call set_black_palette
     call intro_load_fonts
 
     call show_credits
-    call show_intro_text
-    call intro_animation_scene
+    ; call show_intro_text
+    ; call intro_animation_scene
     ret
     
 intro_load_fonts::
     call screen_off
     call clean_OAM
     call clean_bg_map
-    call copy_DMA_routine
     call load_fonts
     ; call enable_vblank_interrupts
     ; call screen_obj_on
     call screen_on
     ret
 
-
 intro_scene_init::
     call screen_off
     call clean_OAM
     call clean_bg_map
-    call copy_DMA_routine
     call init_palettes_by_default
     call man_entity_init
     call Load_intro_Tiles
@@ -92,18 +90,18 @@ intro_scene_init::
     call screen_obj_on
     call screen_on
     ret
-
-menu_start_init::
-call screen_off
-call clean_OAM
-call clean_bg_map    
-call init_palettes_by_default
-call Load_letras_intro_Tiles
-call Load_start_Map
-call enable_vblank_interrupts
-call screen_obj_on
-call screen_on
-ret
+; 
+; menu_start_init::
+; call screen_off
+; call clean_OAM
+; call clean_bg_map    
+; call init_palettes_by_default
+; call Load_letras_intro_Tiles
+; call Load_start_Map
+; call enable_vblank_interrupts
+; call screen_obj_on
+; call screen_on
+; ret
 Load_intro_Tiles::
     ; Cargar tiles desde block.asm
     ld hl, intro_tiles
@@ -118,23 +116,23 @@ Load_intro_Map::
     ld bc, intro_mapa.end - intro_mapa
     call memcpy_65536
     ret
-
-Load_letras_intro_Tiles::
-
-    ld hl, city_street
-    ld de, VRAM0_START + 128 * TILE_SIZE 
-    ld bc, city_street.end - city_street
-    call memcpy_65536
-    ret
-
-Load_start_Map::
-    ld hl, mapa_start
-    ld de, BG_MAP_START
-    ld b, 20
-    ld c, 18
-    call animation_window
-    ret
-
+; 
+; Load_letras_intro_Tiles::
+; 
+;     ld hl, city_street
+;     ld de, VRAM0_START + 128 * TILE_SIZE 
+;     ld bc, city_street.end - city_street
+;     call memcpy_65536
+;     ret
+; 
+; Load_start_Map::
+;     ld hl, mapa_start
+;     ld de, BG_MAP_START
+;     ld b, 20
+;     ld c, 18
+;     call animation_window
+;     ret
+; 
 init_personaje_animacion::
 	;; Example of initializing an enemy (valid for an entity)
 	call man_entity_alloc ; Returns l=entity index

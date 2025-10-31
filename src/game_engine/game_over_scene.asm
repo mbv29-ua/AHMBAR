@@ -59,9 +59,6 @@ game_over_init::
     call clean_OAM
     call clean_bg_map
 
-    ; Cargar tiles del juego SIN offset (desde tile 0)
-    call Load_letras_intro_Tiles
-
     ; Cargar tilemap de Game Over
     ld hl, GameOver_Map
     ld de, BG_MAP_START
