@@ -1,6 +1,10 @@
 INCLUDE "constants.inc"
+INCLUDE "entities/entities.inc"
 
-SECTION "Level 1 Tiles", ROMX
+
+SECTION "Level 1 Tiles", ROM0
+
+INCLUDE "system/ambar_macros.inc"
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; This routine spawns the enemies of the scene 1.
@@ -11,10 +15,7 @@ SECTION "Level 1 Tiles", ROMX
 ;;      -
 ;; WARNING: Destroys A, BC, DE and HL
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 scene_1_enemy_spawner::
-	call load_darkfrog_tiles
-
 	ld  b, $78
 	ld  c, $40
 	ld hl, jumping_frog
@@ -36,3 +37,13 @@ scene_1_enemy_spawner::
 
 	call enemy_spawn
 	ret
+
+init_ambars_level1::
+    ; Spawn ambars at specific locations for level 1
+    ; Position in tiles (Y, X) -> in pixels (Y*8, X*8)
+    
+	SPAWN_AMBAR_AT_TILE 1, 1
+    SPAWN_AMBAR_AT_TILE 10, 10
+    SPAWN_AMBAR_AT_TILE 15, 15
+
+    ret

@@ -2,7 +2,7 @@ INCLUDE "utils/joypad.inc"
 INCLUDE "constants.inc"
 INCLUDE "entities/entities.inc"
 
-SECTION "Character Movement", ROMX
+SECTION "Character Movement", ROM0
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -156,6 +156,7 @@ update_character_velocities::
         ld h, CMP_CONT_H
         ld l, COUNT_MOVING_COOLDOWN
         dec [hl]
+           
 .end:
     ret
 

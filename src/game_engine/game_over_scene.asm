@@ -11,10 +11,6 @@ SECTION "Game Over Scene", ROM0
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 game_over::
-    ; Hacer fade out
-    ; call fadeout
-
-
     ; Saltar a escena de Game Over (no retorna)
     jp scene_game_over
 
