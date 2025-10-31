@@ -42,6 +42,7 @@ load_scene::
     call load_bullet_sprites
     call load_frog_tiles
     call load_fly_tiles
+    call load_butterfly_tiles
     call load_darkfrog_tiles
     call load_desintegration_tiles
 

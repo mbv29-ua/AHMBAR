@@ -77,12 +77,12 @@ CHARMAP " ", 198
 
 
 ; Esto debera estar en otro fichero hasta que se elimine -> fichero de textos
-test_text:
-DB "ABCDEFGHYJKLMNÑOP", ENDLINE
-DB "QRSTUVWXYZabcdefg", ENDLINE
-DB "hijklmnñopqrstuvw", ENDLINE
-DB "xyz¡!¿?.,01234567", ENDLINE
-DB "89 ", ENDTEXT
+;test_text:
+;DB "ABCDEFGHYJKLMNÑOP", ENDLINE
+;DB "QRSTUVWXYZabcdefg", ENDLINE
+;DB "hijklmnñopqrstuvw", ENDLINE
+;DB "xyz¡!¿?.,01234567", ENDLINE
+;DB "89 ", ENDTEXT
 
 
 
@@ -101,61 +101,60 @@ DB "the fate of the ", ENDLINE
 DB "world.", ENDTEXT
 
 ; Menu principal (centrado, mas abajo)
-menu_title::
-
-DB "", ENDLINE
-DB "       AHMBAR", ENDLINE
-DB "", ENDLINE
-DB "      Start Game", ENDLINE
-DB "      Controls", ENDLINE
-DB "      Credits", ENDTEXT
+;menu_title::
+;DB "", ENDLINE
+;DB "       AHMBAR", ENDLINE
+;DB "", ENDLINE
+;DB "      Start Game", ENDLINE
+;DB "      Controls", ENDLINE
+;DB "      Credits", ENDTEXT
 
 ; Pantalla de controles (centrado)
-controls_text::
-DB "", ENDLINE
-DB "    CONTROLS", ENDLINE
-DB "", ENDLINE
-DB "  D-PAD: Move", ENDLINE
-DB "  A: Jump", ENDLINE
-DB "  B: Shoot", ENDLINE
-DB "", ENDLINE
-DB " Press A to return", ENDTEXT
+;controls_text::
+;DB "", ENDLINE
+;DB "    CONTROLS", ENDLINE
+;DB "", ENDLINE
+;DB "  D-PAD: Move", ENDLINE
+;DB "  A: Jump", ENDLINE
+;DB "  B: Shoot", ENDLINE
+;DB "", ENDLINE
+;DB " Press A to return", ENDTEXT
 
 ; Pantalla de creditos
-credits_screen::
-DB "    CREDITS", ENDLINE
-DB "", ENDLINE
-DB " Sonia Mendivil", ENDLINE
-DB " Miguel Beltra", ENDLINE
-DB "Jaime Hernandez", ENDLINE
-DB "", ENDLINE
-DB "   Press A", ENDTEXT
+;credits_screen::
+;DB "    CREDITS", ENDLINE
+;DB "", ENDLINE
+;DB " Sonia Mendivil", ENDLINE
+;DB " Miguel Beltra", ENDLINE
+;DB "Jaime Hernandez", ENDLINE
+;DB "", ENDLINE
+;DB "   Press A", ENDTEXT
 
 
 ;; ACT 1 Dialogs ;; 
 
 act_1_scene_1_dialog::
-	DB "Oh no, toxic frogs.", 		ENDLINE
-	DB "I have to ", 		ENDLINE
-	DB "reach the door. I", 		ENDLINE
-	DB "need to gather all", 		ENDLINE
-	DB "the ahmbar I can.",		ENDTEXT
+	DB "Oh no, toxic frogs.", 	ENDLINE
+	DB "I have to ", 			ENDLINE
+	DB "reach the door. I", 	ENDLINE
+	DB "need to gather all", 	ENDLINE
+	DB "the Ahmbar I can.",		ENDTEXT
 
 act_1_scene_2_dialog::
-	DB "OMG, the only way", 		ENDLINE
-	DB "is going down...", 			ENDLINE
-	DB "But how?", 		ENDTEXT
+	DB "OMG, the only way", 	ENDLINE
+	DB "is going down...", 		ENDLINE
+	DB "But how?", 				ENDTEXT
 
 act_1_scene_3_dialog::
-	DB "Easy...", 		ENDTEXT
+	DB "Easy...", 				ENDTEXT
 
 act_1_scene_4_dialog::
-	DB "Oh dear,", 		ENDLINE
-	DB "here we go again.", ENDTEXT
+	DB "Oh dear,", 				ENDLINE
+	DB "here we go again.", 	ENDTEXT
 
 act_1_scene_5_dialog::
-	DB "Now I can", 		ENDLINE
-	DB "do it better.", 	ENDTEXT
+	DB "Now I can", 			ENDLINE
+	DB "do it better.", 		ENDTEXT
 
 
 
@@ -180,20 +179,22 @@ act_2_scene_3_dialog::
 	DB "I know a shortcut.",	ENDLINE
 	DB "They call it the",		ENDLINE
 	DB "Leap of Death. I",		ENDLINE
-	DB "hope it doesn not",		ENDLINE
+	DB "hope it does not",		ENDLINE
 	DB "live up to its",		ENDLINE
 	DB "name today.",			ENDTEXT
 
 act_2_scene_4_dialog::
 	DB "The electrical",		ENDLINE
-	DB "installations of",			ENDLINE
+	DB "installations of",		ENDLINE
 	DB "this place should",		ENDLINE
 	DB "have been inspected",	ENDLINE
 	DB "a long time ago.",		ENDLINE
 	DB "It is a death trap.",	ENDTEXT
 
 act_2_final_scene_dialog::
-	DB "What the hell is",		ENDLINE
-	DB "that monster!",			ENDLINE
-	DB "Ahmbar corrupts",		ENDLINE
-	DB "all living forms.",		ENDTEXT
+	DB "A corrupted",	ENDLINE
+	DB "life form! Ahmbar ",	ENDLINE
+	DB "curses all living",	ENDLINE
+	DB "forms. I must kill",	ENDLINE
+	DB "it before this",		ENDLINE
+	DB "collapses.",			ENDTEXT

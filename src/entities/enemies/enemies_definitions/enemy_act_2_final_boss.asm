@@ -10,7 +10,7 @@ SECTION "Act 2 final boss", ROM0
 
 act_2_final_boss::
 
-.initial_tile: 			DB FLY_TILE 	;; ENEMY_TILE
+.initial_tile: 			DB BUTTERFLY_TILE 	;; ENEMY_TILE
 .initial_sprite_attrs: 	DB 0		 	;; ENEMY_INITAL_SPRITE_ATTRIBUTES
 .initial_y_speed: 		DB 1 		 	;; ENEMY_INITIAL_VY_SPEED
 .initial_x_speed: 		DB 0		 	;; ENEMY_INITIAL_VX_SPEED
@@ -34,3 +34,11 @@ act_2_final_boss::
 .enemy_AI_3: DW_BE  No_AI				            ;; ENEMY_AI_2
 
 .end_definition:
+
+
+load_butterfly_tiles::
+    ld hl, butterfly_tiles
+    ld de, (VRAM0_START+BUTTERFLY_TILE*TILE_SIZE)
+    ld bc, butterfly_tiles.end - butterfly_tiles.start
+    call memcpy_65536
+    ret
