@@ -1,6 +1,6 @@
 INCLUDE "constants.inc"
 
-SECTION "Act 3 Final Scene configuration", ROM0
+SECTION "Act 2 Final Scene configuration", ROM0
 
 act_2_final_scene::
 
