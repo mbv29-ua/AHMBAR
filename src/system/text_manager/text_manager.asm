@@ -19,9 +19,11 @@ SECTION "Dialogs manager", ROM0
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 clean_line::
+	; di
 	call wait_vblank
    ld  b, TEXTLINE_SIZE
    call memreset_256
+   ; ei
    ret
 
 
@@ -35,6 +37,7 @@ clean_line::
 ;; WARNING: Destroys A, B and HL
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 clean_dialog_box::
+	di
    ld hl, FIRST_DIALOG_LINE
    call clean_line
 
@@ -52,6 +55,7 @@ clean_dialog_box::
    
    ld hl, SIXTH_DIALOG_LINE
    call clean_line
+   ei
 ret
 
 

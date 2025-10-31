@@ -31,10 +31,18 @@ start_game::
 	ld hl, music_game
 	call hUGE_init
 
-	; ld hl, scene_1
-    ld hl, act_2_scene_1
-    ;ld hl, act_2_final_scene
-	call load_scene
+	; ld hl, act_1_scene_1
+    ; ld hl, act_1_scene_4
+    ; ld hl, actact_2_scene_1
+    ; ld hl, act_2_scene_2
+    ; ld hl, act_2_scene_3
+    ; ld hl, act_2_scene_4
+    ; ld hl, act_2_final_scene
+    ; ld hl, act_2_scene_3
+    ; ld hl, act_3_scene_1
+    ld hl, act_3_scene_3
+	
+    call load_scene
 	ret
 
 
@@ -72,10 +80,16 @@ set_initial_memory_values::
     ld [wHUDNeedsUpdate], a
     ld [wShootingCooldown], a ; Inicializar cooldown de disparo a 0
     ld [wSpikeCooldown], a  ; Inicializar cooldown de picas a 0
+    
+    ;; valores para hacer pruebas con los saltos
+    
     ;ld [wPowerupDoubleJump], a
     
+    ld [wPowerupInfiniteJump], a 
+
     ld a, 1 
     ld [wPowerupDoubleJump], a
+    ;ld [wPowerupInfiniteJump], a
 
     ret
 

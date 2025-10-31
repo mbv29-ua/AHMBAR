@@ -257,9 +257,11 @@ wait_a_frame::
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 wait_x_frames::
+    di
     call wait_a_frame
     dec b    
     jr nz, wait_x_frames
+    ei
     ret
 
 
@@ -376,4 +378,12 @@ reset_scroll::
 disable_hud_screen::
     ld hl, rLCDC
     res 5, [hl]
+    ret
+
+
+
+
+set_black_palette::
+    ld hl, rBGP
+    ld [hl], %00000011
     ret

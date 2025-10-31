@@ -1,4 +1,4 @@
-SECTION "characters" , ROMX
+SECTION "characters" , ROM0
 
 ;Cowboy_Sprites::
 ;    ; Bola negra (jugador)

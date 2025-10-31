@@ -132,6 +132,31 @@ DB "", ENDLINE
 DB "   Press A", ENDTEXT
 
 
+;; ACT 1 Dialogs ;; 
+
+act_1_scene_1_dialog::
+	DB "Oh no, toxic frogs", 		ENDLINE
+	DB "like my ex...", 			ENDLINE
+	DB "I have to ", 		ENDLINE
+	DB "reach the door. I", 		ENDLINE
+	DB "need to gather all", 		ENDLINE
+	DB "the ahmbar I can.",		ENDTEXT
+
+act_1_scene_2_dialog::
+	DB "OMG, the only way", 		ENDLINE
+	DB "is going down...", 			ENDLINE
+	DB "But how?", 		ENDTEXT
+
+act_1_scene_3_dialog::
+	DB "Easy...", 		ENDTEXT
+
+act_1_scene_4_dialog::
+	DB "Oh dear,", 		ENDLINE
+	DB "here we go again.", ENDTEXT
+
+act_1_scene_5_dialog::
+	DB "Now I can", 		ENDLINE
+	DB "jump twice.", 	ENDTEXT
 
 
 
@@ -162,7 +187,7 @@ act_2_scene_3_dialog::
 
 act_2_scene_4_dialog::
 	DB "The electrical",		ENDLINE
-	DB "installations",			ENDLINE
+	DB "installations of",			ENDLINE
 	DB "this place should",		ENDLINE
 	DB "have been inspected",	ENDLINE
 	DB "a long time ago.",		ENDLINE
