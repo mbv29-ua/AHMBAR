@@ -136,7 +136,7 @@ DB "   Press A", ENDTEXT
 
 act_1_scene_1_dialog::
 	DB "Oh no, toxic frogs", 		ENDLINE
-	DB "as my ex...", 			ENDLINE
+	DB "like my ex...", 			ENDLINE
 	DB "I have to ", 		ENDLINE
 	DB "reach the door. I", 		ENDLINE
 	DB "need to gather all", 		ENDLINE

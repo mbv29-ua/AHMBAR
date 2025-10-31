@@ -257,9 +257,11 @@ wait_a_frame::
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 wait_x_frames::
+    di
     call wait_a_frame
     dec b    
     jr nz, wait_x_frames
+    ei
     ret
 
 

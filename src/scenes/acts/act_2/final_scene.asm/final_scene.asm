@@ -187,3 +187,11 @@ collect_bullet::
 ;	ld l, a
 ;	ld [hl], DEATH_CLOCK_START_VALUE
 ;	ret
+
+INCLUDE "system/ambar_macros.inc"
+
+init_ambars_ac2_final::
+	SPAWN_AMBAR_AT_TILE 10, 9
+    SPAWN_AMBAR_AT_TILE 10, 11
+    SPAWN_AMBAR_AT_TILE 10, 12
+	ret

@@ -89,12 +89,10 @@ intro_load_fonts::
     call screen_on
     ret
 
-
 intro_scene_init::
     call screen_off
     call clean_OAM
     call clean_bg_map
-    call copy_DMA_routine
     call init_palettes_by_default
     call man_entity_init
     call Load_intro_Tiles
