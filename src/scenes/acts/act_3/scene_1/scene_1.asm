@@ -27,3 +27,11 @@ act_3_scene_1_enemy_spawner::
 	ld hl, basic_fly
 	call enemy_spawn
 	ret
+
+INCLUDE "system/ambar_macros.inc"
+
+init_ambar_ac3_level1::
+	SPAWN_AMBAR_AT_TILE 14, 8
+    SPAWN_AMBAR_AT_TILE 8, 15
+    SPAWN_AMBAR_AT_TILE 5, 20
+	ret
