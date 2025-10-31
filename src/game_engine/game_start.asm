@@ -31,8 +31,8 @@ start_game::
 	ld hl, music_game
 	call hUGE_init
 
-	; ld hl, scene_1
-    ld hl, act_1_scene_4
+	ld hl, act_1_scene_1
+    ;ld hl, act_1_scene_4
     ; ld hl, act_2_final_scene
     ; ld hl, act_3_scene_2
     ; ld hl, act_3_scene_1
