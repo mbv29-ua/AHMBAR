@@ -47,10 +47,11 @@ intro_animation_scene::
     call intro_scene_init
 
     .scroll:
+        call wait_vblank
         ld a, [rSCX]
         ld b, a
-        and %00000010
-        ld hl, Player.tile
+        and %00001000
+        ld hl, $FE02
         jr z, .run_tile_2
             ld [hl], PLAYER_WALKING_TILE_1
             jr .continue
@@ -86,6 +87,7 @@ intro_load_fonts::
     call clean_OAM
     call clean_bg_map
     call load_fonts
+    call screen_obj_on
     call screen_on
     ret
 
@@ -99,7 +101,6 @@ intro_scene_init::
     call Load_intro_Map
     call load_player_tiles
     call init_personaje_animacion
-    call enable_vblank_interrupts
     call screen_obj_on
     call screen_on
     ret
@@ -112,12 +113,16 @@ menu_start_init::
     call Load_letras_intro_Tiles
     call Load_start_Map
 
-    ld hl, Player.wPlayerY
+    ld hl, $FE00
     ld [hl], $50
-    ld hl, Player.wPlayerX
+    inc l
     ld [hl], $10
+    inc l
+    ld [hl], PLAYER_WALKING_TILE_2 ; tile
+	inc l
+    ld [hl], 0
 
-    call enable_vblank_interrupts
+    
     call screen_obj_on
     call screen_on
     ret
@@ -154,15 +159,23 @@ Load_start_Map::
     ret
 
 init_personaje_animacion::
-	;; Example of initializing an enemy (valid for an entity)
-	call man_entity_alloc ; Returns l=entity index
-	ld b, $80 ; Y coordinate
-	ld c, $20  ; X coordinate
-	ld d, PLAYER_WALKING_TILE_1 ; tile
-	ld e, 0   ; tile properties
-	call set_entity_sprite
-	ld b, 0 ; vy 
+	ld hl, $FE00
+    ld [hl], $80 ; Y coordinate
+	inc l
+    ld [hl], $20  ; X coordinate
+	inc l
+    ld [hl], PLAYER_WALKING_TILE_1 ; tile
+	inc l
+    ld [hl], 0   ; tile properties
+    ;; Example of initializing an enemy (valid for an entity)
+	;call man_entity_alloc ; Returns l=entity index
+	;ld b, $80 ; Y coordinate
+	;ld c, $20  ; X coordinate
+	;ld d, PLAYER_WALKING_TILE_1 ; tile
+	;ld e, 0   ; tile properties
+	;call set_entity_sprite
+	;ld b, 0 ; vy 
 	;ld c,  0 ; vx
-	ld d,  1 ; vx
-	call set_entity_physics
+	;ld d,  1 ; vx
+	;call set_entity_physics
     ret
