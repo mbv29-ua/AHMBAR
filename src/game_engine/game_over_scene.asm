@@ -60,6 +60,7 @@ game_over_init::
     call clean_bg_map
 
     ; Cargar tilemap de Game Over
+    call Load_letras_intro_Tiles
     ld hl, GameOver_Map
     ld de, BG_MAP_START
     ld b, 20

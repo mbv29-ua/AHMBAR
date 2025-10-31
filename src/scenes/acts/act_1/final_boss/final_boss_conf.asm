@@ -14,7 +14,7 @@ act_1_scene_5::
 .tilemap:					DW_BE 	act_1_scene_5_tilemap				; SCENE_TILEMAP ; Se almacen como HIGH/LOW
 .goal_y: 					DB 		0						; SCENE_GOAL_POINT_X
 .goal_x:					DB 		0						; SCENE_GOAL_POINT_Y
-.next_scene:				DW_BE 	act_3_scene_1			; SCENE_NEXT_SCENE (Assuming act2_1 is the next scene)
+.next_scene:				DW_BE 	act_2_scene_1			; SCENE_NEXT_SCENE (Assuming act2_1 is the next scene)
 .scene_enemy_spawner:		DW_BE 	final_boss_enemy_spawner; SCENE_ENEMY_SPAWNER
 .scene_collectible_spawner: DW_BE	init_ambars_final_boss	; SCENE_COLLECTIBLE_SPAWNER
 .act_number:				DB 		1						; SCENE_ACT_NUMBER
