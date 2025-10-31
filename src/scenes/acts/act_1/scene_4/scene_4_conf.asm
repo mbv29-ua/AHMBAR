@@ -2,7 +2,7 @@ INCLUDE "constants.inc"
 
 SECTION "Scene 4", ROM0
 
-scene_4::
+act_1_scene_4::
 
 .starting_y: 			DB 		136 					; SCENE_PLAYER_STARTING_Y
 .starting_x: 			DB 		16					; SCENE_PLAYER_STARTING_X
@@ -11,10 +11,10 @@ scene_4::
 .tileset:				DW_BE 	tiles 			; SCENE_TILESET ; Se almacen como HIGH/LOW
 .tilset_size:			DW_BE 	(tiles_end-tiles-tiles)	; SCENE_TILESET_SIZE ; Se almacen como HIGH/LOW
 .tileset_offset:		DW_BE 	128 * TILE_SIZE			; SCENE_TILESET_OFFSET ; Se almacen como HIGH/LOW
-.tilemap:				DW_BE 	Level4_Map				; SCENE_TILEMAP ; Se almacen como HIGH/LOW
+.tilemap:				DW_BE 	act_1_scene_4_tilemap				; SCENE_TILEMAP ; Se almacen como HIGH/LOW
 .goal_y: 			DB 		0					; SCENE_GOAL_POINT_X
 .goal_x:				DB 		0					; SCENE_GOAL_POINT_Y
-.next_scene:			DW_BE 	final_boss				; SCENE_NEXT_SCENE
+.next_scene:			DW_BE 	act_1_scene_5				; SCENE_NEXT_SCENE
 .scene_enemy_spawner:	DW_BE 	scene_4_enemy_spawner	; SCENE_ENEMY_SPAWNER
 .scene_collectible_spawner: DW_BE	init_ambars_level4	; SCENE_COLLECTIBLE_SPAWNER
 .act_number:			DB 		1					; SCENE_ACT_NUMBER

@@ -16,9 +16,9 @@
 
 
 
- SECTION "scene2_act_3_sonia", ROMX
+SECTION FRAGMENT "Tile Maps", ROMX
 
-scene2_act_3_sonia::
+act_3_scene_2_tilemap::
 DB $8C,$8C,$8C,$8C,$8C,$8C,$8C,$8C,$8C,$8C
 DB $8C,$8C,$8C,$8C,$8C,$8C,$8C,$8C,$8C,$8C
 DB $8C,$8C,$8C,$8C,$8C,$8C,$8C,$8C,$8C,$8C

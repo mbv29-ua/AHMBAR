@@ -2,7 +2,7 @@ INCLUDE "constants.inc"
 
 SECTION "Final Boss", ROM0
 
-final_boss::
+act_1_scene_5::
 
 .starting_y: 				DB 		136 					; SCENE_PLAYER_STARTING_Y
 .starting_x: 				DB 		16						; SCENE_PLAYER_STARTING_X
@@ -11,7 +11,7 @@ final_boss::
 .tileset:					DW_BE 	tiles 					; SCENE_TILESET ; Se almacen como HIGH/LOW
 .tilset_size:				DW_BE 	(tiles_end-tiles-tiles)	; SCENE_TILESET_SIZE ; Se almacen como HIGH/LOW
 .tileset_offset:			DW_BE 	128 * TILE_SIZE			; SCENE_TILESET_OFFSET ; Se almacen como HIGH/LOW
-.tilemap:					DW_BE 	Level5_Map				; SCENE_TILEMAP ; Se almacen como HIGH/LOW
+.tilemap:					DW_BE 	act_1_scene_5_tilemap				; SCENE_TILEMAP ; Se almacen como HIGH/LOW
 .goal_y: 					DB 		0						; SCENE_GOAL_POINT_X
 .goal_x:					DB 		0						; SCENE_GOAL_POINT_Y
 .next_scene:				DW_BE 	act_2_scene_1			; SCENE_NEXT_SCENE (Assuming act2_1 is the next scene)
