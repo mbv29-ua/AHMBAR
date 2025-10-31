@@ -35,6 +35,7 @@ clean_line::
 ;; WARNING: Destroys A, B and HL
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 clean_dialog_box::
+	di
    ld hl, FIRST_DIALOG_LINE
    call clean_line
 
@@ -52,6 +53,7 @@ clean_dialog_box::
    
    ld hl, SIXTH_DIALOG_LINE
    call clean_line
+   ei
 ret
 
 
