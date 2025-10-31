@@ -1,6 +1,6 @@
 INCLUDE "constants.inc"
 
-SECTION "Act 3 Final Scene configuration", ROM0
+SECTION "Act 2 Final Scene configuration", ROM0
 
 act_2_final_scene::
 
@@ -16,7 +16,7 @@ act_2_final_scene::
 .goal_x:				DB 		0						; SCENE_GOAL_POINT_Y
 .next_scene:			DW_BE 	act_3_scene_1					; SCENE_NEXT_SCENE
 .scene_enemy_spawner:	DW_BE 	act_2_final_scene_enemy_spawner	; SCENE_ENEMY_SPAWNER
-.scene_collectible_spawner: DW_BE	0					; SCENE_COLLECTIBLE_SPAWNER
+.scene_collectible_spawner: DW_BE	init_ambars_level1					; SCENE_COLLECTIBLE_SPAWNER
 .act_number:			DB 		2						; SCENE_ACT_NUMBER
 .level_number:			DB 		1						; SCENE_LEVEL_NUMBER
 .background_animation:	DW_BE	electricity_animation	; SCENE_ANIMATION_ROUTINE
