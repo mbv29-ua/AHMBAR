@@ -16,7 +16,7 @@
 
 
 
- SECTION "act_3_scene_1_sonia", ROMX
+ SECTION "act_3_scene_1_sonia", ROM0
 
 act_3_scene_1_sonia::
 DB $8E,$8E,$8E,$8E,$8E,$8E,$8E,$8E,$8E,$8E
