@@ -31,16 +31,13 @@ start_game::
 	ld hl, music_game
 	call hUGE_init
 
-	ld hl, scene_1
-<<<<<<< HEAD
-    ;ld hl, act_2_scene_1
-=======
+	; ld hl, scene_1
     ; ld hl, act_2_scene_3
->>>>>>> c024e9052d52687dcfc199e6594a19dcfce305b3
     ; ld hl, act_2_final_scene
     ; ld hl, act_3_scene_2
-    ; ld hl, act_3_scene_1
-	call load_scene
+    ld hl, act_3_scene_1
+	
+    call load_scene
 	ret
 
 
