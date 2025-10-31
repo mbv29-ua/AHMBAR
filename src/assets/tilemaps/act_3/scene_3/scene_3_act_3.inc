@@ -6,7 +6,7 @@
 ;   Section       : scene_3_act_3
 ;   Bank          : 0
 ;   Map size      : 32 x 32
-;   Tile set      : Z:\home\cpc\RA\RA\AHMBAR\src\assets\tiles\sonia\MapaTiles.gbr
+;   Tile set      : Z:\home\cpc\RA\RA\AHMBAR\src\assets\tiles\blocks\blocks_tiles_act1_act3.gbr
 ;   Plane count   : 1 plane (8 bits)
 ;   Plane order   : Tiles are continues
 ;   Tile offset   : 128
