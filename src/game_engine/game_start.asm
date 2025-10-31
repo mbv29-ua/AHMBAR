@@ -11,7 +11,7 @@ SECTION "Game start", ROM0
 ;;      HL: Address of scene.conf
 ;; OUTPUT:
 ;;      -   
-;; WARNING: Destroys A, BC, DE, HL
+;; WARNING: Destroys A, BC, DE, HLgit 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 start_game::
