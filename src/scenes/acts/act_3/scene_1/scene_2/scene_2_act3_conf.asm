@@ -18,6 +18,6 @@ act_3_scene_2::
 .scene_enemy_spawner:	DW_BE 	0	; SCENE_ENEMY_SPAWNER
 .scene_collectible_spawner: DW_BE	0	; SCENE_COLLECTIBLE_SPAWNER
 .act_number:			DB 		3						; SCENE_ACT_NUMBER
-.level_number:			DB 		1						; SCENE_LEVEL_NUMBER
+.level_number:			DB 		2						; SCENE_LEVEL_NUMBER
 .background_animation:	DW_BE	no_animation			; SCENE_ANIMATION_ROUTINE
 .next_level_trigger:	DW_BE	check_door_collision	; SCENE_NEXT_LEVEL_TRIGGER
