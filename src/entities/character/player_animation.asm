@@ -19,11 +19,23 @@ update_player_sprite::
 	ld l, PHY_FLAGS
 	
 	bit PHY_FLAG_GROUNDED, [hl]
-	jr nz, .walking
+	jr nz, .not_jumping
 		ld h, CMP_SPRIT_H
 		ld l, SPR_TILE
 		ld [hl], PLAYER_JUMPING_TILE
 	ret
+
+	.not_jumping:
+		ld h, CMP_PHYS_H
+		ld l, PHY_VX
+		ld a, [hl]
+		or a
+		jr nz, .walking
+
+		ld h, CMP_SPRIT_H
+		ld l, SPR_TILE
+		ld [hl], PLAYER_WALKING_TILE_2
+		ret
 
 	.walking:
 		ld h, CMP_CONT_H
