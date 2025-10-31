@@ -21,3 +21,4 @@ act_2_scene_4::
 .level_number:			DB 		4						; SCENE_LEVEL_NUMBER
 .background_animation:	DW_BE	electricity_animation	; SCENE_ANIMATION_ROUTINE
 .next_level_trigger:	DW_BE	check_door_collision	; SCENE_NEXT_LEVEL_TRIGGER
+.intro_scene:			DW_BE	act_2_scene_4_intro_dialog ; SCENE_INTRO_DIALOG

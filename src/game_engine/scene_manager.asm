@@ -23,7 +23,8 @@ SECTION "Scene manager", ROM0
 
 load_scene::
     call save_current_scene_info_address
-    
+    call play_intro_scene_dialog
+
     ; Turn off the screen
     call screen_off
 
@@ -511,3 +512,38 @@ check_next_scene_trigger::
     ld h, a
     call helper_call_hl
     ret
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine loads the intro dialog of the
+;; scene specified at the current scene information
+;;
+;; INPUT:
+;;      -
+;; OUTPUT:
+;;      -   
+;; WARNING: Destroys  A, BC, DE and HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+play_intro_scene_dialog::
+
+    call screen_off
+    call clean_OAM
+    call clean_bg_map
+    call load_fonts
+    call screen_hud_off
+    call reset_scroll
+    call screen_on
+
+    call get_current_scene_info_address ; in hl
+    ld bc, SCENE_INTRO_DIALOG
+    add hl, bc
+    ld a, [hl+]
+    ld l, [hl]
+    ld h, a
+
+    call helper_call_hl
+    ret
+
+    

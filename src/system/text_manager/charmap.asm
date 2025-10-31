@@ -139,7 +139,7 @@ DB "   Press A", ENDTEXT
 
 act_2_scene_1_dialog::
 	DB "Oh, Toshokan, my", 		ENDLINE
-	DB "city. once", 			ENDLINE
+	DB "city. Once", 			ENDLINE
 	DB "prosperous and", 		ENDLINE
 	DB "rich, now only", 		ENDLINE
 	DB "ruins remain of", 		ENDLINE
@@ -168,7 +168,7 @@ act_2_scene_4_dialog::
 	DB "a long time ago.",		ENDLINE
 	DB "It is a death trap.",	ENDTEXT
 
-act_2_scene_5::
+act_2_final_scene_dialog::
 	DB "What the hell is",		ENDLINE
 	DB "that monster!",			ENDLINE
 	DB "Ahmbar corrupts",		ENDLINE

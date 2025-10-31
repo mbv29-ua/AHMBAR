@@ -5,6 +5,15 @@ INCLUDE "system/hud/hud_constants.inc"
 
 SECTION "Act 2 Final Scene", ROM0
 
+act_2_final_scene_intro_dialog::
+    di
+    call set_black_palette
+    ld hl, act_2_final_scene_dialog
+    call write_super_extended_dialog
+    ei
+    call wait_until_A_pressed
+    ret
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; This routine spawns the enemies of the final
 ;; scene of the act 2.

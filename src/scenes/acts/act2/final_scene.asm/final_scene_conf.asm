@@ -21,3 +21,4 @@ act_2_final_scene::
 .level_number:			DB 		1						; SCENE_LEVEL_NUMBER
 .background_animation:	DW_BE	electricity_animation	; SCENE_ANIMATION_ROUTINE
 .next_level_trigger:	DW_BE	no_enemies_in_scene		; SCENE_NEXT_LEVEL_TRIGGER
+.intro_scene:			DW_BE	act_2_final_scene_intro_dialog ; SCENE_INTRO_DIALOG
