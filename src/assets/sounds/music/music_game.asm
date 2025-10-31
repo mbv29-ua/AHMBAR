@@ -1,6 +1,6 @@
 INCLUDE "assets/sounds/music/hUGE.inc"
 
-SECTION "music_game Song Data", ROMX
+SECTION "music_game Song Data", ROM0
 
 music_game::
 db 7

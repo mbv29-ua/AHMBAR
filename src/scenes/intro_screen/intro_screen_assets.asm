@@ -1,6 +1,6 @@
 INCLUDE "constants.inc"
 INCLUDE "entities/entities.inc"
-SECTION "intro screen scene", ROMX
+SECTION "intro screen scene", ROM0
 
 set_black_palette::
     ld hl, rBGP

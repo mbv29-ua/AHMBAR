@@ -1,4 +1,4 @@
-SECTION "blocks", ROM0
+SECTION "blocks", ROMX
 
 ; Start of tile array.
 tiles::
