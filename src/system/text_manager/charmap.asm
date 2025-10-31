@@ -154,7 +154,7 @@ act_1_scene_4_dialog::
 
 act_1_scene_5_dialog::
 	DB "Now I can", 			ENDLINE
-	DB "do it better.", 		ENDTEXT
+	DB "jump twice.", 			ENDTEXT
 
 
 
