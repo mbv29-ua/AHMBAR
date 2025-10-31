@@ -1,29 +1,24 @@
 INCLUDE "constants.inc"
 
-SECTION "Act 2 Scene 2", ROM0
+SECTION "Act 3 Scene 1", ROM0
 
-act_2_scene_2_intro_dialog::
+act_3_scene_1_intro_dialog::
 	di
     call set_black_palette
-    ld hl, act_2_scene_2_dialog
+    ld hl, act_2_scene_1_dialog
     call write_super_extended_dialog
     ei
     call wait_until_A_pressed
     ret
 
-act_2_scene_2_enemy_spawner::
-	ld  b, $78
-	ld  c, $40
+act_3_scene_1_enemy_spawner::
+	ld  b, $1D * 8 - 112
+	ld  c, $0D * 8 - 0
 	ld hl, jumping_frog
 	call enemy_spawn
 
-	ld  b, $90
-	ld  c, $60
-	ld hl, jumping_frog
-	call enemy_spawn
-
-	ld  b, $38
-	ld  c, $68
+	ld  b, $1D * 8 - 112
+	ld  c, $15 * 8 - 0
 	ld hl, jumping_frog
 	call enemy_spawn
 
