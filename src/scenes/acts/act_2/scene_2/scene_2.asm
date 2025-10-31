@@ -25,12 +25,17 @@ act_2_scene_2_enemy_spawner::
 
 	ld  b, $38
 	ld  c, $68
-	ld hl, jumping_frog
+	ld hl, jumping_moving_frog
 	call enemy_spawn
 
 
-	ld b, (26*8)
-	ld c, (23*28)
+	ld b, (26*8)+16
+	ld c, (23*28)+56
+	call bullet_spawn
+
+
+	ld b, $38
+	ld c, (26*8)+8
 	call bullet_spawn
 
 	ret

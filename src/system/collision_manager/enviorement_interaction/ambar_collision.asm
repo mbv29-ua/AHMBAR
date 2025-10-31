@@ -17,8 +17,8 @@ check_ambar_collisions::
     ld hl, check__player_ambar_collision
     call man_entity_for_each_ambar
 
-    ld hl, clean_collected_ambar
-    call man_entity_for_each_ambar
+    ;ld hl, clean_collected_ambar
+    ;call man_entity_for_each_ambar
     ret
 
 
