@@ -1,0 +1,452 @@
+INCLUDE "assets/sounds/music/hUGE.inc"
+
+SECTION "game_over Song Data", ROM0
+
+game_over_sound::
+db 7
+dw order_cnt
+dw _game_over_sound_order1, _game_over_sound_order2, _game_over_sound_order3, _game_over_sound_order4
+dw _game_over_duty_instruments, _game_over_wave_instruments, _game_over_noise_instruments
+dw _game_over_rutines
+dw _game_over_waves
+
+order_cnt: db 2
+_game_over_sound_order1: dw P0g
+_game_over_sound_order2: dw P1g
+_game_over_sound_order3: dw P0g
+_game_over_sound_order4: dw P3g
+
+P0g:
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+
+P1g:
+ dn C_3,12,$E40
+ dn ___,0,$244
+ dn ___,0,$233
+ dn ___,0,$233
+ dn ___,0,$233
+ dn ___,0,$233
+ dn ___,0,$233
+ dn ___,0,$215
+ dn ___,0,$E00
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+
+P3g:
+ dn F_4,10,$E40
+ dn ___,0,$040
+ dn ___,0,$040
+ dn ___,0,$040
+ dn ___,0,$040
+ dn ___,0,$040
+ dn ___,0,$040
+ dn ___,0,$020
+ dn ___,0,$E00
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+
+_game_over_duty_instruments:
+itSquareinst1:
+db 8
+db 0
+db 240
+dw 0
+db 128
+
+itSquareinst2:
+db 8
+db 64
+db 240
+dw 0
+db 128
+
+itSquareinst3:
+db 8
+db 128
+db 240
+dw 0
+db 128
+
+itSquareinst4:
+db 8
+db 192
+db 240
+dw 0
+db 128
+
+itSquareinst5:
+db 8
+db 0
+db 241
+dw 0
+db 128
+
+itSquareinst6:
+db 8
+db 64
+db 241
+dw 0
+db 128
+
+itSquareinst7:
+db 8
+db 128
+db 241
+dw 0
+db 128
+
+itSquareinst8:
+db 8
+db 192
+db 241
+dw 0
+db 128
+
+itSquareinst9:
+db 8
+db 128
+db 240
+dw 0
+db 128
+
+itSquareinst10:
+db 8
+db 128
+db 240
+dw 0
+db 128
+
+itSquareinst11:
+db 8
+db 128
+db 240
+dw 0
+db 128
+
+itSquareinst12:
+db 8
+db 128
+db 240
+dw 0
+db 128
+
+
+
+_game_over_wave_instruments:
+
+
+_game_over_noise_instruments:
+itNoiseinst1:
+db 240
+dw 0
+db 0
+ds 2
+
+itNoiseinst2:
+db 240
+dw 0
+db 0
+ds 2
+
+itNoiseinst3:
+db 240
+dw 0
+db 0
+ds 2
+
+itNoiseinst4:
+db 240
+dw 0
+db 0
+ds 2
+
+itNoiseinst5:
+db 240
+dw 0
+db 0
+ds 2
+
+itNoiseinst6:
+db 240
+dw 0
+db 0
+ds 2
+
+itNoiseinst7:
+db 240
+dw 0
+db 0
+ds 2
+
+itNoiseinst8:
+db 240
+dw 0
+db 0
+ds 2
+
+itNoiseinst9:
+db 240
+dw 0
+db 0
+ds 2
+
+itNoiseinst10:
+db 240
+dw 0
+db 0
+ds 2
+
+
+
+_game_over_rutines:
+__hUGE_Routine_0:
+
+__end_hUGE_Routine_0:
+ret
+
+__hUGE_Routine_1:
+
+__end_hUGE_Routine_1:
+ret
+
+__hUGE_Routine_2:
+
+__end_hUGE_Routine_2:
+ret
+
+__hUGE_Routine_3:
+
+__end_hUGE_Routine_3:
+ret
+
+__hUGE_Routine_4:
+
+__end_hUGE_Routine_4:
+ret
+
+__hUGE_Routine_5:
+
+__end_hUGE_Routine_5:
+ret
+
+__hUGE_Routine_6:
+
+__end_hUGE_Routine_6:
+ret
+
+__hUGE_Routine_7:
+
+__end_hUGE_Routine_7:
+ret
+
+__hUGE_Routine_8:
+
+__end_hUGE_Routine_8:
+ret
+
+__hUGE_Routine_9:
+
+__end_hUGE_Routine_9:
+ret
+
+__hUGE_Routine_10:
+
+__end_hUGE_Routine_10:
+ret
+
+__hUGE_Routine_11:
+
+__end_hUGE_Routine_11:
+ret
+
+__hUGE_Routine_12:
+
+__end_hUGE_Routine_12:
+ret
+
+__hUGE_Routine_13:
+
+__end_hUGE_Routine_13:
+ret
+
+__hUGE_Routine_14:
+
+__end_hUGE_Routine_14:
+ret
+
+__hUGE_Routine_15:
+
+__end_hUGE_Routine_15:
+ret
+
+_game_over_waves:
+

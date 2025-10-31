@@ -1,4 +1,4 @@
-include "constants.inc"
+include "system/text_manager/text_manager_constants.inc"
 
 SECTION "Charmap", ROM0
 
@@ -93,3 +93,107 @@ DB "Mendivil", ENDLINE
 DB "Beltra", ENDLINE
 DB "Automatic", ENDLINE
 DB "Reasoning Team", ENDTEXT
+
+intro_text::
+DB "Long ago,", ENDLINE
+DB "Ahmbar changed", ENDLINE
+DB "the fate of the ", ENDLINE
+DB "world.", ENDTEXT
+
+; Menu principal (centrado, mas abajo)
+menu_title::
+
+DB "", ENDLINE
+DB "       AHMBAR", ENDLINE
+DB "", ENDLINE
+DB "      Start Game", ENDLINE
+DB "      Controls", ENDLINE
+DB "      Credits", ENDTEXT
+
+; Pantalla de controles (centrado)
+controls_text::
+DB "", ENDLINE
+DB "    CONTROLS", ENDLINE
+DB "", ENDLINE
+DB "  D-PAD: Move", ENDLINE
+DB "  A: Jump", ENDLINE
+DB "  B: Shoot", ENDLINE
+DB "", ENDLINE
+DB " Press A to return", ENDTEXT
+
+; Pantalla de creditos
+credits_screen::
+DB "    CREDITS", ENDLINE
+DB "", ENDLINE
+DB " Sonia Mendivil", ENDLINE
+DB " Miguel Beltra", ENDLINE
+DB "Jaime Hernandez", ENDLINE
+DB "", ENDLINE
+DB "   Press A", ENDTEXT
+
+
+;; ACT 1 Dialogs ;; 
+
+act_1_scene_1_dialog::
+	DB "Oh no, toxic frogs.", 		ENDLINE
+	DB "I have to ", 		ENDLINE
+	DB "reach the door. I", 		ENDLINE
+	DB "need to gather all", 		ENDLINE
+	DB "the ahmbar I can.",		ENDTEXT
+
+act_1_scene_2_dialog::
+	DB "OMG, the only way", 		ENDLINE
+	DB "is going down...", 			ENDLINE
+	DB "But how?", 		ENDTEXT
+
+act_1_scene_3_dialog::
+	DB "Easy...", 		ENDTEXT
+
+act_1_scene_4_dialog::
+	DB "Oh dear,", 		ENDLINE
+	DB "here we go again.", ENDTEXT
+
+act_1_scene_5_dialog::
+	DB "Now I can", 		ENDLINE
+	DB "do it better.", 	ENDTEXT
+
+
+
+;;; ACT 2 Dialogs ;;;
+
+act_2_scene_1_dialog::
+	DB "Oh, Toshokan, my", 		ENDLINE
+	DB "city. Once", 			ENDLINE
+	DB "prosperous and", 		ENDLINE
+	DB "rich, now only", 		ENDLINE
+	DB "ruins remain of", 		ENDLINE
+	DB "what it once was.",		ENDTEXT
+
+act_2_scene_2_dialog::
+	DB "The old station.", 		ENDLINE
+	DB "There is too much", 	ENDLINE
+	DB "noise. I would", 		ENDLINE
+	DB "better go clean", 		ENDLINE
+	DB "it up.",				ENDTEXT
+
+act_2_scene_3_dialog::
+	DB "I know a shortcut.",	ENDLINE
+	DB "They call it the",		ENDLINE
+	DB "Leap of Death. I",		ENDLINE
+	DB "hope it doesn not",		ENDLINE
+	DB "live up to its",		ENDLINE
+	DB "name today.",			ENDTEXT
+
+act_2_scene_4_dialog::
+	DB "The electrical",		ENDLINE
+	DB "installations of",			ENDLINE
+	DB "this place should",		ENDLINE
+	DB "have been inspected",	ENDLINE
+	DB "a long time ago.",		ENDLINE
+	DB "It is a death trap.",	ENDTEXT
+
+act_2_final_scene_dialog::
+	DB "What the hell is",		ENDLINE
+	DB "that monster!",			ENDLINE
+	DB "Ahmbar corrupts",		ENDLINE
+	DB "all living forms.",		ENDTEXT

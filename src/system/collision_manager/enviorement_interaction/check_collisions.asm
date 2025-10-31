@@ -1,66 +1,141 @@
-include "constants.inc"
+INCLUDE "constants.inc"
+INCLUDE "entities/entities.inc"
 
-SECTION "Collions", ROM0
+SECTION "Collisions", ROM0
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; check_collectible_collision
+;;; Checks if player is touching a collectible tile
+;;; (hearts, etc.) and collects it
+;;;
+;;; Destroys: A, BC, HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-; Verifica si el jugador está tocando un tile de puerta
+check_collectible_collision::
+    call get_tile_at_player_position  ; A = tile ID, HL = tilemap address
+    call is_tile_collectible
+    ret nz  ; Not collectible, return
 
-;; TODO : split code 2 parts 1. calculate player position     2. tile position
-check_door_collision::
-    ; Calcular posición del jugador en el tilemap
-    ; Tile X = (Player.wPlayerX + SCX - 8) / 8
-    ldh a, [rSCX]
-    ld b, a
-    ld a, [Player.wPlayerX]
-    add b
-    sub 8  ; Offset de sprite OAM
-    srl a  ; Dividir por 8
-    srl a
-    srl a
-    ld c, a  ; c = Tile X
-
-    ; Tile Y = (Player.wPlayerY + SCY - 16) / 8
-    ldh a, [rSCY]
-    ld b, a
-    ld a, [Player.wPlayerY]
-    add b
-    sub 16  ; Offset de sprite OAM
-    srl a  ; Dividir por 8
-    srl a
-    srl a
-    ld b, a  ; b = Tile Y
-
-    ; Calcular offset en tilemap: Tile Y * 32 + Tile X
-    ; Primero b * 32ñ
-    ld a, b
-    sla a  ; * 2
-    sla a  ; * 4
-    sla a  ; * 8
-    sla a  ; * 16
-    sla a  ; * 32
-    add c  ; + Tile X
-    ld c, a  ; c = offset bajo
-
-    ; Calcular dirección completa: $9800 + offset
-    ld hl, $9800
-    ld b, 0
-    add hl, bc
-
-    ; Leer el tile en esa posición
-    ld a, [hl]
-
-    ; Verificar si es uno de los tiles de puerta (0x88, 0x89, 0x8A, 0x8B)
-    cp $88
-    jr z, .is_door
-    cp $89
-    jr z, .is_door
-    cp $8A
-    jr z, .is_door
-    cp $8B
-    jr z, .is_door
-    ret  ; No es puerta, retornar
-
-.is_door:
-    ; Es una puerta, cambiar de nivel
-    call Next_Level
+    ; Is collectible
+    ; TODO: Add score/health/etc.
+    ; Remove tile from map (replace with empty)
+    ld a, $80  ; Empty tile
+    ld [hl], a
     ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Checks if two entities are colliding. The entities are 
+;; specified by their indices L and E.
+;;
+;; Returns Carry Flag (C=0, NC) when NOT-Colliding,
+;; and (C=1, C) when overlapping.
+;;
+;; INPUT:
+;;       E: Entity index 2
+;;       L: Entity index 1
+;; OUTPUT:
+;;      Carry: { NC: No overlap }, { C: Overlap }
+;; WARNING: Destroys B, C, D and ...
+ 
+are_entities_colliding::
+    push de
+    ld b, CMP_SPRIT_H
+    ld c, l
+    ld d, CMP_SPRIT_H
+    call are_boxes_colliding
+    pop de
+    ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Checks if two Axis Aligned Bounding Boxes (AABB) are
+;; colliding.
+;; 1. First, checks if they collide on the Y axis
+;; 2. Then checks the X axis, only if Y intervals overlap
+;;
+;; Receives in DE and HL the addresses of two AABBs:
+;;           -AABB 1-     -AABB 2-
+;; Address   |BC| +1|     |DE| +1|
+;; Values  
+;; SPR_BASE  [y1][x1] ... [y2][x2]
+;; AABB_BASE [h1][w1] ... [h2][w2]
+;;
+;; Returns Carry Flag (C=0, NC) when NOT colliding,
+;; and (C=1, C) when colliding.
+;;
+;; INPUT:
+;;      BC: Address of AABB 1
+;;      DE: Address of AABB 2
+;; OUTPUT:
+;;      Carry: { NC: Not colliding } { C: colliding }
+;;
+
+are_boxes_colliding::
+    push bc
+    push de
+    call are_intervals_overlapping
+    pop de
+    pop bc
+    ret nc
+
+    inc c
+    inc e
+
+    call are_intervals_overlapping
+    ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Checks if two integral intervals overlap in one dimension
+;; It receives the addresses of 2 intervals in memory
+;; in HL and DE:
+;;
+;; Entity    |BC|       |DE|
+;; Values  
+;; SPR_BASE  [p1] ..... [p2]
+;; AABB_BASE [w1] ..... [w2]
+;;
+;; Returns Carry Flag (C=0, NC) when NOT-Colliding,
+;; and (C=1, C) when overlapping.
+;;
+;; INPUT:
+;;      BC: Address of Interval 1 (p1, w1)
+;;      DE: Address of Interval 2 (p2, w2)
+;; OUTPUT:
+;;      Carry: { NC: No overlap }, { C: Overlap }
+;;
+ 
+are_intervals_overlapping::
+    ;call compare_contents_bc_and_de
+    ;jr nc, .case2 ; [bc] > [de]
+
+    ; Check situation ... bc ... de ...
+    .case1:
+        push bc
+        ld a, [bc]
+        ld h, CMP_AABB_H
+        ld l, c
+        add [hl]
+        ld b, a ; b <- p1+w1
+
+        ld a, [de] ; a <- p2
+
+        cp b ; p2-(p1+w1)
+        pop bc
+        ret nc
+
+    ; Check situation ... de ... bc ...
+    .case2:
+        ld a, [de]
+        ld h, CMP_AABB_H
+        ld l, e
+        add [hl] 
+        ld d, a ; d <- p2+w2
+        
+        ld a, [bc] ; a <- p1
+
+        cp d ; p1-(p2+w2)
+    ret
+
+

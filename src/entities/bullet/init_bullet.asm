@@ -1,53 +1,116 @@
-include "constants.inc"
+INCLUDE "constants.inc"
+INCLUDE "entities/entities.inc"
+INCLUDE "src/system/hud/hud_constants.inc"
+
 
 SECTION "Bullet", ROM0
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine loads the bullet sprite in the 
+;; VRAM.
+;;
+;; INPUT
+;;      -
+;; OUTPUT:
+;;      -
+;; WARNING: Destroys A, BC, DE and HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+load_bullet_sprites::
+    ld hl, bullet_tiles
+    ld de, VRAM0_START + (TILE_BULLET_HUD * TILE_SIZE)
+    ld  b, bullet_tiles.end - bullet_tiles
+    call memcpy_256
+    ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine creates a bullet entity and sets
+;; its component initial values
+;;
+;; INPUT
+;;      -
+;; OUTPUT:
+;;      -
+;; WARNING: Destroys A, BC, DE and HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 init_bullet::
     call man_entity_alloc ; Returns l=entity index
 
+    ;; Change by some flag
     ld a, [wPlayerDirection]
     cp 1
+
+    ld a, [Player.wPlayerX] ;; We keep the flag
     jr z, .right
-    jr .left
+    .left
+        sub 8
+        jr .skip
+    .right
+        add 8
+    .skip
+        ld c, a
 
-.right
-    ld a, [Player.wPlayerX]
-    add 8
-    ld c, a
-    jr .skip
-
-.left
-    ld a, [Player.wPlayerX]
-    sub 8
-    ld c, a
-    jr .skip
-
-.skip
     ; Configurar posición Y
     ; ld e, d
     ; add hl, de
     ld a, [Player.wPlayerY]
     ld b, a
 
-	ld d, TILE_BULLET ; tile
+	ld d, TILE_BULLET_SMALL ; tile
 	ld e, 0   ; tile properties
 	call set_entity_sprite
 
     ld a, [wPlayerDirection]
     cp 1
-    ld b, 0 ; vy 
+    ld b, 0 ; vy
     jr z, .right_speed
     jr .left_speed
 
 .right_speed
-	ld c, BULLET_SPEED ; vx
+	ld d, BULLET_SPEED ; vx
     jr .skip_speed
 
 .left_speed
-	ld c,  -BULLET_SPEED ; vx
+	ld d,  -BULLET_SPEED ; vx
     jr .skip_speed
 
 .skip_speed
-
 	call set_entity_physics
+
+    ; Configurar flags: la bala NO debe existir fuera de bounds
+    ; Esto evita que el sistema la haga "wrapear"
+    ld h, CMP_ATTR_H
+    push hl
+    ld a, ATT_ENTITY_FLAGS
+    add l
+    ld l, a
+
+    ld a, [hl]
+    and (1<<E_BIT_SENTINEL)|(1<<E_BIT_FREE) ; %11000000 <- we apply a mask to keep the first two bits
+    set E_BIT_BULLET, a
+    ld [hl], a
+    pop hl
+
+    push hl
+    ld a, INTERACTION_FLAGS
+    add l
+    ld l, a
+
+    xor a 
+    set E_BIT_DIES_OUT_OF_SCREEN, a  ; Asegurar que NO puede salir de bounds
+    ; set E_BIT_COLLIDABLE, a          ; Collides <- We remove this, so it can overlap with a solid tile to be destroyed
+    set E_BIT_MOVABLE, a 
+    ld [hl], a
+    pop hl
+
+    ld h, CMP_AABB_H
+    ld a, ENTITY_HEIGHT
+    add l
+    ld [hl], 8
+    inc l
+    ld [hl], 8
+
     ret

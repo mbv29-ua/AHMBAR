@@ -1,13 +1,32 @@
 include "constants.inc"
 
-SECTION "Scroll Manager", ROM0
+;;; Mirar lo de los offsets de la pantalla
+DEF SCROLL_OFFSET               EQU 48 ;; This can be changed and it sets the others
 
 DEF SCREEN_OFFSET_VERTICAL      EQU 16
 DEF SCREEN_OFFSET_HORIZONTAL    EQU  8
 DEF TILE_OFFSET                 EQU  8
-DEF SCROLL_OFFSET               EQU 16 ;; Este se puede cambiar
 
-;;; Mirar lo de los offsets de la pantalla
+DEF UP_SCROLL_OFFSET        EQU SCROLL_OFFSET + SCREEN_OFFSET_VERTICAL + TILE_OFFSET
+DEF DOWN_SCROLL_OFFSET      EQU 144 + SCREEN_OFFSET_VERTICAL - SCROLL_OFFSET - TILE_OFFSET
+DEF RIGHT_SCROLL_OFFSET     EQU 160 - SCROLL_OFFSET - SCREEN_OFFSET_HORIZONTAL
+DEF LEFT_SCROLL_OFFSET      EQU SCROLL_OFFSET + SCREEN_OFFSET_HORIZONTAL + TILE_OFFSET
+
+
+
+SECTION "Scroll Manager", ROM0
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine scrolls according to the player
+;; position
+;;
+;; INPUT
+;;      -
+;; OUTPUT:
+;;      -
+;; WARNING: Destroys A and HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 scroll_manager::
 ; Scroll up
 .scroll_up
@@ -18,17 +37,20 @@ scroll_manager::
 
     ; El personaje en posicion que activa el scroll up
     ld a, [Player.wPlayerY]
-    cp SCROLL_OFFSET + SCREEN_OFFSET_VERTICAL + TILE_OFFSET; Límite superior de la pantalla para activar scroll 
+    cp UP_SCROLL_OFFSET; Límite superior de la pantalla para activar scroll 
     jr nc, .end_scroll_up
 
     ; Hacemos scroll up
     ldh a, [rSCY]
     dec a  ; Incrementar SCY muestra más del mapa superior
+    ;ld hl, PlayerSpeed.wY
+    ;add [hl]
     ldh [rSCY], a
 
     ; Retrasamos al jugador para compensar
-    ld hl, Player.wPlayerY
-    inc [hl]
+    ;ld hl, Player.wPlayerY
+    ;inc [hl]
+    call move_all_entities_positions_one_pixel_down
 .end_scroll_up
 
 ; Scroll down
@@ -40,17 +62,20 @@ scroll_manager::
 
     ; El personaje en posicion que activa el scroll down
     ld a, [Player.wPlayerY]
-    cp 144 + SCREEN_OFFSET_VERTICAL - SCROLL_OFFSET - TILE_OFFSET; Límite inferior de la pantalla para activar scroll 
+    cp DOWN_SCROLL_OFFSET; Límite inferior de la pantalla para activar scroll 
     jr c, .end_scroll_down
 
     ; Hacemos scroll down
     ldh a, [rSCY]
     inc a  ; Incrementar SCY muestra más del mapa inferior
+    ;ld hl, PlayerSpeed.wY
+    ;add [hl]
     ldh [rSCY], a
 
     ; Retrasamos al jugador para compensar
-    ld hl, Player.wPlayerY
-    dec [hl]
+    ;ld hl, Player.wPlayerY
+    ;dec [hl]
+    call move_all_entities_positions_one_pixel_up
 .end_scroll_down
 
 ; Scroll right
@@ -62,7 +87,7 @@ scroll_manager::
 
     ; El personaje en posicion que activa el scroll right
     ld a, [Player.wPlayerX]
-    cp 160 - SCROLL_OFFSET - SCREEN_OFFSET_HORIZONTAL; Límite derecha de la pantalla para activar scroll 
+    cp RIGHT_SCROLL_OFFSET; Límite derecha de la pantalla para activar scroll 
     jr c, .end_scroll_right
 
     ; Hacemos scroll right
@@ -71,8 +96,9 @@ scroll_manager::
     ldh [rSCX], a
 
     ; Retrasamos al jugador para compensar
-    ld hl, Player.wPlayerX
-    dec [hl]
+    ;ld hl, Player.wPlayerX
+    ;dec [hl]
+    call move_all_entities_positions_one_pixel_to_left
 .end_scroll_right
 
 
@@ -85,7 +111,7 @@ scroll_manager::
 
     ; El personaje en posicion que activa el scroll left
     ld a, [Player.wPlayerX]
-    cp SCROLL_OFFSET + SCREEN_OFFSET_HORIZONTAL + TILE_OFFSET; Límite izquierda de la pantalla para activar scroll 
+    cp LEFT_SCROLL_OFFSET; Límite izquierda de la pantalla para activar scroll 
     jr nc, .end_scroll_left
 
     ; Hacemos scroll left
@@ -94,8 +120,9 @@ scroll_manager::
     ldh [rSCX], a
 
     ; Retrasamos al jugador para compensar
-    ld hl, Player.wPlayerX
-    inc [hl]
+    ;ld hl, Player.wPlayerX
+    ;inc [hl]
+    call move_all_entities_positions_one_pixel_to_right
 .end_scroll_left
 
 ret

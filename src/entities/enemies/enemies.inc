@@ -1,0 +1,41 @@
+DEF NO_AI EQU $FFFF
+
+RSRESET
+;; No enemy position since this is given to the spawner
+
+DEF ENEMY_TILE 						RB 1 
+DEF ENEMY_INITIAL_SPRITE_ATTRIBUTES	RB 1
+DEF ENEMY_INITIAL_VY_SPEED 			RB 1 
+DEF ENEMY_INITIAL_VX_SPEED 			RB 1 
+
+;; Intelligent (follows the player)
+
+DEF ENEMY_FLAGS						RB 1
+
+DEF ENEMY_ENVIRONMENT_INTERACTION	RB 1
+; 7 E_BIT_MOVABLE
+; 6 E_BIT_GRAVITY
+; 5 E_BIT_DIES_OUT_OF_SCREEN
+; 4 E_BIT_COLLIDABLE
+; 3 E_BIT_DAMAGEABLE
+; 2 E_BIT_STICK_TO_EDGES
+
+DEF ENEMY_LIFE						RB 1 ; If applies
+
+DEF ENEMY_HEIGHT					RB 1
+DEF ENEMY_WIDTH						RB 1
+
+DEF ENEMY_AI_1 						RB 2 ; Address of the routine
+DEF ENEMY_AI_2 						RB 2 ; Address of the routine
+DEF ENEMY_AI_3 						RB 2 ; Address of the routine
+
+DEF ENEMY_DEATH_ANIMATION			RB 2 ; Address of the death animation routine 
+
+DEF ENEMY_SIZE  					RB 0
+
+
+
+DEF DARKFROG_TILE 	EQU $05
+DEF FROG_TILE 		EQU $06
+DEF FLY_TILE  		EQU $07
+DEF FALLING_ROCK	EQU $08

@@ -5,197 +5,261 @@ INCLUDE "entities/entities.inc"
 SECTION "Character Movement", ROM0
 
 
-update_character_velocities::
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine checks the pressed buttons and
+;; updates the player speed Vy and Vx according
+;; to the inputs.
+;;
+;; INPUT
+;;      -
+;; OUTPUT:
+;;      -
+;; WARNING: Destroys A, DE and HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-    ld a, [PRESSED_BUTTONS]
+update_character_velocities::
+    
+
+.continue:
+
+    call decrement_Jump_cooldown
+
+    call reset_counter_jumps_if_grounded
+
+    ld a, [JUST_PRESSED_BUTTONS]
     ld h, CMP_PHYS_H
     ld l, 0
 
 .handle_jump:
-    bit BUTTON_A, a 
+    bit BUTTON_A, a
     jr z, .movement
-    ;; ------ Comprobamos flags ------
-    ld a, l 
-    add PHY_FLAGS
-    ld l, a 
-    ld a, [hl]
 
-    bit PHY_FLAG_GROUNDED, a ;; SI NO ESTA EN EL SUELO NO SALTA
-    jr z, .movement
-    bit PHY_FLAG_JUMPING, a ;; SI YA ESTA SALTANDO NO SALTAR
+    ;; ------------------------------
+    ;; Comprobamos flags de físicas
+    ;; ------------------------------
+    ld d, CMP_ATTR_H
+    ld e, PHY_FLAGS
+    ld a, [de]
+    bit PHY_FLAG_GROUNDED, a
+    jr nz, .doJump        ; Si está en el suelo => salto permitido
+
+
+    ;; Primero comprobamos si tiene salto infinito
+    ld a, [wPowerupInfiniteJump]
+    or a
+    jr nz, .cooldown
+
+
+    ;; ------------------------------
+    ;; No está en el suelo => solo si tiene powerup
+    ;; ------------------------------
+    ld a, [wPowerupDoubleJump]
+    or a
+    jr z, .movement       ; sin powerup => no hay salto doble
+
+    ld a, [wCounterJump]
+    cp 2
+    jr nc, .movement      ; ya ha hecho 2 saltos => no más
+
+
+    .cooldown
+    ;; cooldown
+    ld l, COUNT_JUMPING_COOLDOWN
+    ld h, CMP_CONT_H
+    ld a, [hl]
+    or a
     jr nz, .movement
 
+.doJump:
+    ;; ------------------------------
+    ;; Reiniciamos cooldown
+    ;; ------------------------------
+    ld l, COUNT_JUMPING_COOLDOWN
+    ld h, CMP_CONT_H
+    ld [hl], 10
+
+    ;; ------------------------------
+    ;; Aplicamos velocidad de salto
+    ;; ------------------------------
     ld h, CMP_PHYS_H
     ld l, 0
     ld [hl], -PLAYER_JUMP_SPEED
+    inc l
+    ld [hl], 0
 
-    ;; actualizamos flags si salto
-    ld a, l 
-    add PHY_FLAGS
-    ld l, a 
+    ;; ------------------------------
+    ;; Incrementamos contador de salto
+    ;; ------------------------------
+    ld a, [wCounterJump]
+    inc a
+    ld [wCounterJump], a
 
-    ld a, [hl]
-    res PHY_FLAG_GROUNDED, a ; ya no está en el suelo
-    set PHY_FLAG_JUMPING, a  ; ahora está saltando   
+    ;; ------------------------------
+    ;; Actualizamos flags 
+    ;; ------------------------------
+    ld d, CMP_ATTR_H
+    ld e, PHY_FLAGS
+    ld a, [de]
+    res PHY_FLAG_GROUNDED, a
+    ;set PHY_FLAG_JUMPING, a
+    ld [de], a
 
     jr .next
-
 .movement:
-; Movimiento ABAJO y ABAJO
-    ld [hl], 0 ; reiniciamos
-    
-    .move_down:
-        bit DPAD_DOWN, a
-        jr z, .move_up
-        ld [hl], PLAYER_Y_SPEED ; 1
-
-    .move_up:
-        bit DPAD_UP, a
-        jr z, .next
-        ld [hl], -PLAYER_Y_SPEED ; -1
+    ; No modificar velocidad Y - la gravedad ya la controla el physics_system
+    ; Solo manejamos movimiento horizontal
 
 .next:
 ; Movimiento IZQUIERDA y DERECHA
+    ld h, CMP_PHYS_H    ; Asegurar que H apunta a componente física
+    ld l, 1             ; Offset 2 = velocidad X
     inc l
-    ld [hl], 0 ; reiniciamos
+    ld [hl], 0          ; reiniciar velocidad X
+
+    ; Recargar botones presionados en A
+    ld a, [PRESSED_BUTTONS]
 
     .move_left:
         bit DPAD_LEFT, a
         jr z, .move_right
         ld [hl], -PLAYER_X_SPEED ; -1
         ; Actualizar dirección del jugador a izquierda (0)
+        push af
         ld a, 0
         ld [wPlayerDirection], a
 
+        ;; Change tile direction 
+        ld h, CMP_SPRIT_H
+        ld l, SPR_ATTR
+        set E_BIT_FLIP_X, [hl]
+
+        ;; Update walking counter (needed for animation)
+        ld h, CMP_CONT_H
+        ld l, COUNT_MOVING_COOLDOWN
+        dec [hl]
+        pop af
+
     .move_right:
-        ld a, [PRESSED_BUTTONS] ; Por si alguien pulsa izq+der
         bit DPAD_RIGHT, a
-        jr z, .end 
+        jr z, .end
         ld [hl], PLAYER_X_SPEED ; 1
         ; Actualizar dirección del jugador a derecha (1)
         ld a, 1
         ld [wPlayerDirection], a
 
-.end
-ret
+        ;; Change tile direction 
+        ld h, CMP_SPRIT_H
+        ld l, SPR_ATTR
+        res E_BIT_FLIP_X, [hl]
+
+        ;; Update walking counter (needed for animation)
+        ld h, CMP_CONT_H
+        ld l, COUNT_MOVING_COOLDOWN
+        dec [hl]
+           
+.end:
+    ret
 
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; clamp_player_position
+;; Limits the player position to keep it inside the 
+;; limits of the map.
+;; Must be called AFTER applying all the physics
+;;
+;; INPUT
+;;      L: Entity index
+;; OUTPUT:
+;;      -
+;; WARNING: Destroys A, HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+clamp_player_position::
+    ; Límite X izquierdo (mínimo)
+    ld a, [Player.wPlayerX]
+    cp 8                ; Borde izquierdo de la pantalla
+    jr nc, .check_x_right
+    ld a, 8
+    ld [Player.wPlayerX], a
 
-;move_character::
-;    call read_pad
-;
-;    ld hl, PRESSED_BUTTONS
-;
-;    ; Movimiento ABAJO (incrementa Y del jugador)
-;    bit DPAD_DOWN, [hl]
-;    jr z, .next1
-;    ; Verificar si podemos hacer scroll
-;    ldh a, [rSCY]
-;    cp 112  ; ¿Estamos en el límite inferior del scroll?
-;    jr z, .move_player_down_only
-;    ; Primero intentar mover el personaje
-;    ld a, [Player.wPlayerY]
-;    cp 120  ; Límite inferior de la pantalla para activar scroll
-;    jr nc, .try_scroll_down
-;
-;
-;.move_player_down_only:
-;    ld a, [Player.wPlayerY]
-;    cp 152  ; Límite absoluto inferior de la pantalla
-;    jr nc, .next1
-;    inc a  ; Incrementar Y mueve hacia abajo
-;    ld [Player.wPlayerY], a
-;    jr .next1
-;.try_scroll_down:
-;    ldh a, [rSCY]
-;    inc a  ; Incrementar SCY muestra más del mapa inferior
-;    ldh [rSCY], a
-;
-;    .next1:
-;    ; Movimiento ARRIBA (decrementa Y del jugador)
-;    bit DPAD_UP, [hl]
-;    jr z, .next2
-;    ; Verificar si podemos hacer scroll
-;    ldh a, [rSCY]
-;    cp 0  ; ¿Estamos en el límite superior del scroll?
-;    jr z, .move_player_up_only
-;    ; Primero intentar mover el personaje
-;    ld a, [Player.wPlayerY]
-;    cp 40  ; Límite superior de la pantalla para activar scroll
-;    jr c, .try_scroll_up
-;
-;
-;
-;.move_player_up_only:
-;    ld a, [Player.wPlayerY]
-;    cp 16  ; Límite absoluto superior de la pantalla
-;    jr c, .next2
-;    dec a  ; Decrementar Y mueve hacia arriba
-;    ld [Player.wPlayerY], a
-;    jr .next2
-;.try_scroll_up:
-;    ldh a, [rSCY]
-;    dec a  ; Decrementar SCY muestra más del mapa superior
-;    ldh [rSCY], a
-;
-;    .next2:
-;    ; Movimiento IZQUIERDA (decrementa X del jugador, actualiza dirección)
-;    bit DPAD_LEFT, [hl]
-;    jr z, .next3
-;    ; Actualizar dirección del jugador a izquierda (0)
-;    xor a
-;    ld [wPlayerDirection], a
-;
-;    ; Verificar si podemos hacer scroll
-;    ldh a, [rSCX]
-;    cp 0  ; ¿Estamos en el límite izquierdo del scroll?
-;    jr z, .move_player_left_only
-;    ; Primero intentar mover el personaje
-;    ld a, [Player.wPlayerX]
-;    cp 40  ; Límite izquierdo de la pantalla para activar scroll
-;    jr c, .try_scroll_left
-;.move_player_left_only:
-;    ld a, [Player.wPlayerX]
-;    cp 8  ; Límite absoluto izquierdo de la pantalla
-;    jr c, .next3
-;    dec a  ; Decrementar X mueve hacia la izquierda
-;    ld [Player.wPlayerX], a
-;    jr .next3
-;.try_scroll_left:
-;    ldh a, [rSCX]
-;    dec a  ; Decrementar SCX muestra más del mapa izquierdo
-;    ldh [rSCX], a
-;
-;    .next3:
-;    ; Movimiento DERECHA (incrementa X del jugador, actualiza dirección)
-;    bit DPAD_RIGHT, [hl]
-;    jr z, .end
-;    ; Actualizar dirección del jugador a derecha (1)
-;    ld a, 1
-;    ld [wPlayerDirection], a
-;
-;    ; Verificar si podemos hacer scroll
-;    ldh a, [rSCX]
-;    cp 96  ; ¿Estamos en el límite derecho del scroll?
-;    jr z, .move_player_right_only
-;    ; Primero intentar mover el personaje
-;    ld a, [Player.wPlayerX]
-;    cp 120  ; Límite derecho de la pantalla para activar scroll
-;    jr nc, .try_scroll_right
-;.move_player_right_only:
-;    ld a, [Player.wPlayerX]
-;    cp 168  ; Límite absoluto derecho de la pantalla
-;    jr nc, .end
-;    inc a  ; Incrementar X mueve hacia la derecha
-;    ld [Player.wPlayerX], a
-;    jr .end
-;.try_scroll_right:
-;    ldh a, [rSCX]
-;    inc a  ; Incrementar SCX muestra más del mapa derecho
-;    ldh [rSCX], a
-;
-;    .end:
-;    ; Verificar colisión con puerta después de moverse
-;    call check_door_collision
-;    ret
+.check_x_right:
+    ; Límite X derecho (máximo)
+    ; Si SCX está en su máximo (96), el jugador puede ir hasta 152
+    ; Si SCX está en 0, el jugador puede ir hasta 152 también
+    ldh a, [rSCX]
+    cp 96               ; ¿Scroll en el límite derecho?
+    jr nz, .check_y_top
+
+    ; Estamos en el borde derecho del mapa
+    ld a, [Player.wPlayerX]
+    cp 152 + 8              ; Límite absoluto derecho + offset
+    jr c, .check_y_top
+    ld a, 152 + 8
+    ld [Player.wPlayerX], a
+
+.check_y_top:
+    ; Límite Y superior (mínimo)
+    ld a, [Player.wPlayerY]
+    cp 16               ; Borde superior de la pantalla
+    jr nc, .check_y_bottom
+    ld a, 16
+    ld [Player.wPlayerY], a
+
+.check_y_bottom:
+    ; Límite Y inferior (máximo)
+    ldh a, [rSCY]
+    cp 112              ; ¿Scroll en el límite inferior?
+    jr nz, .end
+
+    ; Estamos en el borde inferior del mapa
+    ld a, [Player.wPlayerY]
+    cp 152              ; Límite absoluto inferior
+    jr c, .end
+    ld a, 152
+    ld [Player.wPlayerY], a
+
+.end:
+    ret
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine decrements the counter that 
+;; registers the cooldown between jumps. Set to
+;; 30.
+;;
+;; INPUT
+;;      -
+;; OUTPUT:
+;;      -
+;; WARNING: Destroys A and HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+decrement_Jump_cooldown::
+    ld l, COUNT_JUMPING_COOLDOWN
+    ld h, CMP_CONT_H
+    ld a, [hl]
+    or a
+    ret z
+    dec [hl]
+    ret
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine resets the counter of jumps just 
+;; in case that the player is grounded.
+;;
+;; INPUT
+;;      -
+;; OUTPUT: wCounterJump 0 or >0
+;;      -
+;; WARNING: Destroys A and HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+reset_counter_jumps_if_grounded::
+    ld d, CMP_ATTR_H
+    ld e, PHY_FLAGS
+    ld a, [de]
+
+    bit PHY_FLAG_GROUNDED, a
+    ret z          ; si no está en el suelo, saltar
+    ld hl, wCounterJump
+    ld [hl], 0    ; <-- reseteamos el contador
+    ret           
+
+    
