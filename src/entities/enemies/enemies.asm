@@ -62,9 +62,6 @@ get_enemy_definition_vy::
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 damage_enemy::
-    ; Guardar índice del enemigo
-    ;ld b, a  ; B = enemy index
-
     ; Obtener vida actual del enemigo
     ld h, CMP_ATTR_H
     ;ld l, a  ; L = enemy index
@@ -72,28 +69,6 @@ damage_enemy::
     add ENTITY_HEALTH  ; A = enemy index + offset ENTITY_HEALTH
     ld l, a  ; HL ahora apunta a ENTITY_HEALTH del enemigo
     dec [hl]  ; A = vida actual
-
-    ; Si tiene menos de 3 de vida, poner a 0
-    ;cp 3
-    ;ret nz ;jr z, .kill_enemy
-
-    ; Restar 3 de vida
-    ;sub 3
-    ;ld [hl], a
-    ;ret
-
-	;.kill_enemy:
-    ; Poner vida a 0
-    ;xor a
-    ;ld [hl], a
-
-    ; Marcar enemigo como FREE (destruirlo)
-    ;ld h, CMP_ATTR_H
-    ;ld l, b  ; L = enemy index (recuperado de B)
-    ;res E_BIT_FREE, [hl]
-	;sub ENTITY_HEALTH
-	;ld l, a
-	;call man_entity_free
     ret
 
 
@@ -149,23 +124,12 @@ clean_dead_enemy::
 	.clean:
 		ld l, e
 		call man_entity_free ; Receives L as the entity index
+
+		ld hl, wNumberOfEnemies
+		dec [hl]
 	ret 
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; kill_enemy
-;; If enemy health is 0, enemy is destroyed
-;;
-;; Input: E = enemy index
-;; Destroys: HL
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;kill_enemies_if_life_is_0::
-;	ld hl, kill_enemy_if_life_is_0
-;	call man_entity_for_each_enemy
-;    ret
-
- 
  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; kill_enemy
 ;; If enemy health is 0, enemy is destroyed
@@ -216,15 +180,20 @@ set_death_clock::
 ;; WARNING: Destroys A and DE
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-man_entity_count_number_of_enemies::
-	xor a
-	ld [wNumberOfEnemies], a
-	ld hl, inc_number_of_enemies_counter
-	call man_entity_for_each_enemy
-	ret
-
-
-inc_number_of_enemies_counter::
-	ld hl, wNumberOfEnemies
-	inc [hl]
-	ret
+;man_entity_count_number_of_enemies::
+;	xor a
+;	ld [wNumberOfEnemies], a
+;	ld hl, inc_number_of_enemies_counter
+;	call man_entity_for_each_enemy
+;	ret
+;
+;
+;inc_number_of_enemies_counter::
+;	ld hl, wNumberOfEnemies
+;	inc [hl]
+;	ret
+;
+;dec_number_of_enemies_counter::
+;	ld hl, wNumberOfEnemies
+;	inc [hl]
+;	ret

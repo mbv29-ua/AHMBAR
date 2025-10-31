@@ -1,7 +1,7 @@
 INCLUDE "constants.inc"
 INCLUDE "system/hud/hud_constants.inc"
 
-SECTION "Game start", ROMX
+SECTION "Game start", ROM0
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -32,8 +32,14 @@ start_game::
 	call hUGE_init
 
 	ld hl, scene_1
+<<<<<<< HEAD
     ;ld hl, act_2_scene_1
+=======
+    ; ld hl, act_2_scene_3
+>>>>>>> c024e9052d52687dcfc199e6594a19dcfce305b3
     ; ld hl, act_2_final_scene
+    ; ld hl, act_3_scene_2
+    ; ld hl, act_3_scene_1
 	call load_scene
 	ret
 
@@ -61,6 +67,8 @@ set_initial_memory_values::
     ld a, MAX_BULLETS
     ld [wPlayerBullets], a
 
+    call reset_score_to_zero ; Reset score to 0 at game start
+
     ; Resetear nivel a 1
     ld a, 1
     ld [wCurrentLevel], a
@@ -70,10 +78,16 @@ set_initial_memory_values::
     ld [wHUDNeedsUpdate], a
     ld [wShootingCooldown], a ; Inicializar cooldown de disparo a 0
     ld [wSpikeCooldown], a  ; Inicializar cooldown de picas a 0
+    
+    ;; valores para hacer pruebas con los saltos
+    
     ;ld [wPowerupDoubleJump], a
     
+    ld [wPowerupInfiniteJump], a 
+
     ld a, 1 
     ld [wPowerupDoubleJump], a
+    ;ld [wPowerupInfiniteJump], a
 
     ret
 

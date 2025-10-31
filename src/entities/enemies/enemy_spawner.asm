@@ -33,6 +33,8 @@ enemy_spawn::
 	call spawner_set_enemy_AI
 	call spawner_set_enemy_ID
 
+	ld hl, wNumberOfEnemies
+	inc [hl]
 	ret
 	
 

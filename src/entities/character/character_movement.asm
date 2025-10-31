@@ -2,7 +2,7 @@ INCLUDE "utils/joypad.inc"
 INCLUDE "constants.inc"
 INCLUDE "entities/entities.inc"
 
-SECTION "Character Movement", ROMX
+SECTION "Character Movement", ROM0
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -18,28 +18,14 @@ SECTION "Character Movement", ROMX
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 update_character_velocities::
-    ;; ------------------------------
-    ;; Decrementar cooldown del salto
-    ;; ------------------------------
-    ld l, COUNT_JUMPING_COOLDOWN
-    ld h, CMP_CONT_H
-    ld a, [hl]
-    or a
-    jr z, .continue
-    dec [hl]
+    
 
 .continue:
-    ;; ------------------------------
-    ;; Reiniciar contador si está en el suelo
-    ;; ------------------------------
-    ld d, CMP_ATTR_H
-    ld e, PHY_FLAGS
-    ld a, [de]
-    bit PHY_FLAG_GROUNDED, a
-    jr z, .skipReset          ; si no está en el suelo, saltar
-    ld hl, wCounterJump
-    ld [hl], 0                ; <-- reseteamos el contador
-.skipReset:
+
+    call decrement_Jump_cooldown
+
+    call reset_counter_jumps_if_grounded
+
     ld a, [JUST_PRESSED_BUTTONS]
     ld h, CMP_PHYS_H
     ld l, 0
@@ -57,6 +43,13 @@ update_character_velocities::
     bit PHY_FLAG_GROUNDED, a
     jr nz, .doJump        ; Si está en el suelo => salto permitido
 
+
+    ;; Primero comprobamos si tiene salto infinito
+    ld a, [wPowerupInfiniteJump]
+    or a
+    jr nz, .cooldown
+
+
     ;; ------------------------------
     ;; No está en el suelo => solo si tiene powerup
     ;; ------------------------------
@@ -68,6 +61,8 @@ update_character_velocities::
     cp 2
     jr nc, .movement      ; ya ha hecho 2 saltos => no más
 
+
+    .cooldown
     ;; cooldown
     ld l, COUNT_JUMPING_COOLDOWN
     ld h, CMP_CONT_H
@@ -226,3 +221,45 @@ clamp_player_position::
 .end:
     ret
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine decrements the counter that 
+;; registers the cooldown between jumps. Set to
+;; 30.
+;;
+;; INPUT
+;;      -
+;; OUTPUT:
+;;      -
+;; WARNING: Destroys A and HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+decrement_Jump_cooldown::
+    ld l, COUNT_JUMPING_COOLDOWN
+    ld h, CMP_CONT_H
+    ld a, [hl]
+    or a
+    ret z
+    dec [hl]
+    ret
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine resets the counter of jumps just 
+;; in case that the player is grounded.
+;;
+;; INPUT
+;;      -
+;; OUTPUT: wCounterJump 0 or >0
+;;      -
+;; WARNING: Destroys A and HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+reset_counter_jumps_if_grounded::
+    ld d, CMP_ATTR_H
+    ld e, PHY_FLAGS
+    ld a, [de]
+
+    bit PHY_FLAG_GROUNDED, a
+    ret z          ; si no está en el suelo, saltar
+    ld hl, wCounterJump
+    ld [hl], 0    ; <-- reseteamos el contador
+    ret           
+
+    

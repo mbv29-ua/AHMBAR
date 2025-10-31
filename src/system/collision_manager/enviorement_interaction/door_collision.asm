@@ -15,7 +15,7 @@ check_door_collision::
     ret nz  ; Not a door, return
 
     ; Is a door, change level
-    ld b, 60
+    ld b, 30
     call wait_x_frames  
     call next_scene
     ret
