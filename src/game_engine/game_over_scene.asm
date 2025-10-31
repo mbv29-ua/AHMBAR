@@ -36,7 +36,8 @@ scene_game_over::
     call fade_to_original
 
     ; Esperar a que presione START para reiniciar
-    call wait_until_start_pressed
+    ld b, 60
+    call wait_x_frames
 
     
       ; Fade out antes de reiniciar
