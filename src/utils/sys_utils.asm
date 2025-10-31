@@ -379,3 +379,11 @@ disable_hud_screen::
     ld hl, rLCDC
     res 5, [hl]
     ret
+
+
+
+
+set_black_palette::
+    ld hl, rBGP
+    ld [hl], %00000011
+    ret
