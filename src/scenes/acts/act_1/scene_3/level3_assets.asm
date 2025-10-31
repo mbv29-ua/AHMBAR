@@ -28,3 +28,12 @@ scene_3_enemy_spawner::
 	call enemy_spawn
 
 	ret
+
+act_1_scene_3_dialog_write:: 
+	di
+    call set_black_palette
+    ld hl, act_1_scene_3_dialog
+    call write_super_extended_dialog
+    ei
+    call wait_until_A_pressed
+    ret

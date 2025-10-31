@@ -47,3 +47,12 @@ init_ambars_level1::
     SPAWN_AMBAR_AT_TILE 15, 15
 
     ret
+
+act_1_scene_1_dialog_write:: 
+	di
+    call set_black_palette
+    ld hl, act_1_scene_1_dialog
+    call write_super_extended_dialog
+    ei
+    call wait_until_A_pressed
+    ret

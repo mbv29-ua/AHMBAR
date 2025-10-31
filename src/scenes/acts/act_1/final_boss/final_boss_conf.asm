@@ -21,4 +21,4 @@ final_boss::
 .level_number:				DB 		5						; SCENE_LEVEL_NUMBER (Using 5 for final boss)
 .background_animation:		DW_BE	update_fire_animation	; SCENE_ANIMATION_ROUTINE
 .next_level_trigger:		DW_BE	check_door_collision	; SCENE_NEXT_LEVEL_TRIGGER
-.intro_scene:				DW_BE	no_dialog 				; SCENE_INTRO_DIALOG
+.intro_scene:				DW_BE	act_1_scene_5_dialog_write 				; SCENE_INTRO_DIALOG

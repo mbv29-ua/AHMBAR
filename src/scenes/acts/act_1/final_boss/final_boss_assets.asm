@@ -34,3 +34,12 @@ init_ambars_final_boss::
     SPAWN_AMBAR_AT_TILE 15, 15
 
     ret
+
+act_1_scene_5_dialog_write:: 
+	di
+    call set_black_palette
+    ld hl, act_1_scene_5_dialog
+    call write_super_extended_dialog
+    ei
+    call wait_until_A_pressed
+    ret
