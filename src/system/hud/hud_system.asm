@@ -244,7 +244,7 @@ render_bullets::
     jr z, .empty_bullet
 
     ; Mostrar bala activa
-    ld a, TILE_BULLET
+    ld a, TILE_BULLET_HUD
     ld [hl+], a
     dec b               ; Restar 1 bala
     jr .next_bullet
