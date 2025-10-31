@@ -141,6 +141,7 @@ check_bullet_player_collisions::
 
 collect_bullet::
     
+    dec l
     call man_entity_free
     ;call clean_collected_bullet
 
