@@ -1,6 +1,6 @@
 INCLUDE "assets/sounds/music/hUGE.inc"
 
-SECTION "enemy_hurt_sound Song Data", ROMX
+SECTION "enemy_hurt_sound Song Data", ROM0
 
 enemy_hurt_sound::
 db 7

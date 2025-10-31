@@ -1,6 +1,6 @@
-SECTION "level2", ROMX
+SECTION FRAGMENT "Tile Maps", ROMX
 
-Level2_Map::
+act_1_scene_2_tilemap::
 DB $A0,$80,$80,$80,$80,$80,$80,$80,$80,$A0
 DB $80,$80,$80,$80,$80,$80,$80,$80,$80,$80
 DB $80,$80,$80,$80,$80,$80,$80,$80,$80,$80

@@ -1,6 +1,6 @@
 
 
- SECTION "PruebaSonia", ROMX
+ SECTION "PruebaSonia", ROM0
 
 pruebafuncion::
 DB $40,$40,$40,$40,$40,$40,$40,$40,$40,$40

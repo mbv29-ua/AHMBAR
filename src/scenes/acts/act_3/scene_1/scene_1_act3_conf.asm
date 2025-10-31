@@ -8,10 +8,10 @@ act_3_scene_1::
 .starting_x: 			DB 		16						; SCENE_PLAYER_STARTING_X
 .initial_scroll_y: 		DB	 	112 					; SCENE_STARTING_SCREEN_SCROLL_Y
 .initial_scroll_x:		DB 		0						; SCENE_STARTING_SCREEN_SCROLL_X
-.tileset:				DW_BE 	tiles_acto_sonia			; SCENE_TILESET ; Se almacen como HIGH/LOW
-.tilset_size:			DW_BE 	(tiles_acto_sonia.end-tiles_acto_sonia.start)		; SCENE_TILESET_SIZE ; Se almacen como HIGH/LOW
+.tileset:				DW_BE 	tiles			; SCENE_TILESET ; Se almacen como HIGH/LOW
+.tilset_size:			DW_BE 	(tiles_end-tiles)		; SCENE_TILESET_SIZE ; Se almacen como HIGH/LOW
 .tileset_offset:		DW_BE 	128 * TILE_SIZE			; SCENE_TILESET_OFFSET ; Se almacen como HIGH/LOW
-.tilemap:				DW_BE 	act_3_scene_1_sonia	    ; SCENE_TILEMAP ; Se almacen como HIGH/LOW
+.tilemap:				DW_BE 	act_3_scene_1_tilemap	    ; SCENE_TILEMAP ; Se almacen como HIGH/LOW
 .goal_y: 				DB 		0						; SCENE_GOAL_POINT_X
 .goal_x:				DB 		0						; SCENE_GOAL_POINT_Y
 .next_scene:			DW_BE 	act_3_scene_2			; SCENE_NEXT_SCENE
@@ -21,3 +21,4 @@ act_3_scene_1::
 .level_number:			DB 		1						; SCENE_LEVEL_NUMBER
 .background_animation:	DW_BE	no_animation			; SCENE_ANIMATION_ROUTINE
 .next_level_trigger:	DW_BE	check_door_collision	; SCENE_NEXT_LEVEL_TRIGGER
+.intro_scene:			DW_BE	no_dialog ; SCENE_INTRO_DIALOG

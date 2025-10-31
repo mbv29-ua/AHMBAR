@@ -1,5 +1,5 @@
 
-SECTION "intro_tiles", ROMX
+SECTION "intro_tiles", ROM0
 
 ; Start of tile array.
 intro_tiles::

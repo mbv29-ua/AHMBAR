@@ -2,7 +2,7 @@ INCLUDE "constants.inc"
 INCLUDE "entities/entities.inc"
 
 
-SECTION "Final Boss Tiles", ROMX
+SECTION "Final Boss Tiles", ROM0
 
 INCLUDE "system/ambar_macros.inc"
 
