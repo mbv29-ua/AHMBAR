@@ -14,11 +14,11 @@ act_3_scene_3::
 .tilemap:				DW_BE 	act_3_scene_3_tilemap	    ; SCENE_TILEMAP ; Se almacen como HIGH/LOW
 .goal_y: 				DB 		0						; SCENE_GOAL_POINT_X
 .goal_x:				DB 		0						; SCENE_GOAL_POINT_Y
-.next_scene:			DW_BE 	act_1_scene_1			; SCENE_NEXT_SCENE
+.next_scene:			DW_BE 	init_ambars_act_3_levels_3			; SCENE_NEXT_SCENE
 .scene_enemy_spawner:	DW_BE 	act_3_scene_3_enemy_spawner	; SCENE_ENEMY_SPAWNER
 .scene_collectible_spawner: DW_BE	init_ambars_act_3_levels_3	; SCENE_COLLECTIBLE_SPAWNER
 .act_number:			DB 		3						; SCENE_ACT_NUMBER
-.level_number:			DB 		2						; SCENE_LEVEL_NUMBER
+.level_number:			DB 		3						; SCENE_LEVEL_NUMBER
 .background_animation:	DW_BE	no_animation			; SCENE_ANIMATION_ROUTINE
 .next_level_trigger:	DW_BE	check_door_collision	; SCENE_NEXT_LEVEL_TRIGGER
 .intro_scene:			DW_BE	no_dialog ; SCENE_INTRO_DIALOG

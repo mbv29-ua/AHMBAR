@@ -31,7 +31,7 @@ act_3_scene_3_enemy_spawner::
 INCLUDE "system/ambar_macros.inc"
 
 init_ambars_act_3_levels_3::
-	SPAWN_AMBAR_AT_TILE 27, 15
-    SPAWN_AMBAR_AT_TILE 22, 0
+	SPAWN_AMBAR_AT_TILE 21, 19
+    SPAWN_AMBAR_AT_TILE 14, 27
     SPAWN_AMBAR_AT_TILE 5, 20
 	ret
