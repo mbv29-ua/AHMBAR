@@ -24,6 +24,8 @@ call wait_vblank ; Main starts working in the VRAM
     call manage_death_animations
 
     ;; Routines not accessing the VRAM should be placed here
+    call check_lives ; Check state after render and before the rest
+    call check_next_scene_trigger
     call hUGE_dosound               ; Update hUGE music driver
 
     call generate_random_number
@@ -58,8 +60,6 @@ call wait_vblank ; Main starts working in the VRAM
     call update_bullet_system
 
     call destroy_dead_enemies
-    call check_lives
-    call check_next_scene_trigger
     halt
 
     jp .main_loop
