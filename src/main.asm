@@ -19,6 +19,7 @@ call wait_vblank ; Main starts working in the VRAM
     ; call update_fire_animation      ; Animate fire tiles during VBlank
     call update_player_sprite
     call process_scene_background_animation
+    call check_ahmbar_tile_collision
     call update_hud_if_needed       ; Update HUD if flag is set (during VBlank)
     call manage_death_animations
 

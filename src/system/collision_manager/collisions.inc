@@ -8,3 +8,6 @@ DEF DOOR_TILE				 	EQU $40 ;  64 -  79
 DEF COLLECTIBLE_TILE 			EQU $50 ;  80 -  95
 DEF DEADLY_TILE 				EQU $60 ;  96 - 111
 DEF SOLID_TILE_2	 			EQU $70 ; 112 - 127
+
+DEF EMPTY_TILE 			        EQU $80 ;  tile $00 of the second bank -> $80
+DEF AHMBAR_TILE 			    EQU $D8 ;  tile $88 of the second bank -> $D8
