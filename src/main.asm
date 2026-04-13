@@ -19,10 +19,13 @@ call wait_vblank ; Main starts working in the VRAM
     ; call update_fire_animation      ; Animate fire tiles during VBlank
     call update_player_sprite
     call process_scene_background_animation
+    call check_ahmbar_tile_collision
     call update_hud_if_needed       ; Update HUD if flag is set (during VBlank)
     call manage_death_animations
 
     ;; Routines not accessing the VRAM should be placed here
+    call check_lives ; Check state after render and before the rest
+    call check_next_scene_trigger
     call hUGE_dosound               ; Update hUGE music driver
 
     call generate_random_number
@@ -57,8 +60,6 @@ call wait_vblank ; Main starts working in the VRAM
     call update_bullet_system
 
     call destroy_dead_enemies
-    call check_lives
-    call check_next_scene_trigger
     halt
 
     jp .main_loop

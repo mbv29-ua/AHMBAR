@@ -25,13 +25,19 @@ act_2_scene_2_enemy_spawner::
 
 	ld  b, $38
 	ld  c, $68
-	ld hl, jumping_frog
+	ld hl, jumping_moving_frog
 	call enemy_spawn
 
-	ld  b, $58
-	ld  c, $14
-	ld hl, basic_fly
-	call enemy_spawn
+
+	ld b, (26*8)+16
+	ld c, (23*28)+56
+	call bullet_spawn
+
+
+	ld b, $38
+	ld c, (26*8)+8
+	call bullet_spawn
+
 	ret
 
 INCLUDE "system/ambar_macros.inc"
@@ -39,5 +45,4 @@ INCLUDE "system/ambar_macros.inc"
 init_ambars_level2::
 	SPAWN_AMBAR_AT_TILE 14, 15
     SPAWN_AMBAR_AT_TILE 7, 11
-    SPAWN_AMBAR_AT_TILE 25, 12
 	ret

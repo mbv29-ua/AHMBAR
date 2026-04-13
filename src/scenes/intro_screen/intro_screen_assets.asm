@@ -22,6 +22,7 @@ show_credits::
     call write_super_extended_dialog
     ei
     call wait_until_A_pressed
+    call fadeout
     call screen_off
     call clean_bg_map
     call screen_on

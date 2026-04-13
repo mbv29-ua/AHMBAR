@@ -73,6 +73,22 @@ is_tile_collectible::
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; is_tile_ahmbar
+;;; Checks if a tile is an ahmbar
+;;;
+;;; Input:
+;;;   A = Tile ID
+;;; Output:
+;;;   Z flag: z=1 means it is ahmbar, z=0 means it is not
+;;;   A = Property flags (preserved for chaining)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+is_tile_ahmbar::
+    cp AHMBAR_TILE
+    ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; is_tile_platform
 ;;; Checks if a tile blocks movement only in down
 ;;; direction

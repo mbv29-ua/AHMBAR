@@ -48,7 +48,7 @@ spike_damage::
     jr c, .less_than_4_lives
 
     ; Tiene 4 o más vidas: restar 4
-    sub 2
+    dec a
     ld [hl], a
     jr .after_damage
 

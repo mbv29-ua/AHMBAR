@@ -28,6 +28,8 @@ final_boss_enemy_spawner::
 init_ambars_final_boss::
     ; Spawn ambars at specific locations for final boss scene
     ; Position in tiles (Y, X) -> in pixels (Y*8, X*8)
+    ld a, 1 
+    ld [wPowerupDoubleJump], a
     
 	SPAWN_AMBAR_AT_TILE 5, 5
     SPAWN_AMBAR_AT_TILE 10, 10
