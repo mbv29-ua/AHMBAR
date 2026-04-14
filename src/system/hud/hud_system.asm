@@ -12,6 +12,8 @@ SECTION "HUD System", ROM0
 ; Tile indices
 DEF TILE_HEART_FULL  EQU $60    ; Corazón completo
 DEF TILE_HEART_HALF  EQU $61    ; Medio corazón
+DEF TILE_THREE       EQU $7E    ; 3 Partes
+DEF TILE_ONE         EQU $7F    ; 1 Parte
 DEF TILE_EMPTY       EQU $00    ; Tile vacío
 ; TILE_BULLET ya definido en constants.inc como $09
 
@@ -155,13 +157,15 @@ render_hud::
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; render_lives
 ;;; Renderiza los corazones según las vidas actuales
-;;; 8 vidas = 4 corazones completos (D0 D0 D0 D0)
-;;; 7 vidas = 3 completos + 1 medio (D0 D0 D0 D1)
-;;; 6 vidas = 3 completos (D0 D0 D0)
-;;; 5 vidas = 2 completos + 1 medio (D0 D0 D1)
-;;; ... etc
-;;; 1 vida  = 1 medio corazón (D1)
-;;; 0 vidas = vacío
+;;; 16 vidas = 4 corazones completos (D0 D0 D0 D0)
+;;; 15 vidas = 3 corazonaes + 1/3
+;;; 14 vidas = 3 corazones + 1/2
+;;; (...)
+;;; 4 vidas = 1 corazon
+;;; 3 vidas = 1/3 
+;;; 2 vidas = 1/2
+;;; 1 vida = 1/4
+;;; 0 vidas = empty
 ;;; Destroys: A, BC, DE, HL
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 render_lives::
@@ -178,33 +182,50 @@ render_lives::
     ld c, 4             ; C = contador de corazones (4 total)
 
 .loop_heart:
-    ; Verificar si quedan >= 2 vidas para corazón completo
-    ld a, b
+    ld a, b             ; Cargamos remanente
+    or a                ; ¿Es cero? (Zero Flag if B=0)
+    jr z, .empty_heart   ; Si es 0, el resto de slots serán vacíos
+
+    ; Lógica de selección de Tile por umbrales
+    cp 4
+    jr nc, .full_heart  ; Si B >= 4
+    cp 3
+    jr z, .three_quarter; Si B == 3
     cp 2
-    jr nc, .full_heart
-
-    ; Verificar si queda 1 vida para medio corazón
+    jr z, .half_heart   ; Si B == 2
     cp 1
-    jr z, .half_heart
-
-    ; No quedan vidas, corazón vacío
-    ld a, TILE_EMPTY
-    ld [hl+], a
-    jr .next_heart
+    jr z, .one_quarter  ; Si B == 1
 
 .full_heart:
     ld a, TILE_HEART_FULL
     ld [hl+], a
     ld a, b
-    sub 2               ; Restar 2 vidas
+    sub 4               ; Restar un corazón completo
     ld b, a
+    jr .next_heart
+
+.three_quarter:
+    ld a, TILE_THREE
+    ld [hl+], a
+    ld b, 0             ; Consumido el resto de la vida
     jr .next_heart
 
 .half_heart:
     ld a, TILE_HEART_HALF
     ld [hl+], a
-    dec b               ; Restar 1 vida
+    ld b, 0
     jr .next_heart
+
+.one_quarter:
+    ld a, TILE_ONE
+    ld [hl+], a
+    ld b, 0
+    jr .next_heart
+
+.empty_heart:
+    ld a, TILE_EMPTY
+    ld [hl+], a
+    ; No decrementamos B porque ya es 0
 
 .next_heart:
     dec c

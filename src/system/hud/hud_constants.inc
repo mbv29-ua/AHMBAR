@@ -1,5 +1,5 @@
 DEF MAX_BULLETS         EQU 5  ; Máximo de balas disponibles
-DEF MAX_LIVES           EQU 8  ; 8 medios corazones = 4 corazones completos
+DEF MAX_LIVES           EQU 16
 DEF BULLET_SPEED        EQU 4
 DEF BULLET_INACTIVE     EQU 0
 DEF BULLET_ACTIVE       EQU 1
