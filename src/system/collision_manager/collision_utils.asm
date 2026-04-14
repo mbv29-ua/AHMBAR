@@ -191,7 +191,6 @@ calculate_address_from_tx_and_ty:
 ;;;
 ;;; Output:
 ;;;   A = Tile ID at player position
-;;;   HL = Address in tilemap ($9800 + offset)
 ;;; Destroys: BC
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
