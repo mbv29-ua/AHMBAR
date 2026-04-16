@@ -76,6 +76,8 @@ scroll_manager::
     ;ld hl, Player.wPlayerY
     ;dec [hl]
     call move_all_entities_positions_one_pixel_up
+    jp .scroll_down
+
 .end_scroll_down
 
 ; Scroll right
