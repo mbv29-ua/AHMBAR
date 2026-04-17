@@ -1,6 +1,6 @@
 
-DEF TILE_COWBOY             EQU $10
-DEF TILE_GOAL               EQU $11
+; DEF TILE_COWBOY             EQU $10
+; DEF TILE_GOAL               EQU $11
 
 DEF TILE_EMPTY              EQU $00    ; Tile vacío
 DEF TILE_PLAYER_WALKING_1   EQU $01
