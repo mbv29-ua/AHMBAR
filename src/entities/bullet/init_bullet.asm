@@ -1,4 +1,5 @@
 INCLUDE "constants.inc"
+INCLUDE "tiles.inc"
 INCLUDE "entities/entities.inc"
 INCLUDE "src/system/hud/hud_constants.inc"
 
@@ -18,10 +19,21 @@ SECTION "Bullet", ROM0
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 load_bullet_sprites::
-    ld hl, bullet_tiles
+    ld hl, bullet_tiles.bullet_hud_tile
     ld de, VRAM0_START + (TILE_BULLET_HUD * TILE_SIZE)
-    ld  b, bullet_tiles.end - bullet_tiles
+    ld  b, TILE_SIZE
     call memcpy_256
+
+    ld hl, bullet_tiles.bullet_tile
+    ld de, VRAM0_START + (TILE_BULLET_SMALL * TILE_SIZE)
+    ld  b, TILE_SIZE
+    call memcpy_256
+
+    ld hl, bullet_tiles.bullet_box
+    ld de, VRAM0_START + (TILE_BULLET_BOX * TILE_SIZE)
+    ld  b, TILE_SIZE
+    call memcpy_256
+
     ret
 
 

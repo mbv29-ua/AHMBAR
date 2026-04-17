@@ -1,4 +1,5 @@
 INCLUDE "entities/entities.inc"
+INCLUDE "tiles.inc"
 
 SECTION "Ambar Spawner", ROM0
 
@@ -19,7 +20,7 @@ ambar_spawn::
 spawner_set_ambar_sprite::
     push bc
     
-    ld d, $62 ; Ambar tile index
+    ld d, TILE_AHMBAR_HUD ; Ambar tile index
     ld e, 0   ; Sprite attributes
 
     ld l, a ; entity index

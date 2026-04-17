@@ -1,6 +1,7 @@
 INCLUDE "scenes/scene_constants.inc"
 INCLUDE "entities/entities.inc"
 INCLUDE "constants.inc"
+INCLUDE "tiles.inc"
 
 SECTION "Scene address", WRAM0
 
@@ -34,7 +35,7 @@ load_scene::
     call man_entity_init
 
     ; Load assets
-    call load_numbers
+    ;call load_numbers
     call load_heart_tiles
     call load_ambar_tile
     call load_player_tiles
@@ -309,7 +310,7 @@ set_player_initial_position::
     add hl, de
     ld c, [hl]  ; X coordinate
 
-    ld d, PLAYER_WALKING_TILE_2 ; tile
+    ld d, TILE_PLAYER_WALKING_2 ; tile
     ld e, 0           ; tile properties
     ld l, 0
     call set_entity_sprite

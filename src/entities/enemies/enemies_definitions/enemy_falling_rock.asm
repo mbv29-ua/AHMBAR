@@ -1,4 +1,5 @@
 INCLUDE "constants.inc"
+INCLUDE "tiles.inc"
 INCLUDE "entities/enemies/enemies.inc"
 
 SECTION "Falling rock", ROM0
@@ -10,7 +11,7 @@ SECTION "Falling rock", ROM0
 
 falling_rock::
 
-.initial_tile: 			DB FALLING_ROCK ;; ENEMY_TILE
+.initial_tile: 			DB TILE_FALLING_ROCK ;; ENEMY_TILE
 .initial_sprite_attrs: 	DB  0		 	;; ENEMY_INITAL_SPRITE_ATTRIBUTES
 .initial_y_speed: 		DB 	0 		 	;; ENEMY_INITIAL_VY_SPEED
 .initial_x_speed: 		DB  0		 	;; ENEMY_INITIAL_VX_SPEED
@@ -38,7 +39,7 @@ falling_rock::
 
 load_rock_tiles::
     ld hl, rock_tile
-    ld de, (VRAM0_START+FALLING_ROCK*TILE_SIZE)
+    ld de, (VRAM0_START+TILE_FALLING_ROCK*TILE_SIZE)
     ld bc, rock_tile.end - rock_tile.start
     call memcpy_65536
     ret

@@ -1,4 +1,6 @@
 INCLUDE "constants.inc"
+INCLUDE "tiles.inc"
+INCLUDE "system/text_manager/text_manager_constants.inc"
 INCLUDE "entities/entities.inc"
 INCLUDE "utils/joypad.inc"
 INCLUDE "src/system/hud/hud_constants.inc"
@@ -9,13 +11,6 @@ SECTION "HUD System", ROM0
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; HUD Constants
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; Tile indices
-DEF TILE_HEART_FULL  EQU $60    ; Corazón completo
-DEF TILE_HEART_HALF  EQU $61    ; Medio corazón
-DEF TILE_THREE       EQU $7E    ; 3 Partes
-DEF TILE_ONE         EQU $7F    ; 1 Parte
-DEF TILE_EMPTY       EQU $00    ; Tile vacío
-; TILE_BULLET ya definido en constants.inc como $09
 
 ; HUD positions in Window tilemap
 DEF HUD_ROW              EQU 0      ; Primera fila de la Window
@@ -127,14 +122,14 @@ render_hud::
     ld [hl], a
 
     ; Ambar tile ($62) (1 tile, X=5)
-    ld a, $62
+    ld a, TILE_AHMBAR_HUD
     ld hl, $9C00 + 5
     ld [hl], a
 
     call render_hud_score       ; Score (2 tiles, X=6) - will be updated in score_system.asm
 
     ; Another Ambar symbol ($62) (1 tile, X=8)
-    ld a, $62
+    ld a, TILE_AHMBAR_HUD
     ld hl, $9C00 + 8
     ld [hl], a
 
@@ -491,21 +486,21 @@ render_act_level::
     add hl, de
 
     ; Escribir "A" (tile $7A)
-    ld a, $7A
+    ld a, TILE_CHAR_A
     ld [hl+], a
 
     ; Escribir número de acto (B contiene el número)
     ld a, b
-    add $70  ; Convertir número a tile ($70 = '0', $71 = '1', etc.)
+    add NUMBERS_START  ; Convertir número a tile ($70 = '0', $71 = '1', etc.)
     ld [hl+], a
 
     ; Escribir "L" (tile $7B)
-    ld a, $7B
+    ld a, TILE_CHAR_L
     ld [hl+], a
 
     ; Escribir número de nivel (C contiene el número)
     ld a, c
-    add $70  ; Convertir número a tile
+    add NUMBERS_START  ; Convertir número a tile
     ld [hl], a
 
     ret

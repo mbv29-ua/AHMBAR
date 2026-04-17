@@ -1,4 +1,5 @@
 INCLUDE "constants.inc"
+INCLUDE "tiles.inc"
 INCLUDE "entities/entities.inc"
 INCLUDE "system/hud/hud_constants.inc"
 

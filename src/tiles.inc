@@ -1,0 +1,45 @@
+
+; DEF TILE_COWBOY             EQU $10
+; DEF TILE_GOAL               EQU $11
+
+DEF TILE_EMPTY              EQU $00    ; Tile vacío
+DEF TILE_PLAYER_WALKING_1   EQU $01
+DEF TILE_PLAYER_WALKING_2   EQU $02
+DEF TILE_PLAYER_JUMPING     EQU $03
+
+DEF TILE_BUTTERFLY 	        EQU $04
+DEF TILE_DARKFROG 	        EQU $05
+DEF TILE_FROG 		        EQU $06
+DEF TILE_FLY  	        	EQU $07
+DEF TILE_FALLING_ROCK	    EQU $08
+
+
+DEF TILE_BULLET_SMALL           EQU $10
+DEF TILE_ENEMY_DESINTEGRATION_1 EQU $11
+DEF TILE_ENEMY_DESINTEGRATION_2 EQU $12
+DEF TILE_ENEMY_DESINTEGRATION_3 EQU $13
+DEF TILE_BULLET_BOX             EQU $14
+
+; Números para HUD (según posiciones reales en VRAM)
+DEF TILE_CHAR_A             EQU $30
+DEF TILE_CHAR_L             EQU $3B
+DEF TILE_DIGIT_0            EQU $6C
+DEF TILE_DIGIT_1            EQU $6D
+DEF TILE_DIGIT_2            EQU $6E
+DEF TILE_DIGIT_3            EQU $6F
+DEF TILE_DIGIT_4            EQU $70
+DEF TILE_DIGIT_5            EQU $71
+DEF TILE_DIGIT_6            EQU $72
+DEF TILE_DIGIT_7            EQU $73
+DEF TILE_DIGIT_8            EQU $74
+DEF TILE_DIGIT_9            EQU $75
+
+; Tile indices
+DEF TILE_HEART_FULL         EQU $77    ; Corazón completo
+DEF TILE_THREE              EQU $78    ; 3 Partes
+DEF TILE_HEART_HALF         EQU $79    ; Medio corazón
+DEF TILE_ONE                EQU $7A    ; 1 Parte
+DEF TILE_AHMBAR_HUD         EQU $7B
+DEF TILE_BULLET_HUD         EQU $7C
+
+

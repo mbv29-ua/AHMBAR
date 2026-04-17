@@ -1,4 +1,5 @@
 INCLUDE "constants.inc"
+INCLUDE "tiles.inc"
 INCLUDE "entities/enemies/enemies.inc"
 
 SECTION "Jumping frog", ROM0
@@ -10,7 +11,7 @@ SECTION "Jumping frog", ROM0
 
 jumping_frog::
 
-.initial_tile: 			DB FROG_TILE 	;; ENEMY_TILE
+.initial_tile: 			DB TILE_FROG 	;; ENEMY_TILE
 .initial_sprite_attrs: 	DB  0		 	;; ENEMY_INITAL_SPRITE_ATTRIBUTES
 .initial_y_speed: 		DB -2 		 	;; ENEMY_INITIAL_VY_SPEED
 .initial_x_speed: 		DB  0		 	;; ENEMY_INITIAL_VX_SPEED
@@ -38,7 +39,7 @@ jumping_frog::
 
 load_frog_tiles::
     ld hl, frog_tile
-    ld de, (VRAM0_START+FROG_TILE*TILE_SIZE)
+    ld de, (VRAM0_START+TILE_FROG*TILE_SIZE)
     ld bc, frog_tile.end - frog_tile.start
     call memcpy_65536
     ret
