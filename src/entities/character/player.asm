@@ -1,5 +1,6 @@
 INCLUDE "entities/entities.inc"
 INCLUDE "constants.inc"
+INCLUDE "tiles.inc"
 
 
 SECTION "Player variables", WRAM0
@@ -66,7 +67,7 @@ enemy_damage::
 load_player_tiles::
     ; Cargar sprite de la bola negra (jugador)
     ld hl, player_beta_tiles
-    ld de, VRAM0_START + PLAYER_WALKING_TILE_1 * TILE_SIZE
+    ld de, VRAM0_START + TILE_PLAYER_WALKING_1 * TILE_SIZE
     ld  b, player_beta_tiles.end - player_beta_tiles.start
     call memcpy_256
     ret

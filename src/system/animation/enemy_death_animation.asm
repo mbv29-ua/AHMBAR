@@ -1,15 +1,12 @@
 INCLUDE "constants.inc"
+INCLUDE "tiles.inc"
 INCLUDE "entities/entities.inc"
 
 SECTION "Enemy death animation data", ROM0
 
-DEF ENEMY_DESINTEGRATION_TILE_1 EQU $34
-DEF ENEMY_DESINTEGRATION_TILE_2 EQU $35
-DEF ENEMY_DESINTEGRATION_TILE_3 EQU $36
-
 desintegrate_animation_tiles::
 .start:
-	DB ENEMY_DESINTEGRATION_TILE_1, ENEMY_DESINTEGRATION_TILE_2, ENEMY_DESINTEGRATION_TILE_3
+	DB TILE_ENEMY_DESINTEGRATION_1, TILE_ENEMY_DESINTEGRATION_2, TILE_ENEMY_DESINTEGRATION_3
 .end:
 
 SECTION "Enemy death animation", ROM0
@@ -27,7 +24,7 @@ SECTION "Enemy death animation", ROM0
 
 load_desintegration_tiles::
     ld hl, desintegration_tiles
-    ld de, (VRAM0_START+ENEMY_DESINTEGRATION_TILE_1*TILE_SIZE)
+    ld de, (VRAM0_START + TILE_ENEMY_DESINTEGRATION_1 * TILE_SIZE)
     ld bc, desintegration_tiles.end - desintegration_tiles.start
     call memcpy_65536
     ret

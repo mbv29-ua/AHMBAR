@@ -1,4 +1,5 @@
 INCLUDE "constants.inc"
+INCLUDE "tiles.inc"
 INCLUDE "entities/entities.inc"
 
 SECTION "intro screen scene", ROM0
@@ -54,10 +55,10 @@ intro_animation_scene::
         and %00001000
         ld hl, $FE02
         jr z, .run_tile_2
-            ld [hl], PLAYER_WALKING_TILE_1
+            ld [hl], TILE_PLAYER_WALKING_1
             jr .continue
         .run_tile_2:
-            ld [hl], PLAYER_WALKING_TILE_2
+            ld [hl], TILE_PLAYER_WALKING_2
         ld hl, Player.wPlayerX
         inc [hl]
 
@@ -119,7 +120,7 @@ menu_start_init::
     inc l
     ld [hl], $10
     inc l
-    ld [hl], PLAYER_WALKING_TILE_2 ; tile
+    ld [hl], TILE_PLAYER_WALKING_2 ; tile
 	inc l
     ld [hl], 0
 
@@ -165,7 +166,7 @@ init_personaje_animacion::
 	inc l
     ld [hl], $20  ; X coordinate
 	inc l
-    ld [hl], PLAYER_WALKING_TILE_1 ; tile
+    ld [hl], TILE_PLAYER_WALKING_1 ; tile
 	inc l
     ld [hl], 0   ; tile properties
     ;; Example of initializing an enemy (valid for an entity)

@@ -1,4 +1,5 @@
 INCLUDE "constants.inc"
+INCLUDE "tiles.inc"
 
 SECTION "Score Variables", WRAM0
 

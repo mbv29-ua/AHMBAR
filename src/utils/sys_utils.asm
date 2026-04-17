@@ -1,7 +1,6 @@
 INCLUDE "constants.inc"
+INCLUDE "tiles.inc"
 INCLUDE "system/text_manager/text_manager_constants.inc"
-
-
 SECTION "System utils", ROM0
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -294,23 +293,23 @@ load_fonts::
 ;; WARNING: Destroys BC, DE and HL.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-load_numbers::
-    ld hl, fonts.numbers
-    ld de, VRAM0_START + NUMBERS_START * TILE_SIZE
-    ld bc, (fonts.end - fonts.numbers) * TILE_SIZE / 2
-    call memcpy_65536
+;load_numbers::
+    ;ld hl, fonts.numbers
+    ;ld de, VRAM0_START + NUMBERS_START * TILE_SIZE
+    ;ld bc, (fonts.end - fonts.numbers) * TILE_SIZE / 2
+    ;call memcpy_65536
 
-    ld hl, fonts.a
-    ld de, VRAM0_START + (NUMBERS_START+10) * TILE_SIZE
-    ld  b, TILE_SIZE
-    call memcpy_256
+    ;ld hl, fonts.a
+    ;ld de, VRAM0_START + (NUMBERS_START+10) * TILE_SIZE
+    ;ld  b, TILE_SIZE
+    ;call memcpy_256
 
-    ld hl, fonts.l
-    ld de, VRAM0_START + (NUMBERS_START+11) * TILE_SIZE
-    ld  b, TILE_SIZE
-    call memcpy_256
+    ;ld hl, fonts.l
+    ;ld de, VRAM0_START + (NUMBERS_START+11) * TILE_SIZE
+    ;ld  b, TILE_SIZE
+    ;call memcpy_256
 
-    ret
+    ;ret
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -325,23 +324,23 @@ load_numbers::
 
 load_heart_tiles::
     ; Cargar corazón completo en tile $60
-    ld hl, fonts.heart_full
-    ld de, VRAM0_START + $60 * TILE_SIZE
-    ld  b, TILE_SIZE
+    ld hl, hud_tiles.heart_full
+    ld de, VRAM0_START + TILE_HEART_FULL * TILE_SIZE
+    ld  b, hud_tiles.hearts_end-hud_tiles.heart_full
     call memcpy_256
 
     ; Cargar medio corazón en tile $61
-    ld hl, fonts.heart_half
-    ld de, VRAM0_START + $61 * TILE_SIZE
-    ld  b, TILE_SIZE
-    call memcpy_256
+    ;ld hl, fonts.heart_half
+    ;ld de, VRAM0_START + $61 * TILE_SIZE
+    ;ld  b, TILE_SIZE
+    ;call memcpy_256
 
     ret
 
 load_ambar_tile::
     ; Cargar corazón completo en tile $D0
     ld hl, ambar.start
-    ld de, VRAM0_START + $62 * TILE_SIZE
+    ld de, VRAM0_START + TILE_AHMBAR_HUD * TILE_SIZE
     ld  b, TILE_SIZE
     call memcpy_256
     ret

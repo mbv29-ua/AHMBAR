@@ -32,10 +32,3 @@ DEF ENEMY_AI_3 						RB 2 ; Address of the routine
 DEF ENEMY_DEATH_ANIMATION			RB 2 ; Address of the death animation routine 
 
 DEF ENEMY_SIZE  					RB 0
-
-
-DEF BUTTERFLY_TILE 	EQU $04
-DEF DARKFROG_TILE 	EQU $05
-DEF FROG_TILE 		EQU $06
-DEF FLY_TILE  		EQU $07
-DEF FALLING_ROCK	EQU $08

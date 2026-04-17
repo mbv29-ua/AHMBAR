@@ -1,4 +1,5 @@
 INCLUDE "constants.inc"
+INCLUDE "tiles.inc"
 INCLUDE "entities/enemies/enemies.inc"
 
 SECTION "Basic fly", ROM0
@@ -10,7 +11,7 @@ SECTION "Basic fly", ROM0
 
 basic_fly::
 
-.initial_tile: 			DB FLY_TILE 	;; ENEMY_TILE
+.initial_tile: 			DB TILE_FLY 	;; ENEMY_TILE
 .initial_sprite_attrs: 	DB 0		 	;; ENEMY_INITAL_SPRITE_ATTRIBUTES
 .initial_y_speed: 		DB 1 		 	;; ENEMY_INITIAL_VY_SPEED
 .initial_x_speed: 		DB 0		 	;; ENEMY_INITIAL_VX_SPEED
@@ -38,7 +39,7 @@ basic_fly::
 
 load_fly_tiles::
     ld hl, fly_tile
-    ld de, (VRAM0_START+FLY_TILE*TILE_SIZE)
+    ld de, (VRAM0_START+TILE_FLY*TILE_SIZE)
     ld bc, fly_tile.end - fly_tile.start
     call memcpy_65536
     ret

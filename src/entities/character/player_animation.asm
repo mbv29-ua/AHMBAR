@@ -1,4 +1,5 @@
 INCLUDE "constants.inc"
+INCLUDE "tiles.inc"
 INCLUDE "entities/entities.inc"
 
 SECTION "Player Animation", ROM0
@@ -22,7 +23,7 @@ update_player_sprite::
 	jr nz, .not_jumping
 		ld h, CMP_SPRIT_H
 		ld l, SPR_TILE
-		ld [hl], PLAYER_JUMPING_TILE
+		ld [hl], TILE_PLAYER_JUMPING
 	ret
 
 	.not_jumping:
@@ -34,7 +35,7 @@ update_player_sprite::
 
 		ld h, CMP_SPRIT_H
 		ld l, SPR_TILE
-		ld [hl], PLAYER_WALKING_TILE_2
+		ld [hl], TILE_PLAYER_WALKING_2
 		ret
 
 	.walking:
@@ -47,8 +48,8 @@ update_player_sprite::
 		ld l, SPR_TILE
 		jr nz, .left_step
 		.right_step:
-			ld [hl], PLAYER_WALKING_TILE_1
+			ld [hl], TILE_PLAYER_WALKING_1
 			ret
 		.left_step:
-			ld [hl], PLAYER_WALKING_TILE_2
+			ld [hl], TILE_PLAYER_WALKING_2
 			ret

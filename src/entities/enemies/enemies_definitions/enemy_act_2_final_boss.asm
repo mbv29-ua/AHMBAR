@@ -1,4 +1,5 @@
 INCLUDE "constants.inc"
+INCLUDE "tiles.inc"
 INCLUDE "entities/enemies/enemies.inc"
 
 SECTION "Act 2 final boss", ROM0
@@ -10,7 +11,7 @@ SECTION "Act 2 final boss", ROM0
 
 act_2_final_boss::
 
-.initial_tile: 			DB BUTTERFLY_TILE 	;; ENEMY_TILE
+.initial_tile: 			DB TILE_BUTTERFLY 	;; ENEMY_TILE
 .initial_sprite_attrs: 	DB 0		 	;; ENEMY_INITAL_SPRITE_ATTRIBUTES
 .initial_y_speed: 		DB 1 		 	;; ENEMY_INITIAL_VY_SPEED
 .initial_x_speed: 		DB 0		 	;; ENEMY_INITIAL_VX_SPEED
@@ -38,7 +39,7 @@ act_2_final_boss::
 
 load_butterfly_tiles::
     ld hl, butterfly_tiles
-    ld de, (VRAM0_START+BUTTERFLY_TILE*TILE_SIZE)
+    ld de, (VRAM0_START+TILE_BUTTERFLY*TILE_SIZE)
     ld bc, butterfly_tiles.end - butterfly_tiles.start
     call memcpy_65536
     ret
