@@ -1,5 +1,13 @@
 INCLUDE "constants.inc"
+INCLUDE "scenes/acts/act_2/scene_1/act_2_scene_1_constants.inc"
 INCLUDE "system/ambar_macros.inc"
+
+MACRO SPAWN_ENEMY_AT
+    ld b, FMOD(\2 * 8 + 16 + (256 - A2_L1_INITIAL_SCROLL_Y), 256)
+    ld c, FMOD(\1 * 8 +  8 + (256 - A2_L1_INITIAL_SCROLL_X), 256)
+	ld hl, \3
+	call enemy_spawn
+ENDM
 
 
 SECTION "Act 2 Scene 1 Spawners", ROM0
@@ -15,40 +23,17 @@ act_2_scene_1_intro_dialog::
 
 
 act_2_scene_1_enemy_spawner::
-	ld  b, $70
-	ld  c, $48
-	ld hl, jumping_frog
-	call enemy_spawn
 
-	ld  b, $38
-	ld  c, $68
-	ld hl, jumping_frog
-	call enemy_spawn
+	SPAWN_ENEMY_AT $08, $1A, jumping_frog
+	SPAWN_ENEMY_AT $0D, $13, jumping_frog
+	SPAWN_ENEMY_AT $0B, $0B, jumping_frog
+	SPAWN_ENEMY_AT $1A, $0B, jumping_frog
 
-	ld  b, $80
-	ld  c, $A0
-	ld hl, jumping_moving_frog
-	call enemy_spawn
+	SPAWN_ENEMY_AT $12, $1C, jumping_moving_frog
 
-	ld  b, $D8
-	ld  c, $80
-	ld hl, basic_fly
-	call enemy_spawn
-
-	ld  b, $D0
-	ld  c, $90
-	ld hl, basic_fly
-	call enemy_spawn
-
-	ld  b, $E8
-	ld  c, $A0
-	ld hl, basic_fly
-	call enemy_spawn
-
-	;ld  b, $E0
-	;ld  c, $B0
-	;ld hl, basic_fly
-	;call enemy_spawn
+	SPAWN_ENEMY_AT $0F, $07, basic_fly
+	SPAWN_ENEMY_AT $11, $06, basic_fly
+	SPAWN_ENEMY_AT $13, $08, basic_fly
 
 	ld b, $A0
 	ld c, $10
@@ -64,8 +49,8 @@ init_ambars_act_2_scene_1::
     ; Spawn ambars at specific locations for level 1
     ; Position in tiles (Y, X) -> in pixels (Y*8, X*8)
     
-	SPAWN_AMBAR_AT_TILE $07, $10 
-    SPAWN_AMBAR_AT_TILE $16, $17 
-    SPAWN_AMBAR_AT_TILE $19, $0A 
+	;SPAWN_AMBAR_AT_TILE $07, $10 
+    ;SPAWN_AMBAR_AT_TILE $16, $17 
+    ;SPAWN_AMBAR_AT_TILE $19, $0A 
 
     ret
