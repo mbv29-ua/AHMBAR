@@ -1,4 +1,5 @@
 INCLUDE "constants.inc"
+INCLUDE "utils/arithmetic_macros.inc"
 INCLUDE "entities/entities.inc"
 
 SECTION "Collision manager", ROM0
@@ -129,7 +130,7 @@ convert_y_to_ty:
     ld hl, rSCY
     add [hl]
     sub 16 ; Subtract the non-visible 16 pixels
-    call div_a_by_8
+    div_a_by_8
     ret
 
 
@@ -150,7 +151,7 @@ convert_x_to_tx:
     ld hl, rSCX
     add [hl]
     sub 8 ; Subtract the non-visible 8 pixels
-    call div_a_by_8
+    div_a_by_8
     ret
 
 
@@ -169,7 +170,7 @@ convert_x_to_tx:
 calculate_address_from_tx_and_ty:
     ld h, 0 ; HL = Tile Y
     ld l, b
-    call mult_hl_32
+    mult_hl_32
 
     ; Add Tile X
     ld d, 0

@@ -1,5 +1,6 @@
 INCLUDE "entities/entities.inc"
 INCLUDE "constants.inc"
+INCLUDE "utils/arithmetic_macros.inc"
 
 SECTION "Moving system variables", WRAM0
 
@@ -485,7 +486,7 @@ move_all_entities_positions_one_pixel_up::
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 apply_enemy_intelligent_behavior::
-	
+
 	ld a, [Player.wPlayerX]
 	ld b, a
 
@@ -536,7 +537,7 @@ apply_enemy_intelligent_behavior::
 
 		ld a, [hl]
 		call abs_value_a
-		call oposite_of_a
+		opposite_of_a
 		ld [hl], a
 
 	ret

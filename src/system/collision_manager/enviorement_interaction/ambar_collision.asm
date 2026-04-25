@@ -1,4 +1,5 @@
 INCLUDE "constants.inc"
+INCLUDE "utils/arithmetic_macros.inc"
 INCLUDE "system/collision_manager/collisions.inc"
 INCLUDE "entities/entities.inc"
 
@@ -78,7 +79,8 @@ get_current_tile_address_left_point::
 
     ld h, 0 ; HL = Tile Y
     ld l, b
-    call mult_hl_32
+    mult_hl_32
+    
     ; Add Tile X
     ld d, 0
     ld e, c ; DE = Tile X 
@@ -103,7 +105,8 @@ get_current_tile_address_right_point::
 
     ld h, 0 ; HL = Tile Y
     ld l, b
-    call mult_hl_32
+    mult_hl_32
+    
     ; Add Tile X
     ld d, 0
     ld e, c ; DE = Tile X 
