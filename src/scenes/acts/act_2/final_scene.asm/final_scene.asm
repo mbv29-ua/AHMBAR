@@ -1,8 +1,15 @@
 INCLUDE "constants.inc"
+INCLUDE "scenes/acts/act_2/final_scene.asm/act_2_final_scene_constants.inc"
 INCLUDE "tiles.inc"
 INCLUDE "entities/entities.inc"
 INCLUDE "system/hud/hud_constants.inc"
 
+MACRO SPAWN_ENEMY_AT
+    ld b, FMOD(\2 * 8 + 16 + (256 - A2_L5_INITIAL_SCROLL_Y), 256)
+    ld c, FMOD(\1 * 8 +  8 + (256 - A2_L5_INITIAL_SCROLL_X), 256)
+	ld hl, \3
+	call enemy_spawn
+ENDM
 
 SECTION "Act 2 Final Scene", ROM0
 
@@ -29,13 +36,9 @@ act_2_final_scene_intro_dialog::
 act_2_final_scene_enemy_spawner::
 	call load_rock_tiles
 
-	ld  b, $60
-	ld  c, $78
-	ld hl, act_2_final_boss
-
-	call enemy_spawn
-
-	ld b, $20
+    SPAWN_ENEMY_AT $12, $15, act_2_final_boss
+	
+    ld b, $20
 	ld c, $28
 	call bullet_spawn
 	ret
@@ -190,10 +193,8 @@ collect_bullet::
 ;	ld [hl], DEATH_CLOCK_START_VALUE
 ;	ret
 
-INCLUDE "system/ambar_macros.inc"
-
 init_ambars_ac2_final::
-	SPAWN_AMBAR_AT_TILE 10, 9
-    SPAWN_AMBAR_AT_TILE 10, 11
-    SPAWN_AMBAR_AT_TILE 10, 12
+	;SPAWN_AMBAR_AT_TILE 10, 9
+    ;SPAWN_AMBAR_AT_TILE 10, 11
+    ;SPAWN_AMBAR_AT_TILE 10, 12
 	ret
