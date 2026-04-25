@@ -91,6 +91,8 @@ update_entity_position::
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 move_entity::
+	call is_entity_on_screen
+	ret c
 	call compute_expected_entity_position
 	call manage_entity_solid_collision
 	call update_entity_position
@@ -486,7 +488,9 @@ move_all_entities_positions_one_pixel_up::
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 apply_enemy_intelligent_behavior::
-
+	call is_entity_on_screen
+	ret c
+	
 	ld a, [Player.wPlayerX]
 	ld b, a
 
@@ -557,4 +561,29 @@ apply_enemy_intelligent_behavior::
 apply_intelligent_behavior_to_enemies::
 	ld hl, apply_enemy_intelligent_behavior
 	call man_entity_for_each_intelligent_enemy
+	ret
+
+
+
+
+
+
+
+is_entity_on_screen::
+	ld h, CMP_SPRIT_H
+	ld a, e
+	add SPR_Y
+	ld l, a
+	ld b, [hl]
+	ld a, SCREEN_HEIGHT + 16
+	sub b
+	ret c
+	
+	ld h, CMP_SPRIT_H
+	ld a, e
+	add SPR_X
+	ld l, a
+	ld b, [hl]
+	ld a, SCREEN_WIDTH + 16
+	sub b
 	ret
