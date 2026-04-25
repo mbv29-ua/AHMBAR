@@ -1,5 +1,6 @@
 INCLUDE "entities/entities.inc"
 INCLUDE "constants.inc"
+INCLUDE "utils/arithmetic_macros.inc"
 
 SECTION "Physics system", ROM0
 
@@ -32,7 +33,7 @@ apply_gravity_to_entity::
 	ld e, GRAVITY
 
 	;; Add and store
-	call add_bc_de
+	add_bc_de
 
 	;; To avoid infinite acceleration
 	ld a, MAX_GRAVITY

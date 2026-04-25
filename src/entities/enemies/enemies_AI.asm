@@ -1,4 +1,5 @@
 INCLUDE "constants.inc"
+INCLUDE "utils/arithmetic_macros.inc"
 INCLUDE "entities/entities.inc"
 
 DEF MOVING_COOLDOWN 		EQU 10 ; About three seconds
@@ -84,8 +85,8 @@ AI_jumping_enemy::
 	jr z, .continue
 	
 	; We flip the direction of the speed
-	call oposite_of_a
-
+	opposite_of_a
+	
 	.continue:
 	ld c, 0
 	ld d, a
@@ -130,7 +131,7 @@ AI_flying_enemy_up_and_down::
 	ld l, a 
 
 	ld a, [hl]
-	call oposite_of_a
+	opposite_of_a
 	ld [hl], a
 	
 	; Starts cooldown

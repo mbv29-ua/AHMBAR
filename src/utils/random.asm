@@ -1,3 +1,5 @@
+INCLUDE "utils/arithmetic_macros.inc"
+
 SECTION "Pseudo-random number", WRAM0
 
 wRandomNumber:: DS 2
@@ -58,7 +60,7 @@ fibonacci_LFSR_PRNG::
 		xor 1 ; xor is the sum in F2
 
 	.shift_and_add:
-		call multiply_bc_by_2
+		multiply_bc_by_2
 		add c ; a+c
 		ld c, a
 
