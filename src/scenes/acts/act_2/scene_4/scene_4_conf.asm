@@ -1,4 +1,5 @@
 INCLUDE "constants.inc"
+INCLUDE "scenes/acts/act_2/scene_4/act_2_scene_4_constants.inc"
 
 SECTION "Act 2 Scene 4 configuration", ROM0
 
@@ -6,8 +7,8 @@ act_2_scene_4::
 
 .starting_y: 			DB 		128						; SCENE_PLAYER_STARTING_Y
 .starting_x: 			DB 		88						; SCENE_PLAYER_STARTING_X
-.initial_scroll_y: 		DB	 	112 					; SCENE_STARTING_SCREEN_SCROLL_Y
-.initial_scroll_x:		DB 		32						; SCENE_STARTING_SCREEN_SCROLL_X
+.initial_scroll_y: 		DB	 	A2_L4_INITIAL_SCROLL_Y  ; SCENE_STARTING_SCREEN_SCROLL_Y
+.initial_scroll_x:		DB 		A2_L4_INITIAL_SCROLL_X 	; SCENE_STARTING_SCREEN_SCROLL_X
 .tileset:				DW_BE 	city_street				; SCENE_TILESET ; Se almacen como HIGH/LOW
 .tilset_size:			DW_BE 	(city_street.end-city_street.start)		; SCENE_TILESET_SIZE ; Se almacen como HIGH/LOW
 .tileset_offset:		DW_BE 	128 * TILE_SIZE			; SCENE_TILESET_OFFSET ; Se almacen como HIGH/LOW
