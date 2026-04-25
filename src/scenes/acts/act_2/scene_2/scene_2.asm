@@ -25,7 +25,7 @@ act_2_scene_2_enemy_spawner::
 
 	SPAWN_ENEMY_AT $0A, $1A, jumping_frog
 	SPAWN_ENEMY_AT $1C, $11, jumping_frog
-	SPAWN_ENEMY_AT $16, $0C, jumping_frog
+	SPAWN_ENEMY_AT $15, $0C, jumping_frog
 	SPAWN_ENEMY_AT $1B, $1A, jumping_frog
 	SPAWN_ENEMY_AT $0A, $06, jumping_frog
 
@@ -36,18 +36,18 @@ act_2_scene_2_enemy_spawner::
 	SPAWN_ENEMY_AT $05, $0A, basic_fly
 	SPAWN_ENEMY_AT $17, $05, basic_fly
 
-	ld b, (26*8)+16
-	ld c, (23*28)+56
-	call bullet_spawn
+	;ld b, (26*8)+16
+	;ld c, (23*28)+56
+	;call bullet_spawn
 
 
-	ld b, $38
-	ld c, (26*8)+8
-	call bullet_spawn
+	;ld b, $38
+	;ld c, (26*8)+8
+	;call bullet_spawn
 
 	ret
 
-INCLUDE "system/ambar_macros.inc"
+;INCLUDE "system/ambar_macros.inc"
 
 init_ambars_level2::
 	;SPAWN_AMBAR_AT_TILE 14, 15

@@ -34,14 +34,7 @@ act_2_scene_1_enemy_spawner::
 	SPAWN_ENEMY_AT $0F, $07, basic_fly
 	SPAWN_ENEMY_AT $11, $06, basic_fly
 	SPAWN_ENEMY_AT $13, $08, basic_fly
-
-	ld b, $A0
-	ld c, $10
-	call bullet_spawn
-
-	ld b, $20
-	ld c, $F0
-	call bullet_spawn
+	
 	ret
 
 
