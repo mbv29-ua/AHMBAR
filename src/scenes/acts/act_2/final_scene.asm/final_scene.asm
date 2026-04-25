@@ -126,27 +126,27 @@ man_entity_for_each_bullet_player::
 	ret
 
 
-check_player_bullet_collision::
-    push de        ; Save E (bullet entity index)
-    ld l, 0        ; Player entity index
-    pop de         ; Restore E (bullet entity index)
-    call are_entities_colliding
-    call c, collect_bullet ; If collide, then collect bullet
-    ret
+;check_player_bullet_collision::
+    ;push de        ; Save E (bullet entity index)
+    ;ld l, 0        ; Player entity index
+    ;pop de         ; Restore E (bullet entity index)
+    ;call are_entities_colliding
+    ;call c, collect_bullet ; If collide, then collect bullet
+    ;ret
 
-check_bullet_player_collisions::
+;check_bullet_player_collisions::
 ;check_player_enemies_collisions::
-    ld hl, check_player_bullet_collision
-    call man_entity_for_each_bullet_player
+    ;ld hl, check_player_bullet_collision
+    ;call man_entity_for_each_bullet_player
 
     ;ld hl, clean_collected_bullet
     ;call man_entity_for_each_bullet_player
-    ret
+    ;ret
 
 collect_bullet::
     
-    dec l
-    call man_entity_free
+    ;dec l
+    ;call man_entity_free
     ;call clean_collected_bullet
 
 	ld hl, wPlayerBullets

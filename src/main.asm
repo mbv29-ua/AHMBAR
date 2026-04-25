@@ -47,7 +47,7 @@ call wait_vblank ; Main starts working in the VRAM
     ; IMPORTANTE: Destruir balas ANTES de actualizar posiciones
     ; call destroy_bullets_out_of_bounds ; Destroy bullets that are off-screen FIRST
     call destroy_entities_out_of_screen
-    call check_ambar_collisions
+    ; call check_ambar_collisions
     call check_all_bullets_wall_collision  ; Destroy bullets hitting walls
     call check_all_bullets_enemy_collision ; Check bullet-enemy collisions
     call update_all_entities_positions
@@ -55,7 +55,7 @@ call wait_vblank ; Main starts working in the VRAM
     call scroll_manager
     call check_deadly_collision     ; Check deadly tiles (spikes) to damage player
     call check_enemy_collision      ; Check collision with enemies
-    call check_bullet_player_collisions
+    ;call check_bullet_player_collisions
 
     call update_bullet_system
 

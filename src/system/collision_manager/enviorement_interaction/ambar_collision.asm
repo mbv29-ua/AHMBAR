@@ -53,11 +53,18 @@ check_ahmbar_tile_collision::
         ld a, [hl] ; load tile
         ld [hl], EMPTY_TILE
         call is_tile_ahmbar
-        jp z, .is_ahmbar
-
+        jr z, .is_ahmbar
+        call is_tile_bulletbox
+        jr z, .is_bulletbox
+        jr .another_collectible
         ; Is an ahmbar, collect it
+
         .is_ahmbar:
             call increment_score_and_display
+            ret
+
+        .is_bulletbox:
+            call collect_bullet
             ret
         .another_collectible:
     jp .loop
