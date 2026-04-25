@@ -223,6 +223,24 @@ enable_vblank_interrupts::
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine disables VBLANK interruptions.
+;;
+;; INPUT:
+;;      -
+;; OUTPUT:
+;;      -
+;; WARNING: Destroys A
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+disable_vblank_interrupts::
+    ; Deshabilita solo interrupciones VBlank (LCD-Stat desactivado)
+    ; Bit 0: VBlank
+    ld a, %00000000     ; Solo bit 0
+    ldh [rIE], a
+    ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; This routine waits a complete frame (~1/60 sec.)
 ;;
 ;; INPUT:
