@@ -14,6 +14,9 @@ SECTION "AI System", ROM0
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 process_entity_AI::
+    call is_entity_on_screen
+    ret c
+	
 	;; HL contains the address of the routine,
 	;; so we save it since we want to use HL
     push de ; We save E
