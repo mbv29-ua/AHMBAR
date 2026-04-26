@@ -16,10 +16,6 @@ SECTION "Enemy collisions", ROM0
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 check_player_enemy_collision::
-    ld a, [wSpikeCooldown]
-    or a
-    ret nz 
-
     ld l, 0 ; Player entity index
     call are_entities_colliding
     call c, enemy_damage ; If collide, then damage the player - Call it with a different name
@@ -39,6 +35,10 @@ check_player_enemy_collision::
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 check_enemy_collision::
+    ld a, [wSpikeCooldown]
+    or a
+    ret nz 
+
     ld hl, check_player_enemy_collision
     call man_entity_for_each_enemy
     ret

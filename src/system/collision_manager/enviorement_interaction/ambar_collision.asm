@@ -1,4 +1,5 @@
 INCLUDE "constants.inc"
+INCLUDE "utils/arithmetic_macros.inc"
 INCLUDE "system/collision_manager/collisions.inc"
 INCLUDE "entities/entities.inc"
 
@@ -52,11 +53,18 @@ check_ahmbar_tile_collision::
         ld a, [hl] ; load tile
         ld [hl], EMPTY_TILE
         call is_tile_ahmbar
-        jp z, .is_ahmbar
-
+        jr z, .is_ahmbar
+        call is_tile_bulletbox
+        jr z, .is_bulletbox
+        jr .another_collectible
         ; Is an ahmbar, collect it
+
         .is_ahmbar:
             call increment_score_and_display
+            ret
+
+        .is_bulletbox:
+            call collect_bullet
             ret
         .another_collectible:
     jp .loop
@@ -78,7 +86,8 @@ get_current_tile_address_left_point::
 
     ld h, 0 ; HL = Tile Y
     ld l, b
-    call mult_hl_32
+    mult_hl_32
+    
     ; Add Tile X
     ld d, 0
     ld e, c ; DE = Tile X 
@@ -103,7 +112,8 @@ get_current_tile_address_right_point::
 
     ld h, 0 ; HL = Tile Y
     ld l, b
-    call mult_hl_32
+    mult_hl_32
+    
     ; Add Tile X
     ld d, 0
     ld e, c ; DE = Tile X 

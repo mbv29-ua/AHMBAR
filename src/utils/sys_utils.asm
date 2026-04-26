@@ -170,6 +170,23 @@ screen_obj_on::
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine deactivates the mode to show 
+;; sprites in the screen
+;;
+;; INPUT:
+;;      -
+;; OUTPUT:
+;;      -
+;; WARNING: Destroys HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+screen_obj_off::
+    ld hl, rLCDC
+    res 1, [hl]
+    ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; This routine activates the backgrounds
 ;;
 ;; INPUT:
@@ -218,6 +235,24 @@ enable_vblank_interrupts::
     ; Habilitar solo interrupciones VBlank (LCD-Stat desactivado)
     ; Bit 0: VBlank
     ld a, %00000001     ; Solo bit 0
+    ldh [rIE], a
+    ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine disables VBLANK interruptions.
+;;
+;; INPUT:
+;;      -
+;; OUTPUT:
+;;      -
+;; WARNING: Destroys A
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+disable_vblank_interrupts::
+    ; Deshabilita solo interrupciones VBlank (LCD-Stat desactivado)
+    ; Bit 0: VBlank
+    ld a, %00000000     ; Solo bit 0
     ldh [rIE], a
     ret
 

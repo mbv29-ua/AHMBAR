@@ -1,8 +1,15 @@
 INCLUDE "constants.inc"
+INCLUDE "scenes/acts/act_2/final_scene.asm/act_2_final_scene_constants.inc"
 INCLUDE "tiles.inc"
 INCLUDE "entities/entities.inc"
 INCLUDE "system/hud/hud_constants.inc"
 
+MACRO SPAWN_ENEMY_AT
+    ld b, FMOD(\2 * 8 + 16 + (256 - A2_L5_INITIAL_SCROLL_Y), 256)
+    ld c, FMOD(\1 * 8 +  8 + (256 - A2_L5_INITIAL_SCROLL_X), 256)
+	ld hl, \3
+	call enemy_spawn
+ENDM
 
 SECTION "Act 2 Final Scene", ROM0
 
@@ -29,121 +36,117 @@ act_2_final_scene_intro_dialog::
 act_2_final_scene_enemy_spawner::
 	call load_rock_tiles
 
-	ld  b, $60
-	ld  c, $78
-	ld hl, act_2_final_boss
-
-	call enemy_spawn
-
-	ld b, $20
-	ld c, $28
-	call bullet_spawn
+    SPAWN_ENEMY_AT $12, $15, act_2_final_boss
+	
+    ;ld b, $20
+	;ld c, $28
+	;call bullet_spawn
 	ret
 
-bullet_spawn::
+;bullet_spawn::
     ; We need to save HL information
-    push hl
-    call man_entity_alloc ; Returns l=entity index
-    ld a, l
-    pop hl
+    ;push hl
+    ;call man_entity_alloc ; Returns l=entity index
+    ;ld a, l
+    ;pop hl
 
-    call spawner_set_bullet_sprite
-    call spawner_set_bullet_flags
-    call spawner_set_bullet_dimensions
-    call spawner_set_bullet_physics
+    ;call spawner_set_bullet_sprite
+    ;call spawner_set_bullet_flags
+    ;call spawner_set_bullet_dimensions
+    ;call spawner_set_bullet_physics
 
-    ret
+    ;ret
 
-spawner_set_bullet_sprite::
-    push bc
+;spawner_set_bullet_sprite::
+    ;push bc
     
-    ld d, TILE_BULLET_BOX ; bullet tile index
-    ld e, 0   ; Sprite attributes
+    ;ld d, TILE_BULLET_BOX ; bullet tile index
+    ;ld e, 0   ; Sprite attributes
 
-    ld l, a ; entity index
-    call set_entity_sprite
+    ;ld l, a ; entity index
+    ;call set_entity_sprite
 
-    pop bc
-    ret
+    ;pop bc
+    ;ret
 
-spawner_set_bullet_flags::
-    push af
+;spawner_set_bullet_flags::
+    ;push af
 
     ; Set entity flags
-    ld h, CMP_ATTR_H
-    add ATT_ENTITY_FLAGS
-    ld l, a
+    ;ld h, CMP_ATTR_H
+    ;add ATT_ENTITY_FLAGS
+    ;ld l, a
     
-    set E_BIT_COLLECTABLE, [hl]
+    ;set E_BIT_COLLECTABLE, [hl]
 
     ; Set interaction flags
-    inc l ; Move to INTERACTION_FLAGS
-    ld b, 0
+    ;inc l ; Move to INTERACTION_FLAGS
+    ;ld b, 0
     ; bullets are not movable, not affected by gravity, etc.
     ; They are collidable with the player.
-    set E_BIT_COLLIDABLE, b
-    ld [hl], b
+    ;set E_BIT_COLLIDABLE, b
+    ;ld [hl], b
 
     ; PHYS_FLAGS
     ; Set entity flags
-    pop af
-    push af
-    ld h, CMP_ATTR_H
-    add PHY_FLAGS
-    ld l, a
+    ;pop af
+    ;push af
+    ;ld h, CMP_ATTR_H
+    ;add PHY_FLAGS
+    ;ld l, a
     
-    set BULLET_COLLECT, [hl]
+    ;set BULLET_COLLECT, [hl]
     
-    pop af
-    ret
+    ;pop af
+    ;ret
 
-spawner_set_bullet_dimensions::
+;spawner_set_bullet_dimensions::
     ; Set bullet dimensions (8x8)
-    ld b, 8
-    ld c, 8
-    ld d, 0
-    ld e, 0
-    ld l, a ; entity index
-    call set_entity_dimensions
-    ret
+    ;ld b, 8
+    ;ld c, 8
+    ;ld d, 0
+    ;ld e, 0
+    ;ld l, a ; entity index
+    ;call set_entity_dimensions
+    ;ret
 
-spawner_set_bullet_physics::
-    ld b, 0
-    ld c, 0
-    ld d, 0
-    ld e, 0
-    ld l, a ; entity index
-    call set_entity_physics
-    ret 
+;spawner_set_bullet_physics::
+    ;ld b, 0
+    ;ld c, 0
+    ;ld d, 0
+    ;ld e, 0
+    ;ld l, a ; entity index
+    ;call set_entity_physics
+    ;ret 
 
-man_entity_for_each_bullet_player::
-	ld b, (1<<BULLET_COLLECT)
-	ld c, PHY_FLAGS
-	call man_entity_for_each_type
-	ret
+;man_entity_for_each_bullet_player::
+	;ld b, (1<<BULLET_COLLECT)
+	;ld c, PHY_FLAGS
+	;call man_entity_for_each_type
+	;ret
 
 
-check_player_bullet_collision::
-    push de        ; Save E (bullet entity index)
-    ld l, 0        ; Player entity index
-    pop de         ; Restore E (bullet entity index)
-    call are_entities_colliding
-    call c, collect_bullet ; If collide, then collect bullet
-    ret
+;check_player_bullet_collision::
+    ;push de        ; Save E (bullet entity index)
+    ;ld l, 0        ; Player entity index
+    ;pop de         ; Restore E (bullet entity index)
+    ;call are_entities_colliding
+    ;call c, collect_bullet ; If collide, then collect bullet
+    ;ret
 
-check_bullet_player_collisions::
+;check_bullet_player_collisions::
 ;check_player_enemies_collisions::
-    ld hl, check_player_bullet_collision
-    call man_entity_for_each_bullet_player
+    ;ld hl, check_player_bullet_collision
+    ;call man_entity_for_each_bullet_player
 
     ;ld hl, clean_collected_bullet
     ;call man_entity_for_each_bullet_player
-    ret
+    ;ret
 
 collect_bullet::
     
-    dec l
-    call man_entity_free
+    ;dec l
+    ;call man_entity_free
     ;call clean_collected_bullet
 
 	ld hl, wPlayerBullets
@@ -190,10 +193,8 @@ collect_bullet::
 ;	ld [hl], DEATH_CLOCK_START_VALUE
 ;	ret
 
-INCLUDE "system/ambar_macros.inc"
-
 init_ambars_ac2_final::
-	SPAWN_AMBAR_AT_TILE 10, 9
-    SPAWN_AMBAR_AT_TILE 10, 11
-    SPAWN_AMBAR_AT_TILE 10, 12
+	;SPAWN_AMBAR_AT_TILE 10, 9
+    ;SPAWN_AMBAR_AT_TILE 10, 11
+    ;SPAWN_AMBAR_AT_TILE 10, 12
 	ret

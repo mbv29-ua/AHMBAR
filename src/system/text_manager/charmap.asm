@@ -131,6 +131,10 @@ DB "world.", ENDTEXT
 
 
 ;; ACT 1 Dialogs ;; 
+act_1_intro_dialog::
+	DB "      ACT 1",			ENDLINE
+	DB "",						ENDLINE
+	DB "    THE RUINS", 		ENDTEXT
 
 act_1_scene_1_dialog::
 	DB "Oh no, toxic frogs.", 	ENDLINE
@@ -158,6 +162,10 @@ act_1_scene_5_dialog::
 
 
 ;;; ACT 2 Dialogs ;;;
+act_2_intro_dialog::
+	DB "      ACT 2",			ENDLINE
+	DB "",						ENDLINE
+	DB "    THE  CITY", 		ENDTEXT
 
 act_2_scene_1_dialog::
 	DB "Oh, Toshokan, my", 		ENDLINE
@@ -191,9 +199,28 @@ act_2_scene_4_dialog::
 	DB "It is a death trap.",	ENDTEXT
 
 act_2_final_scene_dialog::
-	DB "A corrupted",	ENDLINE
+	DB "A corrupted",			ENDLINE
 	DB "life form! Ahmbar ",	ENDLINE
-	DB "curses all living",	ENDLINE
+	DB "curses all living",		ENDLINE
 	DB "forms. I must kill",	ENDLINE
 	DB "it before this",		ENDLINE
 	DB "collapses.",			ENDTEXT
+
+
+;; ACT 3 Dialogs ;; 
+act_3_intro_dialog::
+	DB "      ACT 3",			ENDLINE
+	DB "",						ENDLINE
+	DB " THE HEADQUARTERS", 	ENDTEXT
+
+act_3_scene_1_dialog::
+	DB "I am inside.",			ENDTEXT
+
+act_3_scene_2_dialog::
+	DB "This is becoming", 		ENDLINE
+	DB "more and more",		 	ENDLINE
+	DB "dangerous!",	 		ENDTEXT
+
+act_3_scene_3_dialog::
+	DB "This is the last",		ENDLINE
+	DB "room.",					ENDTEXT
