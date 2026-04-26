@@ -20,11 +20,13 @@ SECTION "Dialogs manager", ROM0
 
 clean_line::
 	; di
+	push hl
 	call wait_vblank
-   ld  b, TEXTLINE_SIZE
-   call memreset_256
-   ; ei
-   ret
+	ld  b, TEXTLINE_SIZE
+	pop hl
+	call memreset_256
+	; ei
+	ret
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
