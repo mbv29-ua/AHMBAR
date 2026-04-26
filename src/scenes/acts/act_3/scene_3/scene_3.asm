@@ -2,10 +2,10 @@ INCLUDE "constants.inc"
 
 SECTION "Act 3 Scene 3", ROM0
 
-act_3_scene_3_intro_dialog::
+act_3_scene_3_dialog_write::
 	di
     call set_black_palette
-    ld hl, act_2_scene_2_dialog
+    ld hl, act_3_scene_3_dialog
     call write_super_extended_dialog
     ei
     call wait_until_A_pressed
