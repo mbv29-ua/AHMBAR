@@ -209,9 +209,9 @@ act_2_final_scene_dialog::
 
 ;; ACT 3 Dialogs ;; 
 act_3_intro_dialog::
-	DB "      ACT 1",			ENDLINE
+	DB "      ACT 3",			ENDLINE
 	DB "",						ENDLINE
-	DB " THE HEADQUARTER", 		ENDTEXT
+	DB " THE HEADQUARTERS", 	ENDTEXT
 
 act_3_scene_1_dialog::
 	DB "I am inside.",			ENDTEXT
