@@ -170,6 +170,23 @@ screen_obj_on::
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine deactivates the mode to show 
+;; sprites in the screen
+;;
+;; INPUT:
+;;      -
+;; OUTPUT:
+;;      -
+;; WARNING: Destroys HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+screen_obj_off::
+    ld hl, rLCDC
+    res 1, [hl]
+    ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; This routine activates the backgrounds
 ;;
 ;; INPUT:
