@@ -535,6 +535,7 @@ play_intro_scene_dialog::
     call clean_bg_map
     call load_fonts
     call screen_hud_off
+    call screen_obj_off
     call reset_scroll
     call screen_on
 
