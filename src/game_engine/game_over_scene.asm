@@ -26,10 +26,10 @@ scene_game_over::
     ;; Poner cuando seaposible despues de wait_until_start_pressed
 
     ; Turn off volume 
-    ld a, $00
-    ld [$FF26], a
+    ;ld a, $00
+    ;ld [$FF26], a
 
-	call hUGE_init
+	;call hUGE_dosound
 
     call fade_to_black
     call game_over_init
@@ -75,6 +75,10 @@ game_over_init::
 
     call reset_scroll
     call disable_hud_screen
+
+	ld hl, game_over_sound
+	call hUGE_init
+
     call screen_on
 
     ret
