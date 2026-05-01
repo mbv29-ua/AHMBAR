@@ -94,10 +94,15 @@ wait_until_A_pressed::
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 wait_until_start_pressed::
-   ld hl, JUST_PRESSED_BUTTONS
    .loop:
-      ; halt
-      call read_pad
-      bit BUTTON_START, [hl]
-      jr z, .loop
+        call wait_vblank
+        call hUGE_dosound
+        ld hl, JUST_PRESSED_BUTTONS
+        call read_pad
+        bit BUTTON_START, [hl]
+        jr z, .loop
+
    ret
+
+
+   

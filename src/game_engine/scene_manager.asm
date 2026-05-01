@@ -65,6 +65,9 @@ load_scene::
     call init_hud                   ; Initialize HUD (lives & bullets)
     call init_hud_score_display ; Initialize and display the score
     
+    ; Load music
+	call init_background_music
+
     ; Turn on the screen
     call enable_vblank_interrupts
     call screen_bg_on
@@ -407,6 +410,7 @@ get_next_scene_info::
 
 next_scene::
     call fade_to_black
+    call stop_background_music
     call get_next_scene_info
     call load_scene
     ret
@@ -550,3 +554,34 @@ play_intro_scene_dialog::
     ret
 
     
+
+init_background_music::
+	; Initialize hUGE music driver with background_music
+    ld a, $80
+    ld [$FF26], a
+
+    ld a, $77
+    ld [$FF24], a
+
+    ld a, $FF
+    ld [$FF25], a
+
+	ld hl, background_music
+	call hUGE_init
+    ret
+
+
+
+stop_background_music::
+    call wait_vblank
+    
+    ld a, $00
+    ld [$FF26], a
+
+    ld a, $00
+    ld [$FF24], a
+
+    ld a, $00
+    ld [$FF25], a
+
+    ret
