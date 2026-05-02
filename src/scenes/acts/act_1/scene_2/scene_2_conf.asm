@@ -12,8 +12,7 @@ act_1_scene_2::
 .tilset_size:			DW_BE 	(tiles_end-tiles)		; SCENE_TILESET_SIZE ; Se almacen como HIGH/LOW
 .tileset_offset:		DW_BE 	128 * TILE_SIZE			; SCENE_TILESET_OFFSET ; Se almacen como HIGH/LOW
 .tilemap:				DW_BE 	act_1_scene_2_tilemap				; SCENE_TILEMAP ; Se almacen como HIGH/LOW
-.goal_y: 				DB 		0						; SCENE_GOAL_POINT_X
-.goal_x:				DB 		0						; SCENE_GOAL_POINT_Y
+.music:                 DW_BE   act_1_music             ; SCENE_MUSIC
 .next_scene:			DW_BE 	act_1_scene_3					; SCENE_NEXT_SCENE
 .scene_enemy_spawner:	DW_BE 	scene_2_enemy_spawner	; SCENE_ENEMY_SPAWNER
 .scene_collectible_spawner: DW_BE	init_ambars_level1	; SCENE_COLLECTIBLE_SPAWNER
