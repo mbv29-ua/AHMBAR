@@ -566,7 +566,12 @@ init_background_music::
     ld a, $FF
     ld [$FF25], a
 
-	ld hl, background_music
+    call get_current_scene_info_address ; in hl
+    ld bc, SCENE_MUSIC
+    add hl, bc
+    ld a, [hl+]
+    ld l, [hl]
+    ld h, a
 	call hUGE_init
     ret
 

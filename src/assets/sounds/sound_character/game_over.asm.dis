@@ -1,0 +1,290 @@
+INCLUDE "assets/sounds/music/hUGE.inc"
+
+SECTION "game_over Song Data", ROM0
+
+game_over_sound::
+db 7
+dw _game_over_order_cnt
+dw _game_over_sound_order1, _game_over_sound_order2, _game_over_sound_order3, _game_over_sound_order4
+dw _game_over_duty_instruments, _game_over_wave_instruments, _game_over_noise_instruments
+dw _game_over_rutines
+dw _game_over_waves
+
+_game_over_order_cnt: db 2
+_game_over_sound_order1: dw P0g
+_game_over_sound_order2: dw P1g
+_game_over_sound_order3: dw P0g
+_game_over_sound_order4: dw P3g
+
+P0g:
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+
+P1g:
+ dn C_3,12,$E40
+ dn ___,0,$244
+ dn ___,0,$233
+ dn ___,0,$233
+ dn ___,0,$233
+ dn ___,0,$233
+ dn ___,0,$233
+ dn ___,0,$215
+ dn ___,0,$E00
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+
+P3g:
+ dn F_4,10,$E40
+ dn ___,0,$040
+ dn ___,0,$040
+ dn ___,0,$040
+ dn ___,0,$040
+ dn ___,0,$040
+ dn ___,0,$040
+ dn ___,0,$020
+ dn ___,0,$E00
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+ dn ___,0,$000
+
+_game_over_duty_instruments:
+
+
+
+_game_over_wave_instruments:
+
+
+_game_over_noise_instruments:
+itNoiseinst1:
+db 240
+dw 0
+db 0
+ds 2
+
+itNoiseinst2:
+db 240
+dw 0
+db 0
+ds 2
+
+itNoiseinst3:
+db 240
+dw 0
+db 0
+ds 2
+
+itNoiseinst4:
+db 240
+dw 0
+db 0
+ds 2
+
+itNoiseinst5:
+db 240
+dw 0
+db 0
+ds 2
+
+itNoiseinst6:
+db 240
+dw 0
+db 0
+ds 2
+
+itNoiseinst7:
+db 240
+dw 0
+db 0
+ds 2
+
+itNoiseinst8:
+db 240
+dw 0
+db 0
+ds 2
+
+itNoiseinst9:
+db 240
+dw 0
+db 0
+ds 2
+
+itNoiseinst10:
+db 240
+dw 0
+db 0
+ds 2
+
+
+
+_game_over_rutines:
+
+_game_over_waves:
+
