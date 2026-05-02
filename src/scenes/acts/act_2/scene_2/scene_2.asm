@@ -13,12 +13,12 @@ ENDM
 SECTION "Act 2 Scene 2", ROM0
 
 act_2_scene_2_intro_dialog::
-	di
-    call set_black_palette
+	;di
+    ;call set_black_palette
     ld hl, act_2_scene_2_dialog
     call write_super_extended_dialog
-    ei
-    call wait_until_A_pressed
+    ;ei
+    ;call wait_until_A_pressed
     ret
 
 act_2_scene_2_enemy_spawner::
