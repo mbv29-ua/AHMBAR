@@ -539,6 +539,7 @@ play_intro_scene_dialog::
     call clean_OAM
     call clean_bg_map
     call load_fonts
+    call set_black_palette
     call screen_hud_off
     call screen_obj_off
     call reset_scroll
@@ -551,7 +552,9 @@ play_intro_scene_dialog::
     ld l, [hl]
     ld h, a
 
+    di
     call helper_call_hl
+    ei
     ret
 
     

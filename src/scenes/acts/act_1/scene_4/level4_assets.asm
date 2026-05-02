@@ -37,10 +37,10 @@ init_ambars_level4::
 
 
 act_1_scene_4_dialog_write:: 
-	di
-    call set_black_palette
+	;di
+    ;call set_black_palette
     ld hl, act_1_scene_4_dialog
     call write_super_extended_dialog
-    ei
-    call wait_until_A_pressed
+    ;ei
+    ;call wait_until_A_pressed
     ret
