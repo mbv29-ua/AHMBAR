@@ -31,7 +31,8 @@ MACRO checkMute
 ENDM
 
 ;; Maximum pattern length
-DEF PATTERN_LENGTH EQU 64
+;DEF PATTERN_LENGTH EQU 64
+DEF PATTERN_LENGTH EQU 32
 
 SECTION "Playback variables", WRAM0
 ;; Active song descriptor

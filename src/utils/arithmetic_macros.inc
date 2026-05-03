@@ -25,6 +25,28 @@ ENDM
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This routine adds the content of the 16-bit
+;; registers BC and DE.
+;;
+;; INPUT:
+;;		BC: 16-bit integer
+;;		DE: 16-bit integer
+;; OUTPUT:
+;;		DE: DE+BC	
+;; WARNING: Destroys DE
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+MACRO add_de_bc
+	ld a, e
+	add c
+	ld e, a
+	ld a, d
+	adc b
+	ld d, a
+ENDM
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; This routine multiplies the content of the
 ;; 16-bit register HL by 32
 ;;

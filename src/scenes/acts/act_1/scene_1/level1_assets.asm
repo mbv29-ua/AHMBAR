@@ -62,18 +62,18 @@ init_ambars_level1::
 
 act_1_scene_1_dialog_write:: 
 	; Act dialog
-	di
-    call set_black_palette
+	;di
+    ;call set_black_palette
     ld hl, act_1_intro_dialog
     call write_super_extended_dialog
-    ei
-    call wait_until_A_pressed
-    di
-	call clean_dialog_box
+    ;ei
+    ;call wait_until_A_pressed
+    ;di
+	;call clean_dialog_box
     
 	; Scene dialog
 	ld hl, act_1_scene_1_dialog
     call write_super_extended_dialog
-    ei
-    call wait_until_A_pressed
+    ;ei
+    ;call wait_until_A_pressed
     ret

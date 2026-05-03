@@ -14,12 +14,12 @@ ENDM
 SECTION "Act 2 Final Scene", ROM0
 
 act_2_final_scene_intro_dialog::
-    di
-    call set_black_palette
+    ;di
+    ;call set_black_palette
     ld hl, act_2_final_scene_dialog
     call write_super_extended_dialog
-    ei
-    call wait_until_A_pressed
+    ;ei
+    ;call wait_until_A_pressed
     ret
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
