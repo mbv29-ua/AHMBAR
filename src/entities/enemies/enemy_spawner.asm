@@ -1,5 +1,6 @@
 INCLUDE "entities/entities.inc"
 INCLUDE "entities/enemies/enemies.inc"
+INCLUDE "tiles.inc"
 
 
 SECTION "Enemy spawer", ROM0
@@ -33,10 +34,21 @@ enemy_spawn::
 	call spawner_set_enemy_AI
 	call spawner_set_enemy_ID
 
+	; Track regular enemy spawns (ENEMY_TILE is at offset 0 of definition, HL still valid)
+	ld a, [hl]
+	cp TILE_FALLING_ROCK
+	jr z, .skip_regular_track
+	cp TILE_BUTTERFLY
+	jr z, .skip_regular_track
+	push hl
+	ld hl, wTotalRegularSpawned
+	inc [hl]
+	pop hl
+.skip_regular_track:
 	ld hl, wNumberOfEnemies
 	inc [hl]
 	ret
-	
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; This routine sets the enemy sprite

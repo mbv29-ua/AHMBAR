@@ -76,8 +76,15 @@ set_initial_memory_values::
     ;; valores para hacer pruebas con los saltos
     
     ld [wPowerupDoubleJump], a
-    
-    ld [wPowerupInfiniteJump], a 
+
+    ld [wPowerupInfiniteJump], a
+
+    ; Reset statistics
+    ld [wEnemiesKilled], a
+    ld [wRegularEnemiesKilled], a
+    ld [wTotalRegularSpawned], a
+    ld [wEnemyHits], a
+    ld [wTotalAhmbarSpawned], a
 
     ;ld a, 1 
     ;ld [wPowerupDoubleJump], a

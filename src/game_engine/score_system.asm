@@ -6,7 +6,7 @@ SECTION "Score Variables", WRAM0
 score_digits:
     ds 2 ; Reserves 2 bytes for each digit of the score (e.g., 00)
 
-score_value:
+score_value::
     ds 2 ; Reserves 2 bytes for the actual numerical score (0-99)
 
 SECTION "Score Routines", ROM0

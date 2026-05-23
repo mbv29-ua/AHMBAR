@@ -1,5 +1,6 @@
 INCLUDE "entities/entities.inc"
 INCLUDE "entities/enemies/enemies.inc"
+INCLUDE "tiles.inc"
 
 DEF DEATH_CLOCK_START_VALUE EQU 15 ; 0.25 seconds
 
@@ -122,12 +123,34 @@ clean_dead_enemy::
 		ret
 
 	.clean:
+		; Read entity tile to track kill type before freeing
+		ld h, CMP_SPRIT_H
+		ld a, e
+		add SPR_TILE
+		ld l, a
+		ld a, [hl]          ; A = sprite tile of this entity
+
+		cp TILE_FALLING_ROCK
+		jr z, .do_free      ; Rocks don't count as kills
+
+		push af             ; save tile
+		ld hl, wEnemiesKilled
+		inc [hl]
+		pop af              ; restore tile
+
+		cp TILE_BUTTERFLY   ; Is boss?
+		jr z, .do_free      ; Boss: count in wEnemiesKilled only
+
+		ld hl, wRegularEnemiesKilled
+		inc [hl]
+
+	.do_free:
 		ld l, e
 		call man_entity_free ; Receives L as the entity index
 
 		ld hl, wNumberOfEnemies
 		dec [hl]
-	ret 
+	ret
 
 
  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

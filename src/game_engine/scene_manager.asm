@@ -57,6 +57,7 @@ load_scene::
     ld [hl], 0
     call init_enemies
     call init_collectibles
+    call count_tile_ahmbar_in_bg  ; Count tile-based ahmbar for collector stat
     call init_palettes_by_default
 
     ; Load scene variables

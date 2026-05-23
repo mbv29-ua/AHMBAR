@@ -48,6 +48,10 @@ enemy_damage::
     ld hl, wPlayerLives
     dec [hl]
 
+    ; Track hit count for untouchable/deaths stat
+    ld hl, wEnemyHits
+    inc [hl]
+
     ; Marcar que HUD necesita actualizarse
     call hud_needs_update
     ret

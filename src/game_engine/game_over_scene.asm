@@ -35,15 +35,19 @@ scene_game_over::
     call game_over_init
     call fade_to_original
 
-    ; Esperar a que presione START para reiniciar
-    ld b, 60
+    ; Show Game Over screen for 3 seconds
+    ld b, 180
     call wait_x_frames
 
-    
-      ; Fade out antes de reiniciar
-    
+    ; Show centered stats screen
+    call fade_to_black
+    call game_over_stats_init
+    call fade_to_original
 
-    ; Reiniciar el juego
+    ; Show stats for 4 seconds then restart
+    ld b, 240
+    call wait_x_frames
+
     jp restart_game
 
 
@@ -73,4 +77,26 @@ game_over_init::
     call disable_hud_screen
     call screen_on
 
+    ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; game_over_stats_init
+;;; Pantalla de estadísticas tras el Game Over.
+;;; Fondo limpio con stats centradas.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+game_over_stats_init::
+    call screen_off
+    call clean_OAM
+    call clean_bg_map
+
+    call Load_letras_intro_Tiles
+    call fill_bg_blank
+
+    call write_game_over_stats
+
+    call reset_scroll
+    call disable_hud_screen
+    call screen_on
     ret

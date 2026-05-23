@@ -20,5 +20,5 @@ act_3_scene_3::
 .act_number:			DB 		3						; SCENE_ACT_NUMBER
 .level_number:			DB 		3						; SCENE_LEVEL_NUMBER
 .background_animation:	DW_BE	no_animation			; SCENE_ANIMATION_ROUTINE
-.next_level_trigger:	DW_BE	check_door_collision	; SCENE_NEXT_LEVEL_TRIGGER
+.next_level_trigger:	DW_BE	trigger_game_end	; SCENE_NEXT_LEVEL_TRIGGER
 .intro_scene:			DW_BE	no_dialog ; SCENE_INTRO_DIALOG

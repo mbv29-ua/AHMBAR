@@ -15,6 +15,8 @@ ambar_spawn::
     call spawner_set_ambar_dimensions
     call spawner_set_ambar_physics
 
+    ld hl, wTotalAhmbarSpawned
+    inc [hl]
     ret
 
 spawner_set_ambar_sprite::
