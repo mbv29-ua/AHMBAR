@@ -277,6 +277,11 @@ wait_a_frame::
     .loop2
         cp [hl]
         jr nz, .loop2
+    push bc
+    push de
+    call hUGE_dosound
+    pop de
+    pop bc
     ret
 
 
@@ -293,11 +298,6 @@ wait_a_frame::
 wait_x_frames::
     di
     call wait_a_frame
-    push bc
-    push de
-    call hUGE_dosound
-    pop de
-    pop bc
     dec b    
     jr nz, wait_x_frames
     ei
