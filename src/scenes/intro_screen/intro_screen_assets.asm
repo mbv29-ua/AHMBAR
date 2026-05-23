@@ -8,7 +8,7 @@ scene_intro_screen::
     call wait_vblank
     call set_black_palette
     call intro_load_fonts
-
+    call stop_background_music
     call show_credits
     call show_intro_text
     call intro_animation_scene
@@ -22,7 +22,7 @@ show_credits::
     ld hl, credits
     call write_super_extended_dialog
     ei
-    call wait_until_A_pressed
+    ;call wait_until_A_pressed
     call fadeout
     call screen_off
     call clean_bg_map
@@ -36,6 +36,19 @@ show_intro_text::
     call write_super_extended_dialog
     ld b, 20
     call wait_x_frames
+
+    ; preparar sonido
+    ld a, $80
+    ld [$FF26], a
+
+    ld a, $77
+    ld [$FF24], a
+
+    ld a, $FF
+    ld [$FF25], a
+    ld hl, act_3_music
+    call hUGE_init
+
     call fade_to_black
     call fade_to_black
     call fade_to_black
@@ -48,8 +61,8 @@ show_intro_text::
 intro_animation_scene::
     call intro_scene_init
 
+     call wait_vblank
     .scroll:
-        call wait_vblank
         ld a, [rSCX]
         ld b, a
         and %00001000
@@ -127,6 +140,7 @@ menu_start_init::
     
     call screen_obj_on
     call screen_on
+    call stop_background_music
     ret
 
 Load_intro_Tiles::

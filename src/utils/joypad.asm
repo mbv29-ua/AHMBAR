@@ -74,8 +74,10 @@ ret
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 wait_until_A_pressed::
-   ld hl, JUST_PRESSED_BUTTONS
    .loop:
+      call wait_vblank
+      call hUGE_dosound
+      ld hl, JUST_PRESSED_BUTTONS
       call read_pad
       bit BUTTON_A, [hl]
       jr z, .loop
