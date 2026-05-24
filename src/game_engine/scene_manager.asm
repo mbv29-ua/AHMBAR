@@ -592,4 +592,7 @@ stop_background_music::
     ld a, $00
     ld [$FF25], a
 
+    ld hl, empty_song
+    call hUGE_init
+
     ret
