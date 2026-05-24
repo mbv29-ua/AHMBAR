@@ -76,7 +76,7 @@ game_over_init::
     call reset_scroll
     call disable_hud_screen
 
-	ld hl, game_over_sound
+	ld hl, empty_song   ; game_over_sound desactivado (falta ROM)
 	call hUGE_init
 
     call screen_on
