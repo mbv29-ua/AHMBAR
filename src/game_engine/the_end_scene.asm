@@ -65,6 +65,7 @@ scene_the_end::
     call the_end_init
     call fade_to_original
 
+    ;; FIXME: does not work -> i dunno why
     call wait_until_A_pressed
 
     jp restart_game
@@ -162,6 +163,8 @@ write_stat_number::
 ;;; write_the_end_content
 ;;; Writes all text and numbers to the BG map.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; FIXME: fix it -> it does not work that way, i dunno why right now
 
 ; THE END screen layout (20 tiles wide):
 ;   row 1:  col 6  "THE END"
