@@ -4,7 +4,7 @@ INCLUDE "entities/entities.inc"
 
 SECTION "Level 4 Tiles", ROM0
 
-INCLUDE "system/ambar_macros.inc"
+;INCLUDE "system/ambar_macros.inc"
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; This routine spawns the enemies of the scene 4.
@@ -28,10 +28,10 @@ scene_4_enemy_spawner::
 init_ambars_level4::
     ; Spawn ambars at specific locations for level 4
     ; Position in tiles (Y, X) -> in pixels (Y*8, X*8)
-    
-	SPAWN_AMBAR_AT_TILE 5, 5
-    SPAWN_AMBAR_AT_TILE 10, 10
-    SPAWN_AMBAR_AT_TILE 15, 15
+    ; Entity-based spawning disabled - ahmbar now placed as $D8 tiles in bg tilemap
+    ;SPAWN_AMBAR_AT_TILE 5, 5
+    ;SPAWN_AMBAR_AT_TILE 10, 10
+    ;SPAWN_AMBAR_AT_TILE 15, 15
 
     ret
 

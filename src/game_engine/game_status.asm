@@ -6,6 +6,10 @@ check_lives::
     cp 0
     ret nz
     
+    ; Count this as one death (game-over event)
+    ld hl, wEnemyHits
+    inc [hl]
+
     ; Si llegó a 0 vidas, game over
     call game_over
     ret
