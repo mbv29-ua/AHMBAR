@@ -164,8 +164,6 @@ write_stat_number::
 ;;; Writes all text and numbers to the BG map.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; FIXME: fix it -> it does not work that way, i dunno why right now
-
 ; THE END screen layout (20 tiles wide):
 ;   row 1:  col 6  "THE END"
 ;   row 4:  col 5  "Ahmbar."   col 13  XX
@@ -174,45 +172,45 @@ write_stat_number::
 ;   row 11: col 5  achievement message
 ;   row 14: col 6  "Press A"
 
-;write_the_end_content::
-;    ; Row 1: "THE END" centred
-;    ld hl, BG_MAP_START + 1 * 32 + 6
-;    ld de, end_text_the_end
-;    call write_bg_string
-;
-;    ; Row 4: "Ahmbar." + score
-;    ld hl, BG_MAP_START + 4 * 32 + 5
-;    ld de, end_text_ahmbar
-;    call write_bg_string
-;    ld hl, BG_MAP_START + 4 * 32 + 13
-;    ld a, [score_value]
-;    call write_stat_number
-;
-;    ; Row 6: "Kills." + kills
-;    ld hl, BG_MAP_START + 6 * 32 + 5
-;    ld de, end_text_kills
-;    call write_bg_string
-;    ld hl, BG_MAP_START + 6 * 32 + 13
-;    ld a, [wEnemiesKilled]
-;    call write_stat_number
-;
-;    ; Row 8: "Deaths." + hits
-;    ld hl, BG_MAP_START + 8 * 32 + 5
-;    ld de, end_text_deaths
-;    call write_bg_string
-;    ld hl, BG_MAP_START + 8 * 32 + 13
-;    ld a, [wEnemyHits]
-;    call write_stat_number
-;
-;    ; Row 11: achievement message
-;    call write_achievement
-;
-;    ; Row 14: "Press A" centred
-;    ld hl, BG_MAP_START + 14 * 32 + 6
-;    ld de, end_text_press_a
-;    call write_bg_string
-;
-;    ret
+write_the_end_content::
+    ; Row 1: "THE END" centred
+    ld hl, BG_MAP_START + 1 * 32 + 6
+    ld de, end_text_the_end
+    call write_bg_string
+
+    ; Row 4: "Ahmbar." + score
+    ld hl, BG_MAP_START + 4 * 32 + 5
+    ld de, end_text_ahmbar
+    call write_bg_string
+    ld hl, BG_MAP_START + 4 * 32 + 13
+    ld a, [score_value]
+    call write_stat_number
+
+    ; Row 6: "Kills." + kills
+    ld hl, BG_MAP_START + 6 * 32 + 5
+    ld de, end_text_kills
+    call write_bg_string
+    ld hl, BG_MAP_START + 6 * 32 + 13
+    ld a, [wEnemiesKilled]
+    call write_stat_number
+
+    ; Row 8: "Deaths." + hits
+    ld hl, BG_MAP_START + 8 * 32 + 5
+    ld de, end_text_deaths
+    call write_bg_string
+    ld hl, BG_MAP_START + 8 * 32 + 13
+    ld a, [wEnemyHits]
+    call write_stat_number
+
+    ; Row 11: achievement message
+    call write_achievement
+
+    ; Row 14: "Press A" centred
+    ld hl, BG_MAP_START + 14 * 32 + 6
+    ld de, end_text_press_a
+    call write_bg_string
+
+    ret
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
