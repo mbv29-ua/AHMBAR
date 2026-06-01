@@ -1,6 +1,7 @@
 INCLUDE "constants.inc"
 INCLUDE "utils/arithmetic_macros.inc"
 INCLUDE "system/collision_manager/collisions.inc"
+INCLUDE "system/hud/hud_constants.inc"
 INCLUDE "entities/entities.inc"
 
 SECTION "Ambar collisions", ROM0
@@ -56,8 +57,9 @@ check_ahmbar_tile_collision::
         jr z, .is_ahmbar
         call is_tile_bulletbox
         jr z, .is_bulletbox
+        call is_tile_heart
+        jr z, .is_heart
         jr .another_collectible
-        ; Is an ahmbar, collect it
 
         .is_ahmbar:
             call increment_score_and_display
@@ -66,8 +68,34 @@ check_ahmbar_tile_collision::
         .is_bulletbox:
             call collect_bullet
             ret
+
+        .is_heart:
+            call collect_heart
+            ret
+
         .another_collectible:
     jp .loop
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; collect_heart
+;;; Adds 4 lives (1 full heart) to the player,
+;;; capped at MAX_LIVES.
+;;;
+;;; Destroys: A, HL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+collect_heart::
+    ld hl, wPlayerLives
+    ld a, [hl]
+    add 4
+    cp MAX_LIVES + 1
+    jr c, .store
+    ld a, MAX_LIVES
+.store:
+    ld [hl], a
+    call hud_needs_update
+    ret
 
 
 get_current_tile_address_left_point::

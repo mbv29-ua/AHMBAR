@@ -37,6 +37,7 @@ load_scene::
     ; Load assets
     ;call load_numbers
     call load_heart_tiles
+    call load_heart_collectible_tile
     call load_ambar_tile
     call load_player_tiles
     ; call load_cowboy_sprites

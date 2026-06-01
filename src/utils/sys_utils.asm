@@ -1,5 +1,6 @@
 INCLUDE "constants.inc"
 INCLUDE "tiles.inc"
+INCLUDE "system/collision_manager/collisions.inc"
 INCLUDE "system/text_manager/text_manager_constants.inc"
 SECTION "System utils", ROM0
 
@@ -381,6 +382,13 @@ load_ambar_tile::
     ; Cargar corazón completo en tile $D0
     ld hl, ambar.start
     ld de, VRAM0_START + TILE_AHMBAR_HUD * TILE_SIZE
+    ld  b, TILE_SIZE
+    call memcpy_256
+    ret
+
+load_heart_collectible_tile::
+    ld hl, hud_tiles.heart_full
+    ld de, VRAM0_START + HEART_TILE * TILE_SIZE
     ld  b, TILE_SIZE
     call memcpy_256
     ret

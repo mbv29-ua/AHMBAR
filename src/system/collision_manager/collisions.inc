@@ -12,3 +12,4 @@ DEF SOLID_TILE_2	 			EQU $70 ; 112 - 127
 DEF EMPTY_TILE 			        EQU $80 ;  tile $00 of the second bank -> $80
 DEF AHMBAR_TILE 			    EQU $D8 ;  tile $88 of the second bank -> $D8
 DEF BULLETBOX_TILE              EQU $D9 ;  tile $89 of the second bank -> $D9
+DEF HEART_TILE                  EQU $DA ;  tile $8A of the second bank -> $DA

@@ -105,6 +105,21 @@ is_tile_bulletbox::
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; is_tile_heart
+;;; Checks if a tile is a heart collectible
+;;;
+;;; Input:
+;;;   A = Tile ID
+;;; Output:
+;;;   Z flag: z=1 means it is a heart, z=0 means it is not
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+is_tile_heart::
+    cp HEART_TILE
+    ret
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; is_tile_platform
 ;;; Checks if a tile blocks movement only in down
 ;;; direction
