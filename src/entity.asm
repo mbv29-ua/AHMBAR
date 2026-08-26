@@ -22,7 +22,7 @@ wCounterReload::    DS 1
 ; Menu Variables
 wMenuOption::       DS 1  ; Opción seleccionada del menú (0 = Start Game, 1 = Controls)
 
-; Statistics Variables
+; Statistics Variables -> fix press A
 wEnemiesKilled::         DS 1  ; Total enemies killed (no rocks)
 wRegularEnemiesKilled::  DS 1  ; Non-boss, non-rock kills (for pacifist/destroyer)
 wTotalRegularSpawned::   DS 1  ; Total non-boss, non-rock enemies spawned
